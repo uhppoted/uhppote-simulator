@@ -3,7 +3,7 @@ package rest
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/uhppoted/uhppoted/src/uhppote-simulator/simulator"
+	"github.com/uhppoted/uhppote-simulator/simulator"
 	"io/ioutil"
 	"log"
 	"net/http"

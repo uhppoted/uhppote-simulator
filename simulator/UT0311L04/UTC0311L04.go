@@ -9,7 +9,7 @@ import (
 	"github.com/uhppoted/uhppote-core/messages"
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
-	"github.com/uhppoted/uhppoted/src/uhppote-simulator/entities"
+	"github.com/uhppoted/uhppote-simulator/entities"
 	"io/ioutil"
 	"math/rand"
 	"net"

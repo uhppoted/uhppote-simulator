@@ -3,7 +3,7 @@ package UT0311L04
 import (
 	"github.com/uhppoted/uhppote-core/messages"
 	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppoted/src/uhppote-simulator/entities"
+	"github.com/uhppoted/uhppote-simulator/entities"
 	"net"
 	"time"
 )
