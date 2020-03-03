@@ -53,6 +53,9 @@ release-tar: release
 debug: build
 	go test ./...
 
+run: 
+	./bin/uhppote-simulator --debug --bind 0.0.0.0:60000 --rest 0.0.0.0:8000 --devices "../runtime/simulation/devices"
+
 new-device: build
 	./bin/uhppote-simulator --debug --devices "../runtime/simulation/devices" new-device $(NEWDEVICE)
 
@@ -67,3 +70,4 @@ delete-device:
 
 swipe:
 	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"door\":$(DOOR),\"card-number\":$(CARD)}"
+
