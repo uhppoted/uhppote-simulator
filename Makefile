@@ -37,9 +37,6 @@ benchmark: build
 coverage: build
 	go test -cover ./...
 
-debug: build
-	go test ./...
-
 release: test vet
 	mkdir -p dist/$(DIST)/windows
 	mkdir -p dist/$(DIST)/darwin
@@ -52,6 +49,9 @@ release: test vet
 
 release-tar: release
 	tar --directory=dist --exclude=".DS_Store" -cvzf dist/$(DIST).tar.gz $(DIST)
+
+debug: build
+	go test ./...
 
 new-device: build
 	./bin/uhppote-simulator --debug --devices "../runtime/simulation/devices" new-device $(NEWDEVICE)
