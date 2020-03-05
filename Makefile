@@ -1,5 +1,6 @@
-VERSION    = v0.5.1x
+VERSION    = v0.5.1
 LDFLAGS    = -ldflags "-X uhppote.VERSION=$(VERSION)" 
+DIST      ?= development
 
 SERIALNO  ?= 405419896
 NEWDEVICE ?= 102030405
@@ -42,13 +43,15 @@ release: test vet
 	mkdir -p dist/$(DIST)/darwin
 	mkdir -p dist/$(DIST)/linux
 	mkdir -p dist/$(DIST)/arm7
-	env GOOS=linux   GOARCH=amd64       go build -o dist/$(DIST)/linux/uhppote-cli       ./...
-	env GOOS=linux   GOARCH=arm GOARM=7 go build -o dist/$(DIST)/arm7/uhppote-cli        ./...
-	env GOOS=darwin  GOARCH=amd64       go build -o dist/$(DIST)/darwin/uhppote-cli      ./..
-	env GOOS=windows GOARCH=amd64       go build -o dist/$(DIST)/windows/uhppote-cli.exe ./...
+	env GOOS=linux   GOARCH=amd64       go build -o dist/$(DIST)/linux   ./...
+	env GOOS=linux   GOARCH=arm GOARM=7 go build -o dist/$(DIST)/arm7    ./...
+	env GOOS=darwin  GOARCH=amd64       go build -o dist/$(DIST)/darwin  ./...
+	env GOOS=windows GOARCH=amd64       go build -o dist/$(DIST)/windows ./...
 
 release-tar: release
+	find . -name ".DS_Store" -delete
 	tar --directory=dist --exclude=".DS_Store" -cvzf dist/$(DIST).tar.gz $(DIST)
+	cd dist; zip --recurse-paths $(DIST).zip $(DIST)
 
 debug: build
 	go test ./...

@@ -9,16 +9,18 @@ Supported operating systems:
 
 ## Releases
 
+- v0.5.1: Initial release following restructuring into standalone Go *modules* and *git submodules*
+
 ## Installation
 
 ### Building from source
 
 #### Dependencies
 
-| *Dependency*                        | *Description*                                          |
-| ----------------------------------- | ------------------------------------------------------ |
-| com.github/uhppoted/uhppote-core    | Device level API implementation                        |
-| golang.org/x/lint/golint            | Additional *lint* check for release builds             |
+| *Dependency*                          | *Description*                                          |
+| ------------------------------------- | ------------------------------------------------------ |
+| [com.github/uhppoted/uhppote-core][1] | Device level API implementation                        |
+| golang.org/x/lint/golint              | Additional *lint* check for release builds             |
 
 ### Binaries
 
@@ -57,4 +59,7 @@ Supported options:
 - --bind <IP address to bind to>
 - --devices <directory path for device files>
 - --debug
+
+[1]: https://github.com/uhppoted/uhppote-core
+
 
