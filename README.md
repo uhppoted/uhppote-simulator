@@ -9,7 +9,11 @@ Supported operating systems:
 
 ## Releases
 
-- v0.5.1: Initial release following restructuring into standalone Go *modules* and *git submodules*
+| *Version* | *Description*                                                                             |
+| --------- | ----------------------------------------------------------------------------------------- |
+| v0.6.1    | Maintenance release to update module dependencies                                         |
+| v0.6.0    | Maintenance release to update module dependencies                                         |
+| v0.5.1    | Initial release following restructuring into standalone Go *modules* and *git submodules* |
 
 ## Installation
 
