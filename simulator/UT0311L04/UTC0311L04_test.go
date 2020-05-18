@@ -267,7 +267,8 @@ func TestHandleSetAddress(t *testing.T) {
 }
 
 func TestHandleGetEvent(t *testing.T) {
-	timestamp, _ := time.ParseInLocation("2006-01-02 15:04:05", "2019-08-01 12:34:56", time.Local)
+	datetime, _ := time.ParseInLocation("2006-01-02 15:04:05", "2019-08-01 12:34:56", time.Local)
+	timestamp := types.DateTime(datetime)
 
 	request := messages.GetEventRequest{
 		SerialNumber: 12345,
@@ -282,7 +283,7 @@ func TestHandleGetEvent(t *testing.T) {
 		Door:         4,
 		DoorOpened:   false,
 		UserID:       555444321,
-		Timestamp:    types.DateTime(timestamp),
+		Timestamp:    &timestamp,
 		Result:       9,
 	}
 

@@ -6,7 +6,18 @@ import (
 )
 
 func (s *UT0311L04) getEvent(addr *net.UDPAddr, request *messages.GetEventRequest) {
-	if s.SerialNumber == request.SerialNumber {
+	if s.SerialNumber != request.SerialNumber {
+		return
+	}
+
+	if len(s.Events.Events) == 0 {
+		response := messages.GetEventResponse{
+			SerialNumber: s.SerialNumber,
+			Index:        0,
+		}
+
+		s.send(addr, &response)
+	} else {
 		index := request.Index
 
 		if event := s.Events.Get(index); event != nil {
@@ -18,7 +29,7 @@ func (s *UT0311L04) getEvent(addr *net.UDPAddr, request *messages.GetEventReques
 				Door:         event.Door,
 				DoorOpened:   event.DoorOpened,
 				UserID:       event.UserID,
-				Timestamp:    event.Timestamp,
+				Timestamp:    &event.Timestamp,
 				Result:       event.Result,
 			}
 
