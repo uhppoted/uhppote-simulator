@@ -11,8 +11,8 @@ func (s *UT0311L04) putCard(addr *net.UDPAddr, request *messages.PutCardRequest)
 	if request.SerialNumber == s.SerialNumber {
 		card := entities.Card{
 			CardNumber: request.CardNumber,
-			From:       request.From,
-			To:         request.To,
+			From:       &request.From,
+			To:         &request.To,
 			Doors: map[uint8]bool{1: request.Door1,
 				2: request.Door2,
 				3: request.Door3,
