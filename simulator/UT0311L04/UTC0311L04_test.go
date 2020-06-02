@@ -335,20 +335,20 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 	cards := entities.CardList{
 		&entities.Card{
 			CardNumber: 100000001,
-			From:       *from,
-			To:         *to,
+			From:       from,
+			To:         to,
 			Doors:      map[uint8]bool{1: false, 2: false, 3: false, 4: false},
 		},
 		&entities.Card{
 			CardNumber: 192837465,
-			From:       *from,
-			To:         *to,
+			From:       from,
+			To:         to,
 			Doors:      map[uint8]bool{1: true, 2: false, 3: false, 4: true},
 		},
 		&entities.Card{
 			CardNumber: 100000003,
-			From:       *from,
-			To:         *to,
+			From:       from,
+			To:         to,
 			Doors:      map[uint8]bool{1: false, 2: false, 3: false, 4: false},
 		},
 	}
