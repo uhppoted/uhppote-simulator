@@ -28,7 +28,6 @@
 
 ### Other
 
-1.  github project page
-2.  Integration tests
-3.  Verify fields in listen events/status replies against SDK:
+1.  Integration tests
+2.  Verify fields in listen events/status replies against SDK:
     - battery status can be (at least) 0x00, 0x01 and 0x04

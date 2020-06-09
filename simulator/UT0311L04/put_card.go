@@ -20,11 +20,17 @@ func (s *UT0311L04) putCard(addr *net.UDPAddr, request *messages.PutCardRequest)
 			},
 		}
 
-		s.Cards.Put(&card)
+		var succeeded bool
+		if err := s.Cards.Put(&card); err != nil {
+			fmt.Printf("WARN:  %v\n", err)
+			succeeded = false
+		} else {
+			succeeded = true
+		}
 
 		response := messages.PutCardResponse{
 			SerialNumber: s.SerialNumber,
-			Succeeded:    true,
+			Succeeded:    succeeded,
 		}
 
 		s.send(addr, &response)

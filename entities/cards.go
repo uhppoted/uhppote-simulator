@@ -27,15 +27,14 @@ func (l *CardList) Size() uint32 {
 	return count
 }
 
-// TODO: implement Marshal/Unmarshal
 func (l *CardList) Put(card *Card) error {
 	if card == nil {
 		return nil
 	}
 
 	for ix, c := range *l {
-		if c == nil || c.CardNumber == 0 || c.CardNumber == 0xffffffff || c.CardNumber == card.CardNumber {
-			(*l)[ix] = card
+		if c != nil && c.CardNumber == card.CardNumber {
+			l[ix] = card
 			return nil
 		}
 	}
