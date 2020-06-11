@@ -11,6 +11,7 @@ Supported operating systems:
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.6.3    | Reworked card list as fixed length array and emulated deleted records                     |
 | v0.6.2    | Updated simulation response for 'no events'                                               |
 | v0.6.1    | Maintenance release to update module dependencies                                         |
 | v0.6.0    | Maintenance release to update module dependencies                                         |
@@ -22,10 +23,10 @@ Supported operating systems:
 
 #### Dependencies
 
-| *Dependency*                          | *Description*                                          |
-| ------------------------------------- | ------------------------------------------------------ |
-| [com.github/uhppoted/uhppote-core][1] | Device level API implementation                        |
-| golang.org/x/lint/golint              | Additional *lint* check for release builds             |
+| *Dependency*                                             | *Description*                                          |
+| -------------------------------------------------------- | ------------------------------------------------------ |
+| [uhppote-core](https://github.com/uhppoted/uhppote-core) | Device level API implementation                        |
+| golang.org/x/lint/golint                                 | Additional *lint* check for release builds             |
 
 ### Binaries
 
@@ -65,6 +66,5 @@ Supported options:
 - --devices <directory path for device files>
 - --debug
 
-[1]: https://github.com/uhppoted/uhppote-core
 
 
