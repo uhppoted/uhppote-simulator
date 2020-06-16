@@ -1,3 +1,5 @@
+![build](https://github.com/uhppoted/uhppote-simulator/workflows/build/badge.svg)
+
 # uhppote-simulator
 
 Software simulator for access control systems based on the *UHPPOTE UT0311-L0x* TCP/IP Wiegand access control boards. 
