@@ -1,9 +1,10 @@
 package UT0311L04
 
 import (
+	"time"
+
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-simulator/entities"
-	"time"
 )
 
 func (s *UT0311L04) Swipe(deviceID uint32, cardNumber uint32, door uint8) (bool, uint32) {
@@ -14,7 +15,7 @@ func (s *UT0311L04) Swipe(deviceID uint32, cardNumber uint32, door uint8) (bool,
 
 	if s.SerialNumber == types.SerialNumber(deviceID) {
 		for _, c := range s.Cards {
-			if c.CardNumber == cardNumber {
+			if c != nil && c.CardNumber == cardNumber {
 				if c.Doors[door] {
 					granted = true
 					opened = s.Doors[door].Open()
