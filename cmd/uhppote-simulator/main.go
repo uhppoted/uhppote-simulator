@@ -110,6 +110,6 @@ func help() {
 	fmt.Println("  Options:")
 	fmt.Println()
 	fmt.Println("    --devices <directory>  Sets the directory to which to load and save simulator device files")
-	fmt.Println("    --debug                Displays vaguely useful internal information")
+	fmt.Println("    --debug                Displays internal information for diagnosing errors")
 	fmt.Println()
 }
