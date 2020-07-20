@@ -68,7 +68,7 @@ func (l *EventList) Get(index uint32) *Event {
 }
 
 func (l *EventList) SetIndex(index uint32) bool {
-	if index != l.Index {
+	if index != l.Index && index <= l.Last {
 		l.Index = index
 		return true
 	}

@@ -293,7 +293,7 @@ func TestHandleGetEvent(t *testing.T) {
 func TestHandleSetEventIndex(t *testing.T) {
 	request := messages.SetEventIndexRequest{
 		SerialNumber: 12345,
-		Index:        17,
+		Index:        7,
 		MagicWord:    0x55aaaa55,
 	}
 
@@ -355,6 +355,8 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 
 	events := entities.EventList{
 		Index: 123,
+		First: 1,
+		Last:  8,
 		Events: []entities.Event{
 			entities.Event{
 				RecordNumber: 1,
@@ -383,6 +385,56 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 				Door:         3,
 				DoorOpened:   false,
 				UserID:       1234567890,
+				Timestamp:    types.DateTime(timestamp),
+				Result:       1,
+			},
+			entities.Event{
+				RecordNumber: 4,
+				Type:         0x05,
+				Granted:      true,
+				Door:         3,
+				DoorOpened:   false,
+				UserID:       1234567891,
+				Timestamp:    types.DateTime(timestamp),
+				Result:       1,
+			},
+			entities.Event{
+				RecordNumber: 5,
+				Type:         0x05,
+				Granted:      false,
+				Door:         4,
+				DoorOpened:   false,
+				UserID:       1234567892,
+				Timestamp:    types.DateTime(timestamp),
+				Result:       1,
+			},
+			entities.Event{
+				RecordNumber: 6,
+				Type:         0x05,
+				Granted:      false,
+				Door:         1,
+				DoorOpened:   false,
+				UserID:       1234567892,
+				Timestamp:    types.DateTime(timestamp),
+				Result:       1,
+			},
+			entities.Event{
+				RecordNumber: 7,
+				Type:         0x05,
+				Granted:      true,
+				Door:         2,
+				DoorOpened:   true,
+				UserID:       1234567893,
+				Timestamp:    types.DateTime(timestamp),
+				Result:       1,
+			},
+			entities.Event{
+				RecordNumber: 8,
+				Type:         0x05,
+				Granted:      true,
+				Door:         3,
+				DoorOpened:   true,
+				UserID:       1234567894,
 				Timestamp:    types.DateTime(timestamp),
 				Result:       1,
 			},

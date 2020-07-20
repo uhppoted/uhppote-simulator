@@ -5,6 +5,7 @@
 - [x] Rework card list as fixed length array
 - [x] Implement `card deleted` response
 - [x] Unit tests for CardList
+- [ ] Unit tests for EventList
 
 ## TODO
 
