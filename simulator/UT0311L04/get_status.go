@@ -40,10 +40,10 @@ func (s *UT0311L04) getStatus(addr *net.UDPAddr, request *messages.GetStatusRequ
 			response.EventType = event.Type
 			response.Granted = event.Granted
 			response.Door = event.Door
-			response.DoorOpened = event.DoorOpened
-			response.UserID = event.UserID
+			response.Direction = event.Direction
+			response.CardNumber = event.CardNumber
 			response.EventTimestamp = event.Timestamp
-			response.EventResult = event.Result
+			response.EventReason = event.Reason
 		}
 
 		s.send(addr, &response)

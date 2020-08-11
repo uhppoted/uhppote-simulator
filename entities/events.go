@@ -9,10 +9,10 @@ type Event struct {
 	Type         uint8          `json:"type"`
 	Granted      bool           `json:"granted"`
 	Door         uint8          `json:"door"`
-	DoorOpened   bool           `json:"door-opened"`
-	UserID       uint32         `json:"user-id"`
+	Direction    uint8          `json:"direction"`
+	CardNumber   uint32         `json:"CardNumber"`
 	Timestamp    types.DateTime `json:"timestamp"`
-	Result       uint8          `json:"result"`
+	Reason       uint8          `json:"reason"`
 }
 
 type EventList struct {

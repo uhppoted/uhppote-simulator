@@ -27,10 +27,10 @@ func (s *UT0311L04) getEvent(addr *net.UDPAddr, request *messages.GetEventReques
 				Type:         event.Type,
 				Granted:      event.Granted,
 				Door:         event.Door,
-				DoorOpened:   event.DoorOpened,
-				UserID:       event.UserID,
+				Direction:    event.Direction,
+				CardNumber:   event.CardNumber,
 				Timestamp:    &event.Timestamp,
-				Result:       event.Result,
+				Reason:       event.Reason,
 			}
 
 			s.send(addr, &response)

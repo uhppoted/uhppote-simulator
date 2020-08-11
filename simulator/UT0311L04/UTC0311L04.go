@@ -333,12 +333,12 @@ func (s *UT0311L04) add(e *entities.Event) uint32 {
 			Door4Button: s.Doors[4].IsButtonPressed(),
 
 			EventType:   e.Type,
-			EventResult: e.Result,
+			EventReason: e.Reason,
 			Timestamp:   e.Timestamp,
-			UserID:      e.UserID,
+			CardNumber:  e.CardNumber,
 			Granted:     e.Granted,
 			Door:        e.Door,
-			DoorOpened:  e.DoorOpened,
+			Direction:   e.Direction,
 		}
 
 		s.send(s.Listener, &event)

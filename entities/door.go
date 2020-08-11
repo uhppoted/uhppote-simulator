@@ -57,13 +57,13 @@ func NewDoor(id uint8) *Door {
 	return door
 }
 
-func (d *Door) Open() bool {
+func (d *Door) Open() uint8 {
 	now := time.Now().UTC()
 	closeAt := now.Add(time.Duration(d.Delay))
 
 	d.openUntil = &closeAt
 
-	return true
+	return 0x01
 }
 
 func (d Door) IsOpen() bool {

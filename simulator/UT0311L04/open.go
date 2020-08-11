@@ -11,16 +11,16 @@ import (
 func (s *UT0311L04) openDoor(addr *net.UDPAddr, request *messages.OpenDoorRequest) {
 	if s.SerialNumber == request.SerialNumber {
 		granted := false
-		opened := false
+		direction := uint8(0x01)
 		door := request.Door
 
 		if !(door < 1 || door > 4) {
 			granted = true
-			opened = s.Doors[door].Open()
+			direction = s.Doors[door].Open()
 
 			response := messages.OpenDoorResponse{
 				SerialNumber: s.SerialNumber,
-				Succeeded:    granted && opened,
+				Succeeded:    granted,
 			}
 
 			s.send(addr, &response)
@@ -30,10 +30,10 @@ func (s *UT0311L04) openDoor(addr *net.UDPAddr, request *messages.OpenDoorReques
 				Type:       0x02,
 				Granted:    granted,
 				Door:       door,
-				DoorOpened: opened,
-				UserID:     3922570474,
+				Direction:  direction,
+				CardNumber: 3922570474,
 				Timestamp:  types.DateTime(datetime),
-				Result:     0x2c,
+				Reason:     0x2c,
 			}
 
 			s.add(&event)
