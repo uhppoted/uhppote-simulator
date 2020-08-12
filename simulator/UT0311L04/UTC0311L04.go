@@ -24,23 +24,22 @@ type UT0311L04 struct {
 	compressed bool
 	txq        chan entities.Message
 
-	SerialNumber   types.SerialNumber       `json:"serial-number"`
-	IpAddress      net.IP                   `json:"address"`
-	SubnetMask     net.IP                   `json:"subnet"`
-	Gateway        net.IP                   `json:"gateway"`
-	MacAddress     types.MacAddress         `json:"MAC"`
-	Version        types.Version            `json:"version"`
-	TimeOffset     entities.Offset          `json:"offset"`
-	Doors          map[uint8]*entities.Door `json:"doors"`
-	Listener       *net.UDPAddr             `json:"listener"`
-	SystemState    byte                     `json:"state"`
-	PacketNumber   uint32                   `json:"packet-number"`
-	Backup         uint32                   `json:"backup"`
-	SpecialMessage byte                     `json:"special-message"`
-	Battery        byte                     `json:"battery"`
-	FireAlarm      byte                     `json:"fire-alarm"`
-	Cards          entities.CardList        `json:"cards"`
-	Events         entities.EventList       `json:"events"`
+	SerialNumber types.SerialNumber       `json:"serial-number"`
+	IpAddress    net.IP                   `json:"address"`
+	SubnetMask   net.IP                   `json:"subnet"`
+	Gateway      net.IP                   `json:"gateway"`
+	MacAddress   types.MacAddress         `json:"MAC"`
+	Version      types.Version            `json:"version"`
+	TimeOffset   entities.Offset          `json:"offset"`
+	Doors        map[uint8]*entities.Door `json:"doors"`
+	Listener     *net.UDPAddr             `json:"listener"`
+	SystemError  uint8                    `json:"system-state"`
+	SequenceId   uint32                   `json:"sequence-id"`
+	SpecialInfo  uint8                    `json:"special-info"`
+	RelayState   uint8                    `json:"relay-state"`
+	InputState   uint8                    `json:"input-state"`
+	Cards        entities.CardList        `json:"cards"`
+	Events       entities.EventList       `json:"events"`
 }
 
 func NewUT0311L04(deviceID uint32, dir string, compressed bool) *UT0311L04 {
@@ -311,16 +310,15 @@ func (s *UT0311L04) add(e *entities.Event) uint32 {
 		utc := time.Now().UTC()
 		datetime := utc.Add(time.Duration(s.TimeOffset))
 		event := uhppote.Event{
-			SerialNumber:   s.SerialNumber,
-			LastIndex:      s.Events.Last,
-			SystemState:    s.SystemState,
-			SystemDate:     types.SystemDate(datetime),
-			SystemTime:     types.SystemTime(datetime),
-			PacketNumber:   s.PacketNumber,
-			Backup:         s.Backup,
-			SpecialMessage: s.SpecialMessage,
-			LowBattery:     s.Battery,
-			FireAlarm:      s.FireAlarm,
+			SerialNumber: s.SerialNumber,
+			EventIndex:   s.Events.Last,
+			SystemError:  s.SystemError,
+			SystemDate:   types.SystemDate(datetime),
+			SystemTime:   types.SystemTime(datetime),
+			SequenceId:   s.SequenceId,
+			SpecialInfo:  s.SpecialInfo,
+			RelayState:   s.RelayState,
+			InputState:   s.InputState,
 
 			Door1State: s.Doors[1].IsOpen(),
 			Door2State: s.Doors[2].IsOpen(),
@@ -332,13 +330,13 @@ func (s *UT0311L04) add(e *entities.Event) uint32 {
 			Door3Button: s.Doors[3].IsButtonPressed(),
 			Door4Button: s.Doors[4].IsButtonPressed(),
 
-			EventType:   e.Type,
-			EventReason: e.Reason,
-			Timestamp:   e.Timestamp,
-			CardNumber:  e.CardNumber,
-			Granted:     e.Granted,
-			Door:        e.Door,
-			Direction:   e.Direction,
+			EventType:  e.Type,
+			Reason:     e.Reason,
+			Timestamp:  e.Timestamp,
+			CardNumber: e.CardNumber,
+			Granted:    e.Granted,
+			Door:       e.Door,
+			Direction:  e.Direction,
 		}
 
 		s.send(s.Listener, &event)

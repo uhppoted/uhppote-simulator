@@ -14,16 +14,15 @@ func (s *UT0311L04) getStatus(addr *net.UDPAddr, request *messages.GetStatusRequ
 		event := s.Events.Get(s.Events.Last)
 
 		response := messages.GetStatusResponse{
-			SerialNumber:   s.SerialNumber,
-			LastIndex:      s.Events.Last,
-			SystemState:    s.SystemState,
-			SystemDate:     types.SystemDate(datetime),
-			SystemTime:     types.SystemTime(datetime),
-			PacketNumber:   s.PacketNumber,
-			Backup:         s.Backup,
-			SpecialMessage: s.SpecialMessage,
-			Battery:        s.Battery,
-			FireAlarm:      s.FireAlarm,
+			SerialNumber: s.SerialNumber,
+			EventIndex:   s.Events.Last,
+			SystemError:  s.SystemError,
+			SystemDate:   types.SystemDate(datetime),
+			SystemTime:   types.SystemTime(datetime),
+			SequenceId:   s.SequenceId,
+			SpecialInfo:  s.SpecialInfo,
+			RelayState:   s.RelayState,
+			InputState:   s.InputState,
 
 			Door1State: s.Doors[1].IsOpen(),
 			Door2State: s.Doors[2].IsOpen(),
@@ -42,8 +41,8 @@ func (s *UT0311L04) getStatus(addr *net.UDPAddr, request *messages.GetStatusRequ
 			response.Door = event.Door
 			response.Direction = event.Direction
 			response.CardNumber = event.CardNumber
-			response.EventTimestamp = event.Timestamp
-			response.EventReason = event.Reason
+			response.Timestamp = event.Timestamp
+			response.Reason = event.Reason
 		}
 
 		s.send(addr, &response)

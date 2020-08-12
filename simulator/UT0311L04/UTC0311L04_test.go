@@ -19,7 +19,7 @@ import (
 //
 // 	response := messages.GetStatusResponse{
 // 		SerialNumber:  12345,
-// 		LastIndex:     3,
+// 		EventIndex:     3,
 // 		SwipeRecord:   0x00,
 // 		Granted:       false,
 // 		Door:          3,
