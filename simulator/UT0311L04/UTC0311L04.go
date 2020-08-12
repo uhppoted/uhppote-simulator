@@ -33,7 +33,7 @@ type UT0311L04 struct {
 	TimeOffset   entities.Offset          `json:"offset"`
 	Doors        map[uint8]*entities.Door `json:"doors"`
 	Listener     *net.UDPAddr             `json:"listener"`
-	SystemError  uint8                    `json:"system-state"`
+	SystemError  uint8                    `json:"system-error"`
 	SequenceId   uint32                   `json:"sequence-id"`
 	SpecialInfo  uint8                    `json:"special-info"`
 	RelayState   uint8                    `json:"relay-state"`
