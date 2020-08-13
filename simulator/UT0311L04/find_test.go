@@ -158,11 +158,9 @@ func TestFindDeviceWithDifferentAddress(t *testing.T) {
 
 	s.find(&src, &request)
 
-	timeout := time.After(500 * time.Millisecond)
-
 	select {
-	case <-timeout:
 	case <-txq:
-		t.Fatal("'find' sent response to request with different request")
+		t.Fatalf("'find' sent response to request with different request")
+	default:
 	}
 }
