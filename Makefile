@@ -1,4 +1,4 @@
-VERSION    = v0.6.3
+VERSION    = v0.6.4
 LDFLAGS    = -ldflags "-X uhppote.VERSION=$(VERSION)" 
 DIST      ?= development
 
@@ -7,6 +7,8 @@ NEWDEVICE ?= 102030405
 CARD      ?= 65538
 DOOR      ?= 3
 DEBUG     ?= --debug
+
+.PHONY: bump
 
 all: test      \
 	 benchmark \
@@ -52,6 +54,9 @@ release: build-all
 	find . -name ".DS_Store" -delete
 	tar --directory=dist --exclude=".DS_Store" -cvzf dist/$(DIST).tar.gz $(DIST)
 	cd dist; zip --recurse-paths $(DIST).zip $(DIST)
+
+bump:
+	go get -u github.com/uhppoted/uhppote-core
 
 debug: build
 	go test ./... -run TestCardListPutWithFullList
