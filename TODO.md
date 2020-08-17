@@ -1,10 +1,7 @@
 ## v0.6.x
 
-## IN PROGRESS
+### IN PROGRESS
 
-- [x] Rework card list as fixed length array
-- [x] Implement `card deleted` response
-- [x] Unit tests for CardList
 - [ ] Unit tests for EventList
 
 ## TODO
