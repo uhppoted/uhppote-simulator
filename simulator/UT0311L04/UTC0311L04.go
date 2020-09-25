@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"github.com/uhppoted/uhppote-core/messages"
 	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppote-simulator/entities"
 	"io/ioutil"
 	"math/rand"
@@ -18,6 +17,8 @@ import (
 	"reflect"
 	"time"
 )
+
+type event messages.GetStatusResponse
 
 type UT0311L04 struct {
 	file       string
@@ -309,7 +310,7 @@ func (s *UT0311L04) add(e *entities.Event) uint32 {
 
 		utc := time.Now().UTC()
 		datetime := utc.Add(time.Duration(s.TimeOffset))
-		event := uhppote.Event{
+		e := event{
 			SerialNumber: s.SerialNumber,
 			EventIndex:   s.Events.Last,
 			SystemError:  s.SystemError,
@@ -339,7 +340,7 @@ func (s *UT0311L04) add(e *entities.Event) uint32 {
 			Direction:  e.Direction,
 		}
 
-		s.send(s.Listener, &event)
+		s.send(s.Listener, &e)
 
 		return s.Events.Last
 	}

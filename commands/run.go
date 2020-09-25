@@ -6,7 +6,6 @@ import (
 	"fmt"
 	codec "github.com/uhppoted/uhppote-core/encoding/UTO311-L0x"
 	"github.com/uhppoted/uhppote-core/messages"
-	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppote-simulator/rest"
 	"github.com/uhppoted/uhppote-simulator/simulator"
 	"net"
@@ -17,6 +16,8 @@ import (
 )
 
 var debug bool = false
+
+type event messages.GetStatusResponse
 
 func Simulate(ctx *simulator.Context, dbg bool) {
 	debug = dbg
@@ -125,7 +126,7 @@ func send(c *net.UDPConn, dest *net.UDPAddr, message interface{}) {
 	// Identify (for simulation purposes only) these boards as having a serial number
 	// that starts with '0'. This assumes the convention that one door controllers have
 	// a serial number starting with 1, two door controllers start with 2, etc.
-	if event, ok := message.(*uhppote.Event); ok {
+	if event, ok := message.(*event); ok {
 		deviceID := fmt.Sprintf("%09d", event.SerialNumber)
 		if strings.HasPrefix(deviceID, "0") {
 			msg[0] = 0x19
