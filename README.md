@@ -13,6 +13,8 @@ Supported operating systems:
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.6.5    | Maintenance release for version compatibility with `node-red-contrib-uhppoted`            |
+| v0.6.4    | Maintenance release for version compatibility with `uhppoted-app-sheets`                  |
 | v0.6.3    | Reworked card list as fixed length array and emulated deleted records                     |
 | v0.6.2    | Updated simulation response for 'no events'                                               |
 | v0.6.1    | Maintenance release to update module dependencies                                         |
