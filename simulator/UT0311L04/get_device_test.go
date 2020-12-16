@@ -12,7 +12,7 @@ import (
 
 func TestGetDeviceWithMatchingAddress(t *testing.T) {
 	MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
-	manufactured, _ := types.DateFromString("2020-12-05")
+	released, _ := types.DateFromString("2020-12-05")
 	listener := net.UDPAddr{IP: net.IPv4(10, 0, 0, 10), Port: 43210}
 	txq := make(chan entities.Message, 8)
 
@@ -23,7 +23,7 @@ func TestGetDeviceWithMatchingAddress(t *testing.T) {
 		Gateway:      net.IPv4(10, 0, 0, 1),
 		MacAddress:   types.MacAddress(MAC),
 		Version:      9876,
-		Manufactured: *manufactured,
+		Released:     *released,
 		Listener:     &listener,
 		Cards:        entities.CardList{},
 		Events:       entities.EventList{},
@@ -63,7 +63,7 @@ func TestGetDeviceWithMatchingAddress(t *testing.T) {
 
 func TestGetDeviceWithAddress0(t *testing.T) {
 	MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
-	manufactured, _ := types.DateFromString("2020-12-05")
+	released, _ := types.DateFromString("2020-12-05")
 	listener := net.UDPAddr{IP: net.IPv4(10, 0, 0, 10), Port: 43210}
 	txq := make(chan entities.Message, 8)
 
@@ -74,7 +74,7 @@ func TestGetDeviceWithAddress0(t *testing.T) {
 		Gateway:      net.IPv4(10, 0, 0, 1),
 		MacAddress:   types.MacAddress(MAC),
 		Version:      9876,
-		Manufactured: *manufactured,
+		Released:     *released,
 		Listener:     &listener,
 		Cards:        entities.CardList{},
 		Events:       entities.EventList{},
@@ -114,7 +114,7 @@ func TestGetDeviceWithAddress0(t *testing.T) {
 
 func TestGetDeviceWithDifferentAddress(t *testing.T) {
 	MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
-	manufactured, _ := types.DateFromString("2020-12-05")
+	released, _ := types.DateFromString("2020-12-05")
 	listener := net.UDPAddr{IP: net.IPv4(10, 0, 0, 10), Port: 43210}
 	txq := make(chan entities.Message, 8)
 
@@ -125,7 +125,7 @@ func TestGetDeviceWithDifferentAddress(t *testing.T) {
 		Gateway:      net.IPv4(10, 0, 0, 1),
 		MacAddress:   types.MacAddress(MAC),
 		Version:      9876,
-		Manufactured: *manufactured,
+		Released:     *released,
 		Listener:     &listener,
 		Cards:        entities.CardList{},
 		Events:       entities.EventList{},
