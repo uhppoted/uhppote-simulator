@@ -1,19 +1,18 @@
 package UT0311L04
 
 import (
-	"fmt"
 	"net"
 	"reflect"
 	"testing"
-	"time"
 
 	"github.com/uhppoted/uhppote-core/messages"
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-simulator/entities"
 )
 
-func TestFindDeviceWithMatchingAddress(t *testing.T) {
+func TestGetDeviceWithMatchingAddress(t *testing.T) {
 	MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
+	manufactured, _ := types.DateFromString("2020-12-05")
 	listener := net.UDPAddr{IP: net.IPv4(10, 0, 0, 10), Port: 43210}
 	txq := make(chan entities.Message, 8)
 
@@ -24,6 +23,7 @@ func TestFindDeviceWithMatchingAddress(t *testing.T) {
 		Gateway:      net.IPv4(10, 0, 0, 1),
 		MacAddress:   types.MacAddress(MAC),
 		Version:      9876,
+		Manufactured: *manufactured,
 		Listener:     &listener,
 		Cards:        entities.CardList{},
 		Events:       entities.EventList{},
@@ -33,8 +33,7 @@ func TestFindDeviceWithMatchingAddress(t *testing.T) {
 	}
 
 	src := net.UDPAddr{IP: net.IPv4(10, 0, 0, 1), Port: 12345}
-	utc := time.Now().UTC()
-	datetime := utc.Add(time.Duration(s.TimeOffset))
+	date, _ := types.DateFromString("2020-12-05")
 
 	expected := entities.Message{
 		Destination: &src,
@@ -45,7 +44,7 @@ func TestFindDeviceWithMatchingAddress(t *testing.T) {
 			Gateway:      net.IPv4(10, 0, 0, 1),
 			MacAddress:   types.MacAddress(MAC),
 			Version:      9876,
-			Date:         types.Date(datetime),
+			Date:         *date,
 		},
 	}
 
@@ -53,26 +52,18 @@ func TestFindDeviceWithMatchingAddress(t *testing.T) {
 		SerialNumber: 12345,
 	}
 
-	s.find(&src, &request)
+	s.getDevice(&src, &request)
 
 	response := <-txq
 
 	if !reflect.DeepEqual(response, expected) {
-		if !reflect.DeepEqual(response.Destination, expected.Destination) {
-			t.Errorf("'find' sent incorrect rsponse with incorrect destination address\n   expected: %+v\n   got:      %+v\n", expected.Destination, response.Destination)
-		}
-
-		// INTERIM HACK to compare messages with dates that differ in the sub-second range
-		p := fmt.Sprintf("%v", response.Message)
-		q := fmt.Sprintf("%v", expected.Message)
-		if p != q {
-			t.Errorf("'find' sent incorrect rsponse with incorrect message\n   expected: %+v\n   got:      %+v\n", expected.Message, response.Message)
-		}
+		t.Errorf("'get-device' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, response)
 	}
 }
 
-func TestFindDeviceWithAddress0(t *testing.T) {
+func TestGetDeviceWithAddress0(t *testing.T) {
 	MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
+	manufactured, _ := types.DateFromString("2020-12-05")
 	listener := net.UDPAddr{IP: net.IPv4(10, 0, 0, 10), Port: 43210}
 	txq := make(chan entities.Message, 8)
 
@@ -83,6 +74,7 @@ func TestFindDeviceWithAddress0(t *testing.T) {
 		Gateway:      net.IPv4(10, 0, 0, 1),
 		MacAddress:   types.MacAddress(MAC),
 		Version:      9876,
+		Manufactured: *manufactured,
 		Listener:     &listener,
 		Cards:        entities.CardList{},
 		Events:       entities.EventList{},
@@ -92,8 +84,7 @@ func TestFindDeviceWithAddress0(t *testing.T) {
 	}
 
 	src := net.UDPAddr{IP: net.IPv4(10, 0, 0, 1), Port: 12345}
-	utc := time.Now().UTC()
-	datetime := utc.Add(time.Duration(s.TimeOffset))
+	date, _ := types.DateFromString("2020-12-05")
 
 	expected := entities.Message{
 		Destination: &src,
@@ -104,7 +95,7 @@ func TestFindDeviceWithAddress0(t *testing.T) {
 			Gateway:      net.IPv4(10, 0, 0, 1),
 			MacAddress:   types.MacAddress(MAC),
 			Version:      9876,
-			Date:         types.Date(datetime),
+			Date:         *date,
 		},
 	}
 
@@ -112,26 +103,18 @@ func TestFindDeviceWithAddress0(t *testing.T) {
 		SerialNumber: 0,
 	}
 
-	s.find(&src, &request)
+	s.getDevice(&src, &request)
 
 	response := <-txq
 
 	if !reflect.DeepEqual(response, expected) {
-		if !reflect.DeepEqual(response.Destination, expected.Destination) {
-			t.Errorf("'find' sent incorrect rsponse with incorrect destination address\n   expected: %+v\n   got:      %+v\n", expected.Destination, response.Destination)
-		}
-
-		// INTERIM HACK to compare messages with dates that differ in the sub-second range
-		p := fmt.Sprintf("%v", response.Message)
-		q := fmt.Sprintf("%v", expected.Message)
-		if p != q {
-			t.Errorf("'find' sent incorrect rsponse with incorrect message\n   expected: %+v\n   got:      %+v\n", expected.Message, response.Message)
-		}
+		t.Errorf("'get-device' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, response)
 	}
 }
 
-func TestFindDeviceWithDifferentAddress(t *testing.T) {
+func TestGetDeviceWithDifferentAddress(t *testing.T) {
 	MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
+	manufactured, _ := types.DateFromString("2020-12-05")
 	listener := net.UDPAddr{IP: net.IPv4(10, 0, 0, 10), Port: 43210}
 	txq := make(chan entities.Message, 8)
 
@@ -142,6 +125,7 @@ func TestFindDeviceWithDifferentAddress(t *testing.T) {
 		Gateway:      net.IPv4(10, 0, 0, 1),
 		MacAddress:   types.MacAddress(MAC),
 		Version:      9876,
+		Manufactured: *manufactured,
 		Listener:     &listener,
 		Cards:        entities.CardList{},
 		Events:       entities.EventList{},
@@ -156,11 +140,11 @@ func TestFindDeviceWithDifferentAddress(t *testing.T) {
 		SerialNumber: 54321,
 	}
 
-	s.find(&src, &request)
+	s.getDevice(&src, &request)
 
 	select {
 	case <-txq:
-		t.Fatalf("'find' sent response to request with different request")
+		t.Fatalf("'get-device' sent response to request with different request")
 	default:
 	}
 }

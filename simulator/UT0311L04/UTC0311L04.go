@@ -31,6 +31,7 @@ type UT0311L04 struct {
 	Gateway             net.IP                   `json:"gateway"`
 	MacAddress          types.MacAddress         `json:"MAC"`
 	Version             types.Version            `json:"version"`
+	Manufactured        types.Date               `json:"manufactured"`
 	TimeOffset          entities.Offset          `json:"offset"`
 	Doors               map[uint8]*entities.Door `json:"doors"`
 	Listener            *net.UDPAddr             `json:"listener"`
@@ -63,6 +64,7 @@ func NewUT0311L04(deviceID uint32, dir string, compressed bool) *UT0311L04 {
 		Gateway:      net.IPv4(0, 0, 0, 0),
 		MacAddress:   types.MacAddress(mac),
 		Version:      0x0892,
+		Manufactured: types.Date(time.Now()),
 		Doors: map[uint8]*entities.Door{
 			1: entities.NewDoor(1),
 			2: entities.NewDoor(2),
@@ -135,7 +137,7 @@ func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 		s.getListener(src, v)
 
 	case *messages.FindDevicesRequest:
-		s.find(src, v)
+		s.getDevice(src, v)
 
 	case *messages.SetAddressRequest:
 		s.setAddress(src, v)
@@ -232,6 +234,10 @@ func load(filepath string) (*UT0311L04, error) {
 
 	if simulator.Events.Last == 0 {
 		simulator.Events.Last = uint32(len(simulator.Events.Events))
+	}
+
+	if time.Time(simulator.Manufactured).Year() < 2000 {
+		simulator.Manufactured = types.Date(time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local))
 	}
 
 	return simulator, nil

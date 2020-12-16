@@ -2,14 +2,15 @@
 
 ### IN PROGRESS
 
-- [x] Implement record-special-events
 - [ ] Add 'open' REST API
 - [ ] Add 'button' REST API
-- [ ] System date (for get-device) should be the fixed i.e. not 'now'
 - [ ] Remove relay and input state from JSON
 - [ ] Replace UTO311L04.TimeOffset with time zone
 - [ ] Unit tests for EventList
 - [ ] Check real device events list rollover
+
+- [x] Implement record-special-events
+- [x] Date (for get-device) should be the manufactured date i.e. fixed, not 'now'
 
 ## TODO
 
