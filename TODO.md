@@ -1,8 +1,15 @@
-## v0.7.x
+## v0.6.x
 
 ### IN PROGRESS
 
+- [x] Implement record-special-events
+- [ ] Add 'open' REST API
+- [ ] Add 'button' REST API
+- [ ] System date (for get-device) should be the fixed i.e. not 'now'
+- [ ] Remove relay and input state from JSON
+- [ ] Replace UTO311L04.TimeOffset with time zone
 - [ ] Unit tests for EventList
+- [ ] Check real device events list rollover
 
 ## TODO
 
@@ -10,6 +17,7 @@
 - [ ] concurrent requests
 - [ ] simulator-cli
 - [ ] HTML
+- [ ] httpd
 - [ ] Rework simulator.run to use rx channels
 - [ ] Reload simulator on device file change
 - [ ] Implement JSON unmarshal to initialise default values

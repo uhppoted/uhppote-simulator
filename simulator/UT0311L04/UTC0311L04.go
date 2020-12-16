@@ -25,22 +25,23 @@ type UT0311L04 struct {
 	compressed bool
 	txq        chan entities.Message
 
-	SerialNumber types.SerialNumber       `json:"serial-number"`
-	IpAddress    net.IP                   `json:"address"`
-	SubnetMask   net.IP                   `json:"subnet"`
-	Gateway      net.IP                   `json:"gateway"`
-	MacAddress   types.MacAddress         `json:"MAC"`
-	Version      types.Version            `json:"version"`
-	TimeOffset   entities.Offset          `json:"offset"`
-	Doors        map[uint8]*entities.Door `json:"doors"`
-	Listener     *net.UDPAddr             `json:"listener"`
-	SystemError  uint8                    `json:"system-error"`
-	SequenceId   uint32                   `json:"sequence-id"`
-	SpecialInfo  uint8                    `json:"special-info"`
-	RelayState   uint8                    `json:"relay-state"`
-	InputState   uint8                    `json:"input-state"`
-	Cards        entities.CardList        `json:"cards"`
-	Events       entities.EventList       `json:"events"`
+	SerialNumber        types.SerialNumber       `json:"serial-number"`
+	IpAddress           net.IP                   `json:"address"`
+	SubnetMask          net.IP                   `json:"subnet"`
+	Gateway             net.IP                   `json:"gateway"`
+	MacAddress          types.MacAddress         `json:"MAC"`
+	Version             types.Version            `json:"version"`
+	TimeOffset          entities.Offset          `json:"offset"`
+	Doors               map[uint8]*entities.Door `json:"doors"`
+	Listener            *net.UDPAddr             `json:"listener"`
+	RecordSpecialEvents bool                     `json:"record-special-events"`
+	SystemError         uint8                    `json:"system-error"`
+	SequenceId          uint32                   `json:"sequence-id"`
+	SpecialInfo         uint8                    `json:"special-info"`
+	RelayState          uint8                    `json:"relay-state"`
+	InputState          uint8                    `json:"input-state"`
+	Cards               entities.CardList        `json:"cards"`
+	Events              entities.EventList       `json:"events"`
 }
 
 func NewUT0311L04(deviceID uint32, dir string, compressed bool) *UT0311L04 {
@@ -92,61 +93,64 @@ func (s *UT0311L04) SetTxQ(txq chan entities.Message) {
 func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 	switch v := rq.(type) {
 	case *messages.GetStatusRequest:
-		s.getStatus(src, rq.(*messages.GetStatusRequest))
+		s.getStatus(src, v)
 
 	case *messages.SetTimeRequest:
-		s.setTime(src, rq.(*messages.SetTimeRequest))
+		s.setTime(src, v)
 
 	case *messages.GetTimeRequest:
-		s.getTime(src, rq.(*messages.GetTimeRequest))
+		s.getTime(src, v)
 
 	case *messages.OpenDoorRequest:
-		s.openDoor(src, rq.(*messages.OpenDoorRequest))
+		s.openDoor(src, v)
 
 	case *messages.PutCardRequest:
-		s.putCard(src, rq.(*messages.PutCardRequest))
+		s.putCard(src, v)
 
 	case *messages.DeleteCardRequest:
-		s.deleteCard(src, rq.(*messages.DeleteCardRequest))
+		s.deleteCard(src, v)
 
 	case *messages.DeleteCardsRequest:
-		s.deleteCards(src, rq.(*messages.DeleteCardsRequest))
+		s.deleteCards(src, v)
 
 	case *messages.GetCardsRequest:
-		s.getCards(src, rq.(*messages.GetCardsRequest))
+		s.getCards(src, v)
 
 	case *messages.GetCardByIDRequest:
-		s.getCardByID(src, rq.(*messages.GetCardByIDRequest))
+		s.getCardByID(src, v)
 
 	case *messages.GetCardByIndexRequest:
-		s.getCardByIndex(src, rq.(*messages.GetCardByIndexRequest))
+		s.getCardByIndex(src, v)
 
 	case *messages.SetDoorControlStateRequest:
-		s.setDoorControlState(src, rq.(*messages.SetDoorControlStateRequest))
+		s.setDoorControlState(src, v)
 
 	case *messages.GetDoorControlStateRequest:
-		s.getDoorControlState(src, rq.(*messages.GetDoorControlStateRequest))
+		s.getDoorControlState(src, v)
 
 	case *messages.SetListenerRequest:
-		s.setListener(src, rq.(*messages.SetListenerRequest))
+		s.setListener(src, v)
 
 	case *messages.GetListenerRequest:
-		s.getListener(src, rq.(*messages.GetListenerRequest))
+		s.getListener(src, v)
 
 	case *messages.FindDevicesRequest:
-		s.find(src, rq.(*messages.FindDevicesRequest))
+		s.find(src, v)
 
 	case *messages.SetAddressRequest:
-		s.setAddress(src, rq.(*messages.SetAddressRequest))
+		s.setAddress(src, v)
 
 	case *messages.GetEventRequest:
-		s.getEvent(src, rq.(*messages.GetEventRequest))
+		s.getEvent(src, v)
 
 	case *messages.SetEventIndexRequest:
-		s.setEventIndex(src, rq.(*messages.SetEventIndexRequest))
+		s.setEventIndex(src, v)
+
+	case *messages.RecordSpecialEventsRequest:
+		s.recordSpecialEvents(src, v)
 
 	case *messages.GetEventIndexRequest:
-		s.getEventIndex(src, rq.(*messages.GetEventIndexRequest))
+		s.getEventIndex(src, v)
 
 	default:
 		panic(errors.New(fmt.Sprintf("Unsupported message type %T", v)))
