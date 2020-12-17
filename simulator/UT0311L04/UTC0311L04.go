@@ -31,7 +31,7 @@ type UT0311L04 struct {
 	Gateway             net.IP                   `json:"gateway"`
 	MacAddress          types.MacAddress         `json:"MAC"`
 	Version             types.Version            `json:"version"`
-	Released            types.Date               `json:"released"`
+	Released            *ReleaseDate             `json:"released"`
 	TimeOffset          entities.Offset          `json:"offset"`
 	Doors               map[uint8]*entities.Door `json:"doors"`
 	Listener            *net.UDPAddr             `json:"listener"`
@@ -52,7 +52,6 @@ func NewUT0311L04(deviceID uint32, dir string, compressed bool) *UT0311L04 {
 	}
 
 	mac := make([]byte, 6)
-	released, _ := types.DateFromString("2020-01-01")
 	rand.Read(mac)
 
 	device := UT0311L04{
@@ -65,7 +64,7 @@ func NewUT0311L04(deviceID uint32, dir string, compressed bool) *UT0311L04 {
 		Gateway:      net.IPv4(0, 0, 0, 0),
 		MacAddress:   types.MacAddress(mac),
 		Version:      0x0892,
-		Released:     *released,
+		Released:     DefaultReleaseDate(),
 		Doors: map[uint8]*entities.Door{
 			1: entities.NewDoor(1),
 			2: entities.NewDoor(2),
@@ -202,8 +201,11 @@ func load(filepath string) (*UT0311L04, error) {
 		return nil, err
 	}
 
-	simulator := new(UT0311L04)
-	err = json.Unmarshal(bytes, simulator)
+	simulator := UT0311L04{
+		Released: DefaultReleaseDate(),
+	}
+
+	err = json.Unmarshal(bytes, &simulator)
 	if err != nil {
 		return nil, err
 	}
@@ -237,11 +239,7 @@ func load(filepath string) (*UT0311L04, error) {
 		simulator.Events.Last = uint32(len(simulator.Events.Events))
 	}
 
-	if time.Time(simulator.Released).Year() < 2000 {
-		simulator.Released = types.Date(time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local))
-	}
-
-	return simulator, nil
+	return &simulator, nil
 }
 
 func (s *UT0311L04) Save() error {

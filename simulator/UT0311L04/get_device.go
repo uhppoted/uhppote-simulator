@@ -17,7 +17,7 @@ func (s *UT0311L04) getDevice(addr *net.UDPAddr, request *messages.FindDevicesRe
 			Gateway:      s.Gateway,
 			MacAddress:   s.MacAddress,
 			Version:      types.Version(s.Version),
-			Date:         s.Released,
+			Date:         types.Date(*s.Released),
 		}
 
 		s.send(addr, &response)
