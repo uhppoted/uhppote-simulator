@@ -3,12 +3,23 @@
 ### IN PROGRESS
 
 - [ ] Add 'open' REST API
+      -- optional open duration
+
+- [ ] Make door model more accurate
+      - get relay state from door unlocked list
+      - normally open -> relay is set
+      - normall closed -> relay is clear
+      - controlled -> relay is set while unlocked
+      - deny access (reason: 0x0b) if 'normally closed'
+      - only generate door opened/closed event if state changes
+
 - [ ] Add 'button' REST API
 - [ ] Remove relay and input state from JSON
 - [ ] Replace UTO311L04.TimeOffset with time zone
 - [ ] Unit tests for EventList
 - [ ] Check real device events list rollover
 
+- [x] Add 'close' REST API
 - [x] Implement record-special-events
 - [x] Date (for get-device) should be the manufactured date i.e. fixed, not 'now'
 

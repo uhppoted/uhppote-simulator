@@ -104,7 +104,7 @@ func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 		s.getTime(src, v)
 
 	case *messages.OpenDoorRequest:
-		s.openDoor(src, v)
+		s.unlockDoor(src, v)
 
 	case *messages.PutCardRequest:
 		s.putCard(src, v)

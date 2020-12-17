@@ -17,4 +17,6 @@ type Simulator interface {
 	Delete() error
 
 	Swipe(deviceID uint32, cardNumber uint32, door uint8) (bool, uint32)
+	Open(deviceID uint32, door uint8) (uint32, error)
+	Close(deviceID uint32, door uint8) (uint32, error)
 }

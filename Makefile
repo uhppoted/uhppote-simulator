@@ -79,3 +79,9 @@ delete-device:
 swipe:
 	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"door\":$(DOOR),\"card-number\":$(CARD)}"
 
+open:
+	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/open" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"door\":$(DOOR),\"delay\":30}"
+
+close:
+	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/close" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"door\":$(DOOR)}"
+

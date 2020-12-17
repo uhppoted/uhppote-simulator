@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func (s *UT0311L04) openDoor(addr *net.UDPAddr, request *messages.OpenDoorRequest) {
+func (s *UT0311L04) unlockDoor(addr *net.UDPAddr, request *messages.OpenDoorRequest) {
 	if s.SerialNumber == request.SerialNumber {
 		granted := false
 		direction := uint8(0x01)
@@ -16,7 +16,7 @@ func (s *UT0311L04) openDoor(addr *net.UDPAddr, request *messages.OpenDoorReques
 
 		if !(door < 1 || door > 4) {
 			granted = true
-			direction = s.Doors[door].Open()
+			direction = s.Doors[door].Unlock()
 
 			response := messages.OpenDoorResponse{
 				SerialNumber: s.SerialNumber,

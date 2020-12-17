@@ -8,11 +8,11 @@ import (
 type Delay time.Duration
 
 type Door struct {
-	ControlState uint8 `json:"control"`
-	Delay        Delay `json:"delay"`
-	open         bool
-	openUntil    *time.Time
-	button       bool
+	ControlState  uint8 `json:"control"`
+	Delay         Delay `json:"delay"`
+	open          bool
+	button        bool
+	unlockedUntil *time.Time
 }
 
 func (delay Delay) MarshalJSON() ([]byte, error) {
@@ -51,27 +51,37 @@ func NewDoor(id uint8) *Door {
 	door.ControlState = 3
 	door.Delay = Delay(5 * 1000000000)
 	door.open = false
-	door.openUntil = nil
 	door.button = false
+	door.unlockedUntil = nil
 
 	return door
 }
 
-func (d *Door) Open() uint8 {
+func (d *Door) Open() {
+	d.open = true
+}
+
+func (d *Door) Close() {
+	d.open = false
+}
+
+func (d *Door) Unlock() uint8 {
 	now := time.Now().UTC()
 	closeAt := now.Add(time.Duration(d.Delay))
 
-	d.openUntil = &closeAt
+	d.unlockedUntil = &closeAt
 
 	return 0x01
 }
 
 func (d Door) IsOpen() bool {
-	if d.openUntil != nil {
-		return !time.Now().UTC().After(*d.openUntil)
-	}
+	return d.open
 
-	return false
+	// if d.unlockedUntil != nil {
+	// 	return !time.Now().UTC().After(*d.openUntil)
+	// }
+	//
+	// return false
 }
 
 func (d Door) IsButtonPressed() bool {
