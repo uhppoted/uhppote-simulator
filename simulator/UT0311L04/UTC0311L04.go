@@ -319,6 +319,7 @@ func (s *UT0311L04) add(e *entities.Event) uint32 {
 
 		utc := time.Now().UTC()
 		datetime := utc.Add(time.Duration(s.TimeOffset))
+
 		e := event{
 			SerialNumber: s.SerialNumber,
 			EventIndex:   s.Events.Last,

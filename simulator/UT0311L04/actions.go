@@ -46,11 +46,25 @@ func (s *UT0311L04) Open(deviceID uint32, door uint8, duration *time.Duration) (
 		return 0, fmt.Errorf("%v: invalid doori %d", deviceID, door)
 	}
 
-	s.Doors[door].Open(duration)
+	closed := func() {
+		if s.RecordSpecialEvents {
+			datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
+			event := entities.Event{
+				Type:      0x02,
+				Granted:   true,
+				Door:      door,
+				Direction: 1,
+				Timestamp: types.DateTime(datetime),
+				Reason:    0x18,
+			}
+
+			s.add(&event)
+		}
+	}
 
 	var eventID uint32 = 0
 
-	if s.RecordSpecialEvents {
+	if s.Doors[door].Open(duration, closed) && s.RecordSpecialEvents {
 		datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
 		event := entities.Event{
 			Type:      0x02,
@@ -72,11 +86,9 @@ func (s *UT0311L04) Close(deviceID uint32, door uint8) (uint32, error) {
 		return 0, fmt.Errorf("%v: invalid doori %d", deviceID, door)
 	}
 
-	s.Doors[door].Close()
-
 	var eventID uint32 = 0
 
-	if s.RecordSpecialEvents {
+	if s.Doors[door].Close() && s.RecordSpecialEvents {
 		datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
 		event := entities.Event{
 			Type:      0x02,

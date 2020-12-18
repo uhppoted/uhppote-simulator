@@ -2,6 +2,7 @@ package entities
 
 import (
 	"encoding/json"
+	"sync"
 	"time"
 )
 
@@ -12,8 +13,9 @@ type Door struct {
 	Delay         Delay `json:"delay"`
 	open          bool
 	button        bool
+	openTimer     *time.Timer
 	unlockedUntil *time.Time
-	openUntil     *time.Time
+	guard         sync.RWMutex
 }
 
 func (delay Delay) MarshalJSON() ([]byte, error) {
@@ -58,19 +60,60 @@ func NewDoor(id uint8) *Door {
 	return door
 }
 
-func (d *Door) Open(duration *time.Duration) {
-	if duration != nil {
-		now := time.Now().UTC()
-		closeAt := now.Add(*duration)
-
-		d.openUntil = &closeAt
-	} else {
-		d.open = true
+func (d *Door) Open(duration *time.Duration, f func()) bool {
+	if d == nil {
+		return false
 	}
+
+	d.guard.Lock()
+	defer d.guard.Unlock()
+
+	if !d.open {
+		d.open = true
+
+		if duration != nil {
+			d.openTimer = time.AfterFunc(*duration, func() {
+				d.guard.Lock()
+
+				changed := d.open
+				if d.open {
+					d.open = false
+				}
+
+				if f != nil && changed {
+					defer f() // defer f() because f() invokes door.IsOpen which invokes d.guard.RLock()
+				}
+
+				// Can't use defer d.guard.Unlock() - defer's seem to stack up and deadlock
+				d.guard.Unlock()
+			})
+		}
+
+		return true
+	}
+
+	return false
 }
 
-func (d *Door) Close() {
-	d.open = false
+func (d *Door) Close() bool {
+	if d == nil {
+		return false
+	}
+
+	d.guard.Lock()
+	defer d.guard.Unlock()
+
+	if d.open {
+		d.open = false
+
+		if d.openTimer != nil {
+			d.openTimer.Stop()
+		}
+
+		return true
+	}
+
+	return false
 }
 
 func (d *Door) Unlock() uint8 {
@@ -83,9 +126,8 @@ func (d *Door) Unlock() uint8 {
 }
 
 func (d Door) IsOpen() bool {
-	if d.openUntil != nil && d.openUntil.After(time.Now()) {
-		return true
-	}
+	d.guard.RLock()
+	defer d.guard.RUnlock()
 
 	return d.open
 }
