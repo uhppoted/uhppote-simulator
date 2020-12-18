@@ -96,42 +96,52 @@ func (d *Door) Open(duration *time.Duration, f func()) bool {
 }
 
 func (d *Door) Close() bool {
-	if d == nil {
-		return false
-	}
+	if d != nil {
+		d.guard.Lock()
+		defer d.guard.Unlock()
 
-	d.guard.Lock()
-	defer d.guard.Unlock()
+		if d.open {
+			d.open = false
 
-	if d.open {
-		d.open = false
+			if d.openTimer != nil {
+				d.openTimer.Stop()
+			}
 
-		if d.openTimer != nil {
-			d.openTimer.Stop()
+			return true
 		}
-
-		return true
 	}
 
 	return false
 }
 
 func (d *Door) Unlock() uint8 {
-	now := time.Now().UTC()
-	lockAt := now.Add(time.Duration(d.Delay))
+	if d != nil {
+		now := time.Now().UTC()
+		lockAt := now.Add(time.Duration(d.Delay))
 
-	d.unlockedUntil = &lockAt
+		d.unlockedUntil = &lockAt
 
-	return 0x01
+		return 0x01
+	}
+
+	return 0x00
 }
 
-func (d Door) IsOpen() bool {
-	d.guard.RLock()
-	defer d.guard.RUnlock()
+func (d *Door) IsOpen() bool {
+	if d != nil {
+		d.guard.RLock()
+		defer d.guard.RUnlock()
 
-	return d.open
+		return d.open
+	}
+
+	return false
 }
 
-func (d Door) IsButtonPressed() bool {
+func (d *Door) IsButtonPressed() bool {
+	if d != nil {
+		return false
+	}
+
 	return false
 }
