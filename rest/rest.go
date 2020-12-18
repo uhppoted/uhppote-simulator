@@ -3,12 +3,14 @@ package rest
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/uhppoted/uhppote-simulator/simulator"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"regexp"
 	"strconv"
+	"time"
+
+	"github.com/uhppoted/uhppote-simulator/simulator"
 )
 
 type Device struct {
@@ -286,8 +288,8 @@ func open(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 	}
 
 	request := struct {
-		Door  uint8   `json:"door"`
-		Delay *uint32 `json:"delay"`
+		Door     uint8 `json:"door"`
+		Duration uint  `json:"duration"`
 	}{}
 
 	err = json.Unmarshal(blob, &request)
@@ -302,7 +304,13 @@ func open(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	eventID, err := s.Open(uint32(deviceID), request.Door)
+	var duration *time.Duration
+	if request.Duration > 0 {
+		d := time.Duration(request.Duration) * time.Second
+		duration = &d
+	}
+
+	eventID, err := s.Open(uint32(deviceID), request.Door, duration)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to emulate 'door open' (%v)", err), http.StatusInternalServerError)
 		return

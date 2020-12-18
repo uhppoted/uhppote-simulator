@@ -1,9 +1,11 @@
 package simulator
 
 import (
+	"net"
+	"time"
+
 	"github.com/uhppoted/uhppote-core/messages"
 	"github.com/uhppoted/uhppote-simulator/entities"
-	"net"
 )
 
 type Simulator interface {
@@ -17,6 +19,6 @@ type Simulator interface {
 	Delete() error
 
 	Swipe(deviceID uint32, cardNumber uint32, door uint8) (bool, uint32)
-	Open(deviceID uint32, door uint8) (uint32, error)
+	Open(deviceID uint32, door uint8, duration *time.Duration) (uint32, error)
 	Close(deviceID uint32, door uint8) (uint32, error)
 }

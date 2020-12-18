@@ -1,7 +1,6 @@
 package UT0311L04
 
 import (
-	"fmt"
 	"net"
 	"time"
 
@@ -11,8 +10,6 @@ import (
 
 func (s *UT0311L04) getStatus(addr *net.UDPAddr, request *messages.GetStatusRequest) {
 	if s.SerialNumber == request.SerialNumber {
-		fmt.Printf("DEBUG/Q: %04X\n", s.RelayState)
-
 		utc := time.Now().UTC()
 		datetime := utc.Add(time.Duration(s.TimeOffset))
 		event := s.Events.Get(s.Events.Last)

@@ -41,12 +41,12 @@ func (s *UT0311L04) Swipe(deviceID uint32, cardNumber uint32, door uint8) (bool,
 	return granted, eventID
 }
 
-func (s *UT0311L04) Open(deviceID uint32, door uint8) (uint32, error) {
+func (s *UT0311L04) Open(deviceID uint32, door uint8, duration *time.Duration) (uint32, error) {
 	if door < 1 || door > 4 {
 		return 0, fmt.Errorf("%v: invalid doori %d", deviceID, door)
 	}
 
-	s.Doors[door].Open()
+	s.Doors[door].Open(duration)
 
 	var eventID uint32 = 0
 

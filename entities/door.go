@@ -13,6 +13,7 @@ type Door struct {
 	open          bool
 	button        bool
 	unlockedUntil *time.Time
+	openUntil     *time.Time
 }
 
 func (delay Delay) MarshalJSON() ([]byte, error) {
@@ -57,8 +58,15 @@ func NewDoor(id uint8) *Door {
 	return door
 }
 
-func (d *Door) Open() {
-	d.open = true
+func (d *Door) Open(duration *time.Duration) {
+	if duration != nil {
+		now := time.Now().UTC()
+		closeAt := now.Add(*duration)
+
+		d.openUntil = &closeAt
+	} else {
+		d.open = true
+	}
 }
 
 func (d *Door) Close() {
@@ -67,21 +75,19 @@ func (d *Door) Close() {
 
 func (d *Door) Unlock() uint8 {
 	now := time.Now().UTC()
-	closeAt := now.Add(time.Duration(d.Delay))
+	lockAt := now.Add(time.Duration(d.Delay))
 
-	d.unlockedUntil = &closeAt
+	d.unlockedUntil = &lockAt
 
 	return 0x01
 }
 
 func (d Door) IsOpen() bool {
-	return d.open
+	if d.openUntil != nil && d.openUntil.After(time.Now()) {
+		return true
+	}
 
-	// if d.unlockedUntil != nil {
-	// 	return !time.Now().UTC().After(*d.openUntil)
-	// }
-	//
-	// return false
+	return d.open
 }
 
 func (d Door) IsButtonPressed() bool {
