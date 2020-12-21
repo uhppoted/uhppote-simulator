@@ -28,17 +28,6 @@ type NewDeviceRequest struct {
 	Compressed bool   `json:"compressed"`
 }
 
-type SwipeRequest struct {
-	Door       uint8  `json:"door"`
-	CardNumber uint32 `json:"card-number"`
-}
-
-type SwipeResponse struct {
-	Granted bool   `json:"access-granted"`
-	Opened  bool   `json:"door-opened"`
-	Message string `json:"message"`
-}
-
 type handlerfn func(*simulator.Context, http.ResponseWriter, *http.Request)
 
 type handler struct {
@@ -228,7 +217,11 @@ func swipe(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	request := SwipeRequest{}
+	request := struct {
+		Door       uint8  `json:"door"`
+		CardNumber uint32 `json:"card-number"`
+	}{}
+
 	err = json.Unmarshal(blob, &request)
 	if err != nil {
 		http.Error(w, "Invalid request format", http.StatusBadRequest)
@@ -241,18 +234,22 @@ func swipe(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	granted, eventID := s.Swipe(uint32(deviceID), request.CardNumber, request.Door)
-	opened := false
-	message := "Access denied"
+	granted, err := s.Swipe(uint32(deviceID), request.CardNumber, request.Door)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Failed to emulate 'door open' (%v)", err), http.StatusInternalServerError)
+		return
+	}
 
+	message := "Access denied"
 	if granted {
-		opened = true
 		message = "Access granted"
 	}
 
-	response := SwipeResponse{
+	response := struct {
+		Granted bool   `json:"access-granted"`
+		Message string `json:"message"`
+	}{
 		Granted: granted,
-		Opened:  opened,
 		Message: message,
 	}
 
@@ -263,7 +260,6 @@ func swipe(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Location", fmt.Sprintf("/uhppote/simulator/%d/events/%d", s.DeviceID(), eventID))
 	w.Write(b)
 }
 
@@ -310,15 +306,33 @@ func open(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 		duration = &d
 	}
 
-	eventID, err := s.Open(uint32(deviceID), request.Door, duration)
+	opened, err := s.Open(uint32(deviceID), request.Door, duration)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to emulate 'door open' (%v)", err), http.StatusInternalServerError)
 		return
 	}
 
-	if eventID != 0 {
-		w.Header().Set("Location", fmt.Sprintf("/uhppote/simulator/%d/events/%d", s.DeviceID(), eventID))
+	message := "Could not open door"
+	if opened {
+		message = "Door open"
 	}
+
+	response := struct {
+		Opened  bool   `json:"door-opened"`
+		Message string `json:"message"`
+	}{
+		Opened:  opened,
+		Message: message,
+	}
+
+	b, err := json.Marshal(response)
+	if err != nil {
+		http.Error(w, "Error generating response", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(b)
 }
 
 func close(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
@@ -357,13 +371,31 @@ func close(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	eventID, err := s.Close(uint32(deviceID), request.Door)
+	closed, err := s.Close(uint32(deviceID), request.Door)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to emulate 'door closed' (%v)", err), http.StatusInternalServerError)
 		return
 	}
 
-	if eventID != 0 {
-		w.Header().Set("Location", fmt.Sprintf("/uhppote/simulator/%d/events/%d", s.DeviceID(), eventID))
+	message := "Could not close door"
+	if closed {
+		message = "Door closed"
 	}
+
+	response := struct {
+		Closed  bool   `json:"door-closed"`
+		Message string `json:"message"`
+	}{
+		Closed:  closed,
+		Message: message,
+	}
+
+	b, err := json.Marshal(response)
+	if err != nil {
+		http.Error(w, "Error generating response", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(b)
 }

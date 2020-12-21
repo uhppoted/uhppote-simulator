@@ -60,42 +60,36 @@ func NewDoor(id uint8) *Door {
 	return door
 }
 
-func (d *Door) Open(duration *time.Duration, f func()) bool {
+func (d *Door) Open(duration *time.Duration, opened func(uint8), closed func()) bool {
 	if d == nil {
 		return false
 	}
 
+	now := time.Now()
+
 	d.guard.Lock()
 	defer d.guard.Unlock()
 
-	if !d.open {
+	if !d.open && (d.ControlState == 0x01 || (d.ControlState == 0x03 && d.unlockedUntil != nil && d.unlockedUntil.After(now))) {
 		d.open = true
+
+		go func() {
+			if opened != nil {
+				opened(0x17)
+			}
+		}()
 
 		if duration != nil {
 			d.openTimer = time.AfterFunc(*duration, func() {
-				d.guard.Lock()
-
-				changed := d.open
-				if d.open {
-					d.open = false
-				}
-
-				if f != nil && changed {
-					defer f() // defer f() because f() invokes door.IsOpen which invokes d.guard.RLock()
-				}
-
-				// Can't use defer d.guard.Unlock() - defer's seem to stack up and deadlock
-				d.guard.Unlock()
+				d.Close(closed)
 			})
 		}
-
-		return true
 	}
 
-	return false
+	return d.open
 }
 
-func (d *Door) Close() bool {
+func (d *Door) Close(closed func()) bool {
 	if d != nil {
 		d.guard.Lock()
 		defer d.guard.Unlock()
@@ -107,8 +101,14 @@ func (d *Door) Close() bool {
 				d.openTimer.Stop()
 			}
 
-			return true
+			go func() {
+				if closed != nil {
+					closed()
+				}
+			}()
 		}
+
+		return !d.open
 	}
 
 	return false

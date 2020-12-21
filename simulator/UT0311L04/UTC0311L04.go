@@ -6,9 +6,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/uhppoted/uhppote-core/messages"
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-simulator/entities"
 	"io/ioutil"
 	"math/rand"
 	"net"
@@ -16,6 +13,10 @@ import (
 	"path/filepath"
 	"reflect"
 	"time"
+
+	"github.com/uhppoted/uhppote-core/messages"
+	"github.com/uhppoted/uhppote-core/types"
+	"github.com/uhppoted/uhppote-simulator/entities"
 )
 
 type event messages.GetStatusResponse

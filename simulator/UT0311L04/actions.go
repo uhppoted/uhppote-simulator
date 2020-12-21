@@ -8,7 +8,7 @@ import (
 	"github.com/uhppoted/uhppote-simulator/entities"
 )
 
-func (s *UT0311L04) Swipe(deviceID uint32, cardNumber uint32, door uint8) (bool, uint32) {
+func (s *UT0311L04) Swipe(deviceID uint32, cardNumber uint32, door uint8) (bool, error) {
 	granted := false
 	direction := uint8(0x01)
 	eventType := uint8(0x01)
@@ -36,17 +36,33 @@ func (s *UT0311L04) Swipe(deviceID uint32, cardNumber uint32, door uint8) (bool,
 		Reason:     reason,
 	}
 
-	eventID := s.add(&event)
+	s.add(&event)
 
-	return granted, eventID
+	return granted, nil
 }
 
-func (s *UT0311L04) Open(deviceID uint32, door uint8, duration *time.Duration) (uint32, error) {
+func (s *UT0311L04) Open(deviceID uint32, door uint8, duration *time.Duration) (bool, error) {
 	if door < 1 || door > 4 {
-		return 0, fmt.Errorf("%v: invalid doori %d", deviceID, door)
+		return false, fmt.Errorf("%v: invalid door %d", deviceID, door)
 	}
 
-	closed := func() {
+	onOpen := func(reason uint8) {
+		if s.RecordSpecialEvents {
+			datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
+			event := entities.Event{
+				Type:      0x02,
+				Granted:   true,
+				Door:      door,
+				Direction: 1,
+				Timestamp: types.DateTime(datetime),
+				Reason:    reason,
+			}
+
+			s.add(&event)
+		}
+	}
+
+	onClose := func() {
 		if s.RecordSpecialEvents {
 			datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
 			event := entities.Event{
@@ -62,45 +78,33 @@ func (s *UT0311L04) Open(deviceID uint32, door uint8, duration *time.Duration) (
 		}
 	}
 
-	var eventID uint32 = 0
+	opened := s.Doors[door].Open(duration, onOpen, onClose)
 
-	if s.Doors[door].Open(duration, closed) && s.RecordSpecialEvents {
-		datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
-		event := entities.Event{
-			Type:      0x02,
-			Granted:   true,
-			Door:      door,
-			Direction: 1,
-			Timestamp: types.DateTime(datetime),
-			Reason:    0x17,
-		}
-
-		eventID = s.add(&event)
-	}
-
-	return eventID, nil
+	return opened, nil
 }
 
-func (s *UT0311L04) Close(deviceID uint32, door uint8) (uint32, error) {
+func (s *UT0311L04) Close(deviceID uint32, door uint8) (bool, error) {
 	if door < 1 || door > 4 {
-		return 0, fmt.Errorf("%v: invalid doori %d", deviceID, door)
+		return false, fmt.Errorf("%v: invalid door %d", deviceID, door)
 	}
 
-	var eventID uint32 = 0
+	onClose := func() {
+		if s.RecordSpecialEvents {
+			datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
+			event := entities.Event{
+				Type:      0x02,
+				Granted:   true,
+				Door:      door,
+				Direction: 1,
+				Timestamp: types.DateTime(datetime),
+				Reason:    0x18,
+			}
 
-	if s.Doors[door].Close() && s.RecordSpecialEvents {
-		datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
-		event := entities.Event{
-			Type:      0x02,
-			Granted:   true,
-			Door:      door,
-			Direction: 1,
-			Timestamp: types.DateTime(datetime),
-			Reason:    0x18,
+			s.add(&event)
 		}
-
-		eventID = s.add(&event)
 	}
 
-	return eventID, nil
+	closed := s.Doors[door].Close(onClose)
+
+	return closed, nil
 }

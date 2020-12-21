@@ -3,14 +3,12 @@
 ### IN PROGRESS
 
 - [ ] Make door model more accurate
-      - only open door if unlocked
+      - deny access (reason: 0x0b) if 'normally closed'
       - get relay state from door unlocked list
       - normally open -> relay is set
       - normall closed -> relay is clear
       - controlled -> relay is set while unlocked
-      - deny access (reason: 0x0b) if 'normally closed'
-      - figure out why double defer() in Door.Open() causes deadlock
-      - get-status 'code' (byte 16: 8 if open, 9 if closed)
+      - check event in get-status: 'card' (byte 16..19) should be 8 if open, 9 if closed)
 
 - [ ] Add 'button' REST API
 - [ ] Remove relay and input state from JSON
