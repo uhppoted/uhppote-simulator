@@ -2,20 +2,17 @@
 
 ### IN PROGRESS
 
+- [ ] get-status seems to be using release time
 - [ ] Make door model more accurate
       - deny access (reason: 0x0b) if 'normally closed'
-      - get relay state from door unlocked list
-      - normally open -> relay is set
-      - normall closed -> relay is clear
-      - controlled -> relay is set while unlocked
       - check event in get-status: 'card' (byte 16..19) should be 8 if open, 9 if closed)
 
 - [ ] Add 'button' REST API
-- [ ] Remove relay and input state from JSON
 - [ ] Replace UTO311L04.TimeOffset with time zone
 - [ ] Unit tests for EventList
 - [ ] Check real device events list rollover
 
+- [x] Remove relay state from JSON
 - [x] Add 'close' REST API
 - [x] Add 'open' REST API
 - [x] Implement record-special-events

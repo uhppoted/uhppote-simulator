@@ -2,6 +2,7 @@ package entities
 
 import (
 	"encoding/json"
+	"fmt"
 	"sync"
 	"time"
 )
@@ -17,6 +18,12 @@ type Door struct {
 	unlockedUntil *time.Time
 	guard         sync.RWMutex
 }
+
+const (
+	NormallyOpen   = uint8(1)
+	NormallyClosed = uint8(2)
+	Controlled     = uint8(3)
+)
 
 func (delay Delay) MarshalJSON() ([]byte, error) {
 	return json.Marshal(time.Duration(delay).String())
@@ -65,12 +72,10 @@ func (d *Door) Open(duration *time.Duration, opened func(uint8), closed func()) 
 		return false
 	}
 
-	now := time.Now()
-
 	d.guard.Lock()
 	defer d.guard.Unlock()
 
-	if !d.open && (d.ControlState == 0x01 || (d.ControlState == 0x03 && d.unlockedUntil != nil && d.unlockedUntil.After(now))) {
+	if !d.open && d.IsUnlocked() {
 		d.open = true
 
 		go func() {
@@ -115,27 +120,50 @@ func (d *Door) Close(closed func()) bool {
 }
 
 func (d *Door) Unlock() uint8 {
-	if d != nil {
-		now := time.Now().UTC()
-		lockAt := now.Add(time.Duration(d.Delay))
-
-		d.unlockedUntil = &lockAt
-
-		return 0x01
+	if d == nil {
+		return 0x00
 	}
 
-	return 0x00
+	now := time.Now().UTC()
+	lockAt := now.Add(time.Duration(d.Delay))
+
+	d.unlockedUntil = &lockAt
+
+	return 0x01
 }
 
 func (d *Door) IsOpen() bool {
-	if d != nil {
-		d.guard.RLock()
-		defer d.guard.RUnlock()
-
-		return d.open
+	if d == nil {
+		return false
 	}
 
-	return false
+	d.guard.RLock()
+	defer d.guard.RUnlock()
+
+	return d.open
+}
+
+func (d *Door) IsUnlocked() bool {
+	if d == nil {
+		return false
+	}
+
+	d.guard.RLock()
+	defer d.guard.RUnlock()
+
+	switch d.ControlState {
+	case NormallyOpen:
+		return true
+
+	case NormallyClosed:
+		return false
+
+	case Controlled:
+		return d.unlockedUntil != nil && d.unlockedUntil.After(time.Now())
+
+	default:
+		return false
+	}
 }
 
 func (d *Door) IsButtonPressed() bool {

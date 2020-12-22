@@ -22,7 +22,7 @@ func (s *UT0311L04) getStatus(addr *net.UDPAddr, request *messages.GetStatusRequ
 			SystemTime:   types.SystemTime(datetime),
 			SequenceId:   s.SequenceId,
 			SpecialInfo:  s.SpecialInfo,
-			RelayState:   s.RelayState,
+			RelayState:   s.relays(),
 			InputState:   s.InputState,
 
 			Door1State: s.Doors[1].IsOpen(),

@@ -40,7 +40,6 @@ type UT0311L04 struct {
 	SystemError         uint8                    `json:"system-error"`
 	SequenceId          uint32                   `json:"sequence-id"`
 	SpecialInfo         uint8                    `json:"special-info"`
-	RelayState          uint8                    `json:"relay-state"`
 	InputState          uint8                    `json:"input-state"`
 	Cards               entities.CardList        `json:"cards"`
 	Events              entities.EventList       `json:"events"`
@@ -329,7 +328,7 @@ func (s *UT0311L04) add(e *entities.Event) uint32 {
 			SystemTime:   types.SystemTime(datetime),
 			SequenceId:   s.SequenceId,
 			SpecialInfo:  s.SpecialInfo,
-			RelayState:   s.RelayState,
+			RelayState:   s.relays(),
 			InputState:   s.InputState,
 
 			Door1State: s.Doors[1].IsOpen(),
@@ -357,4 +356,22 @@ func (s *UT0311L04) add(e *entities.Event) uint32 {
 	}
 
 	return 0
+}
+
+func (s *UT0311L04) relays() uint8 {
+	state := uint8(0x00)
+	doors := map[uint8]uint8{
+		1: 0x01,
+		2: 0x02,
+		3: 0x04,
+		4: 0x08,
+	}
+
+	for k, mask := range doors {
+		if s.Doors[k].IsUnlocked() {
+			state |= mask
+		}
+	}
+
+	return state
 }
