@@ -17,7 +17,7 @@ const (
 
 func (s *UT0311L04) Swipe(cardNumber uint32, door uint8) (bool, error) {
 	if door < 1 || door > 4 {
-		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID, door)
+		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID(), door)
 	}
 
 	swiped := func(eventType uint8, granted bool, reason uint8) {
@@ -26,7 +26,7 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8) (bool, error) {
 			Type:       eventType,
 			Granted:    granted,
 			Door:       door,
-			Direction:  uint8(0x01),
+			Direction:  1,
 			CardNumber: cardNumber,
 			Timestamp:  types.DateTime(datetime),
 			Reason:     reason,
@@ -68,19 +68,20 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8) (bool, error) {
 
 func (s *UT0311L04) Open(door uint8, duration *time.Duration) (bool, error) {
 	if door < 1 || door > 4 {
-		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID, door)
+		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID(), door)
 	}
 
 	onOpen := func(reason uint8) {
 		if s.RecordSpecialEvents {
 			datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
 			event := entities.Event{
-				Type:      0x02,
-				Granted:   true,
-				Door:      door,
-				Direction: 1,
-				Timestamp: types.DateTime(datetime),
-				Reason:    reason,
+				Type:       0x02,
+				Granted:    true,
+				Door:       door,
+				Direction:  1,
+				CardNumber: 8,
+				Timestamp:  types.DateTime(datetime),
+				Reason:     reason,
 			}
 
 			s.add(&event)
@@ -91,12 +92,13 @@ func (s *UT0311L04) Open(door uint8, duration *time.Duration) (bool, error) {
 		if s.RecordSpecialEvents {
 			datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
 			event := entities.Event{
-				Type:      0x02,
-				Granted:   true,
-				Door:      door,
-				Direction: 1,
-				Timestamp: types.DateTime(datetime),
-				Reason:    0x18,
+				Type:       0x02,
+				Granted:    true,
+				Door:       door,
+				Direction:  1,
+				CardNumber: 9,
+				Timestamp:  types.DateTime(datetime),
+				Reason:     0x18,
 			}
 
 			s.add(&event)
@@ -110,19 +112,20 @@ func (s *UT0311L04) Open(door uint8, duration *time.Duration) (bool, error) {
 
 func (s *UT0311L04) Close(door uint8) (bool, error) {
 	if door < 1 || door > 4 {
-		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID, door)
+		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID(), door)
 	}
 
 	onClose := func() {
 		if s.RecordSpecialEvents {
 			datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
 			event := entities.Event{
-				Type:      0x02,
-				Granted:   true,
-				Door:      door,
-				Direction: 1,
-				Timestamp: types.DateTime(datetime),
-				Reason:    0x18,
+				Type:       0x02,
+				Granted:    true,
+				Door:       door,
+				Direction:  1,
+				CardNumber: 9,
+				Timestamp:  types.DateTime(datetime),
+				Reason:     0x18,
 			}
 
 			s.add(&event)

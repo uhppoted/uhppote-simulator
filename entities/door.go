@@ -67,88 +67,100 @@ func NewDoor(id uint8) *Door {
 }
 
 func (d *Door) Open(duration *time.Duration, opened func(uint8), closed func()) bool {
-	if d == nil {
-		return false
-	}
+	if d != nil {
+		d.guard.Lock()
+		defer d.guard.Unlock()
 
-	d.guard.Lock()
-	defer d.guard.Unlock()
+		if !d.open && d.unlocked() {
+			d.open = true
 
-	if !d.open && d.IsUnlocked() {
-		d.open = true
+			go func() {
+				if opened != nil {
+					opened(0x17)
+				}
+			}()
 
-		go func() {
-			if opened != nil {
-				opened(0x17)
+			if duration != nil {
+				d.openTimer = time.AfterFunc(*duration, func() {
+					d.Close(closed)
+				})
 			}
-		}()
-
-		if duration != nil {
-			d.openTimer = time.AfterFunc(*duration, func() {
-				d.Close(closed)
-			})
 		}
+
+		return d.open
 	}
 
-	return d.open
+	return false
 }
 
 func (d *Door) Close(closed func()) bool {
-	if d == nil {
-		return false
-	}
+	if d != nil {
+		d.guard.Lock()
+		defer d.guard.Unlock()
 
-	d.guard.Lock()
-	defer d.guard.Unlock()
+		if d.open {
+			d.open = false
 
-	if d.open {
-		d.open = false
+			if d.openTimer != nil {
+				d.openTimer.Stop()
+			}
 
-		if d.openTimer != nil {
-			d.openTimer.Stop()
+			go func() {
+				if closed != nil {
+					closed()
+				}
+			}()
 		}
 
-		go func() {
-			if closed != nil {
-				closed()
-			}
-		}()
+		return !d.open
 	}
 
-	return !d.open
+	return false
 }
 
 func (d *Door) Unlock() bool {
-	if d == nil || d.ControlState == NormallyClosed {
-		return false
+	if d != nil && d.ControlState != NormallyClosed {
+		lockAt := time.Now().UTC().Add(time.Duration(d.Delay))
+
+		d.unlockedUntil = &lockAt
+
+		return true
 	}
 
-	lockAt := time.Now().UTC().Add(time.Duration(d.Delay))
-
-	d.unlockedUntil = &lockAt
-
-	return true
+	return false
 }
 
 func (d *Door) IsOpen() bool {
 	if d == nil {
-		return false
+		d.guard.RLock()
+		defer d.guard.RUnlock()
+
+		return d.open
 	}
 
-	d.guard.RLock()
-	defer d.guard.RUnlock()
-
-	return d.open
+	return false
 }
 
 func (d *Door) IsUnlocked() bool {
-	if d == nil {
+	if d != nil {
+		d.guard.RLock()
+		defer d.guard.RUnlock()
+
+		return d.unlocked()
+	}
+
+	return false
+}
+
+func (d *Door) IsButtonPressed() bool {
+	if d != nil {
 		return false
 	}
 
-	d.guard.RLock()
-	defer d.guard.RUnlock()
+	return false
+}
 
+func (d *Door) unlocked() bool {
 	switch d.ControlState {
 	case NormallyOpen:
 		return true
@@ -158,15 +170,6 @@ func (d *Door) IsUnlocked() bool {
 
 	case Controlled:
 		return d.unlockedUntil != nil && d.unlockedUntil.After(time.Now())
-
-	default:
-		return false
-	}
-}
-
-func (d *Door) IsButtonPressed() bool {
-	if d != nil {
-		return false
 	}
 
 	return false
