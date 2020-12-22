@@ -18,7 +18,7 @@ type Simulator interface {
 	Save() error
 	Delete() error
 
-	Swipe(deviceID uint32, cardNumber uint32, door uint8) (bool, error)
-	Open(deviceID uint32, door uint8, duration *time.Duration) (bool, error)
-	Close(deviceID uint32, door uint8) (bool, error)
+	Swipe(cardNumber uint32, door uint8) (bool, error)
+	Open(door uint8, duration *time.Duration) (bool, error)
+	Close(door uint8) (bool, error)
 }

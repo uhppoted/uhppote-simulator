@@ -4,7 +4,6 @@
 
 - [ ] get-status seems to be using release time
 - [ ] Make door model more accurate
-      - deny access (reason: 0x0b) if 'normally closed'
       - check event in get-status: 'card' (byte 16..19) should be 8 if open, 9 if closed)
 
 - [ ] Add 'button' REST API

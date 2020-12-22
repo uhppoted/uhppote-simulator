@@ -8,42 +8,67 @@ import (
 	"github.com/uhppoted/uhppote-simulator/entities"
 )
 
-func (s *UT0311L04) Swipe(deviceID uint32, cardNumber uint32, door uint8) (bool, error) {
-	granted := false
-	direction := uint8(0x01)
-	eventType := uint8(0x01)
-	reason := uint8(0x06)
+const (
+	swipePass      uint8 = 0x01
+	noPrivilege    uint8 = 0x06
+	normallyClosed uint8 = 0x0b
+	noPass         uint8 = 0x12
+)
+
+func (s *UT0311L04) Swipe(cardNumber uint32, door uint8) (bool, error) {
+	if door < 1 || door > 4 {
+		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID, door)
+	}
+
+	swiped := func(eventType uint8, granted bool, reason uint8) {
+		datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
+		event := entities.Event{
+			Type:       eventType,
+			Granted:    granted,
+			Door:       door,
+			Direction:  uint8(0x01),
+			CardNumber: cardNumber,
+			Timestamp:  types.DateTime(datetime),
+			Reason:     reason,
+		}
+
+		s.add(&event)
+	}
 
 	for _, c := range s.Cards {
-		if c != nil && c.CardNumber == cardNumber {
-			if c.Doors[door] {
-				granted = true
-				direction = s.Doors[door].Unlock()
-				eventType = 0x02
-				reason = 0x01
+		if c == nil || c.CardNumber != cardNumber {
+			continue
+		}
+
+		if !c.Doors[door] {
+			swiped(0x01, false, noPrivilege)
+			return false, nil
+		}
+
+		if d, ok := s.Doors[door]; ok {
+			if d.ControlState == entities.NormallyClosed {
+				swiped(0x01, false, normallyClosed)
+				return false, nil
+			}
+
+			if d.Unlock() {
+				swiped(0x02, true, swipePass)
+				return true, nil
 			}
 		}
+
+		break
 	}
 
-	datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
-	event := entities.Event{
-		Type:       eventType,
-		Granted:    granted,
-		Door:       door,
-		Direction:  direction,
-		CardNumber: cardNumber,
-		Timestamp:  types.DateTime(datetime),
-		Reason:     reason,
-	}
+	// Denied
+	swiped(0x01, false, noPass)
 
-	s.add(&event)
-
-	return granted, nil
+	return false, nil
 }
 
-func (s *UT0311L04) Open(deviceID uint32, door uint8, duration *time.Duration) (bool, error) {
+func (s *UT0311L04) Open(door uint8, duration *time.Duration) (bool, error) {
 	if door < 1 || door > 4 {
-		return false, fmt.Errorf("%v: invalid door %d", deviceID, door)
+		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID, door)
 	}
 
 	onOpen := func(reason uint8) {
@@ -83,9 +108,9 @@ func (s *UT0311L04) Open(deviceID uint32, door uint8, duration *time.Duration) (
 	return opened, nil
 }
 
-func (s *UT0311L04) Close(deviceID uint32, door uint8) (bool, error) {
+func (s *UT0311L04) Close(door uint8) (bool, error) {
 	if door < 1 || door > 4 {
-		return false, fmt.Errorf("%v: invalid door %d", deviceID, door)
+		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID, door)
 	}
 
 	onClose := func() {

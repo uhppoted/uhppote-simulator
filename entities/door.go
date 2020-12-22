@@ -2,7 +2,6 @@ package entities
 
 import (
 	"encoding/json"
-	"fmt"
 	"sync"
 	"time"
 )
@@ -95,41 +94,40 @@ func (d *Door) Open(duration *time.Duration, opened func(uint8), closed func()) 
 }
 
 func (d *Door) Close(closed func()) bool {
-	if d != nil {
-		d.guard.Lock()
-		defer d.guard.Unlock()
+	if d == nil {
+		return false
+	}
 
-		if d.open {
-			d.open = false
+	d.guard.Lock()
+	defer d.guard.Unlock()
 
-			if d.openTimer != nil {
-				d.openTimer.Stop()
-			}
+	if d.open {
+		d.open = false
 
-			go func() {
-				if closed != nil {
-					closed()
-				}
-			}()
+		if d.openTimer != nil {
+			d.openTimer.Stop()
 		}
 
-		return !d.open
+		go func() {
+			if closed != nil {
+				closed()
+			}
+		}()
 	}
 
-	return false
+	return !d.open
 }
 
-func (d *Door) Unlock() uint8 {
-	if d == nil {
-		return 0x00
+func (d *Door) Unlock() bool {
+	if d == nil || d.ControlState == NormallyClosed {
+		return false
 	}
 
-	now := time.Now().UTC()
-	lockAt := now.Add(time.Duration(d.Delay))
+	lockAt := time.Now().UTC().Add(time.Duration(d.Delay))
 
 	d.unlockedUntil = &lockAt
 
-	return 0x01
+	return true
 }
 
 func (d *Door) IsOpen() bool {

@@ -11,12 +11,11 @@ import (
 func (s *UT0311L04) unlockDoor(addr *net.UDPAddr, request *messages.OpenDoorRequest) {
 	if s.SerialNumber == request.SerialNumber {
 		granted := false
-		direction := uint8(0x01)
 		door := request.Door
 
 		if !(door < 1 || door > 4) {
 			granted = true
-			direction = s.Doors[door].Unlock()
+			s.Doors[door].Unlock()
 
 			response := messages.OpenDoorResponse{
 				SerialNumber: s.SerialNumber,
@@ -30,7 +29,7 @@ func (s *UT0311L04) unlockDoor(addr *net.UDPAddr, request *messages.OpenDoorRequ
 				Type:       0x02,
 				Granted:    granted,
 				Door:       door,
-				Direction:  direction,
+				Direction:  0x01,
 				CardNumber: 3922570474,
 				Timestamp:  types.DateTime(datetime),
 				Reason:     0x2c,

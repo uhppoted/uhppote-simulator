@@ -234,7 +234,7 @@ func swipe(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	granted, err := s.Swipe(uint32(deviceID), request.CardNumber, request.Door)
+	granted, err := s.Swipe(request.CardNumber, request.Door)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to emulate 'door open' (%v)", err), http.StatusInternalServerError)
 		return
@@ -306,7 +306,7 @@ func open(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 		duration = &d
 	}
 
-	opened, err := s.Open(uint32(deviceID), request.Door, duration)
+	opened, err := s.Open(request.Door, duration)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to emulate 'door open' (%v)", err), http.StatusInternalServerError)
 		return
@@ -371,7 +371,7 @@ func close(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	closed, err := s.Close(uint32(deviceID), request.Door)
+	closed, err := s.Close(request.Door)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to emulate 'door closed' (%v)", err), http.StatusInternalServerError)
 		return
