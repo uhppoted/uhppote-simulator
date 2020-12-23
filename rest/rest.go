@@ -49,8 +49,7 @@ func Run(ctx *simulator.Context) {
 	d.Add("^/uhppote/simulator$", devices)
 	d.Add("^/uhppote/simulator/[0-9]+$", device)
 	d.Add("^/uhppote/simulator/[0-9]+/swipe$", swipe)
-	d.Add("^/uhppote/simulator/[0-9]+/open$", open)
-	d.Add("^/uhppote/simulator/[0-9]+/close$", close)
+	d.Add("^/uhppote/simulator/[0-9]+/door/[1-4]$", door)
 	d.Add("^/uhppote/simulator/[0-9]+/button/[1-4]$", button)
 
 	log.Fatal(http.ListenAndServe(ctx.RestAddress, &d))
@@ -264,15 +263,21 @@ func swipe(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 	w.Write(b)
 }
 
-func open(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
+func door(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, fmt.Sprintf("Invalid method:%s - expected POST", r.Method), http.StatusMethodNotAllowed)
 		return
 	}
 
 	url := r.URL.Path
-	matches := regexp.MustCompile("^/uhppote/simulator/([0-9]+)/open$").FindStringSubmatch(url)
+	matches := regexp.MustCompile("^/uhppote/simulator/([0-9]+)/door/([1-4])$").FindStringSubmatch(url)
 	deviceID, err := strconv.ParseUint(matches[1], 10, 32)
+	if err != nil {
+		http.Error(w, "Error reading request", http.StatusInternalServerError)
+		return
+	}
+
+	door, err := strconv.ParseUint(matches[2], 10, 8)
 	if err != nil {
 		http.Error(w, "Error reading request", http.StatusInternalServerError)
 		return
@@ -285,8 +290,7 @@ func open(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 	}
 
 	request := struct {
-		Door     uint8 `json:"door"`
-		Duration uint  `json:"duration"`
+		Action string `json:"action"`
 	}{}
 
 	err = json.Unmarshal(blob, &request)
@@ -295,9 +299,25 @@ func open(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s := ctx.DeviceList.Find(uint32(deviceID))
-	if s == nil {
-		http.Error(w, fmt.Sprintf("No device with ID %d", deviceID), http.StatusNotFound)
+	switch request.Action {
+	case "open":
+		open(ctx, w, uint32(deviceID), uint8(door), blob)
+
+	case "close":
+		close(ctx, w, uint32(deviceID), uint8(door), blob)
+
+	default:
+		http.Error(w, fmt.Sprintf("%d: invalid door action %d:%s", deviceID, door, request.Action), http.StatusBadRequest)
+	}
+}
+
+func open(ctx *simulator.Context, w http.ResponseWriter, deviceID uint32, door uint8, blob []byte) {
+	request := struct {
+		Duration uint `json:"duration"`
+	}{}
+
+	if err := json.Unmarshal(blob, &request); err != nil {
+		http.Error(w, "Invalid request format", http.StatusBadRequest)
 		return
 	}
 
@@ -307,7 +327,13 @@ func open(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 		duration = &d
 	}
 
-	opened, err := s.Open(request.Door, duration)
+	s := ctx.DeviceList.Find(uint32(deviceID))
+	if s == nil {
+		http.Error(w, fmt.Sprintf("No device with ID %d", deviceID), http.StatusNotFound)
+		return
+	}
+
+	opened, err := s.Open(door, duration)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to emulate 'door open' (%v)", err), http.StatusInternalServerError)
 		return
@@ -319,10 +345,10 @@ func open(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := struct {
-		Opened  bool   `json:"door-opened"`
+		Result  bool   `json:"result"`
 		Message string `json:"message"`
 	}{
-		Opened:  opened,
+		Result:  opened,
 		Message: message,
 	}
 
@@ -336,43 +362,14 @@ func open(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 	w.Write(b)
 }
 
-func close(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, fmt.Sprintf("Invalid method:%s - expected POST", r.Method), http.StatusMethodNotAllowed)
-		return
-	}
-
-	url := r.URL.Path
-	matches := regexp.MustCompile("^/uhppote/simulator/([0-9]+)/close$").FindStringSubmatch(url)
-	deviceID, err := strconv.ParseUint(matches[1], 10, 32)
-	if err != nil {
-		http.Error(w, "Error reading request", http.StatusInternalServerError)
-		return
-	}
-
-	blob, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		http.Error(w, "Error reading request", http.StatusInternalServerError)
-		return
-	}
-
-	request := struct {
-		Door uint8 `json:"door"`
-	}{}
-
-	err = json.Unmarshal(blob, &request)
-	if err != nil {
-		http.Error(w, "Invalid request format", http.StatusBadRequest)
-		return
-	}
-
+func close(ctx *simulator.Context, w http.ResponseWriter, deviceID uint32, door uint8, blob []byte) {
 	s := ctx.DeviceList.Find(uint32(deviceID))
 	if s == nil {
 		http.Error(w, fmt.Sprintf("No device with ID %d", deviceID), http.StatusNotFound)
 		return
 	}
 
-	closed, err := s.Close(request.Door)
+	closed, err := s.Close(door)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to emulate 'door closed' (%v)", err), http.StatusInternalServerError)
 		return
@@ -384,10 +381,10 @@ func close(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := struct {
-		Closed  bool   `json:"door-closed"`
+		Result  bool   `json:"result"`
 		Message string `json:"message"`
 	}{
-		Closed:  closed,
+		Result:  closed,
 		Message: message,
 	}
 

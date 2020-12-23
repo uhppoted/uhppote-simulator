@@ -80,8 +80,10 @@ swipe:
 	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"door\":$(DOOR),\"card-number\":$(CARD)}"
 
 open:
-	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/open" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"door\":$(DOOR),\"duration\":10}"
+	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/door/$(DOOR)" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"action\":\"open\",\"duration\":10}"
 
 close:
-	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/close" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"door\":$(DOOR)}"
+	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/door/$(DOOR)" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"action\":\"close\"}"
 
+button:
+	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/button/$(DOOR)" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"duration\":10}"
