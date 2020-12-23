@@ -21,4 +21,5 @@ type Simulator interface {
 	Swipe(cardNumber uint32, door uint8) (bool, error)
 	Open(door uint8, duration *time.Duration) (bool, error)
 	Close(door uint8) (bool, error)
+	ButtonPressed(door uint8, duration time.Duration) (bool, error)
 }

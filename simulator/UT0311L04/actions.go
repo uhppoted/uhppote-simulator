@@ -51,7 +51,7 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8) (bool, error) {
 				return false, nil
 			}
 
-			if d.Unlock() {
+			if d.Unlock(0 * time.Second) {
 				swiped(0x02, true, swipePass)
 				return true, nil
 			}
@@ -135,4 +135,54 @@ func (s *UT0311L04) Close(door uint8) (bool, error) {
 	closed := s.Doors[door].Close(onClose)
 
 	return closed, nil
+}
+
+func (s *UT0311L04) ButtonPressed(door uint8, duration time.Duration) (bool, error) {
+	if door < 1 || door > 4 {
+		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID(), door)
+	}
+
+	onUnlocked := func() {
+		if s.RecordSpecialEvents {
+			datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
+			event := entities.Event{
+				Type:       0x02,
+				Granted:    true,
+				Door:       door,
+				Direction:  1,
+				CardNumber: 1,
+				Timestamp:  types.DateTime(datetime),
+				Reason:     0x14,
+			}
+
+			s.add(&event)
+		}
+	}
+
+	onNotUnlocked := func() {
+		if s.RecordSpecialEvents {
+			datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
+			event := entities.Event{
+				Type:       0x03,
+				Granted:    false,
+				Door:       door,
+				Direction:  1,
+				CardNumber: 6,
+				Timestamp:  types.DateTime(datetime),
+				Reason:     0x14,
+			}
+
+			s.add(&event)
+		}
+	}
+
+	unlocked := s.Doors[door].PressButton(duration)
+
+	if unlocked {
+		onUnlocked()
+	} else {
+		onNotUnlocked()
+	}
+
+	return unlocked, nil
 }

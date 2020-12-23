@@ -15,7 +15,7 @@ func (s *UT0311L04) unlockDoor(addr *net.UDPAddr, request *messages.OpenDoorRequ
 
 		if !(door < 1 || door > 4) {
 			granted = true
-			s.Doors[door].Unlock()
+			s.Doors[door].Unlock(0 * time.Second)
 
 			response := messages.OpenDoorResponse{
 				SerialNumber: s.SerialNumber,

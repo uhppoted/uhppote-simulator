@@ -2,11 +2,12 @@
 
 ### IN PROGRESS
 
-- [ ] Add 'button' REST API
+- [ ] Rework open/close REST API as .../door and open/close as the action
 - [ ] Replace UTO311L04.TimeOffset with time zone
 - [ ] Unit tests for EventList
 - [ ] Check real device events list rollover
 
+- [x] Add 'button' REST API
 - [x] Check door control state for swipe and open actions
 - [x] Remove relay state from JSON
 - [x] Add 'close' REST API
