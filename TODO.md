@@ -6,6 +6,7 @@
 - [ ] Unit tests for EventList
 - [ ] Check real device events list rollover
 
+- [x] Move button API into door API and return door state as opened/closed/locked/unlocked
 - [x] Rework open/close REST API as .../door and open/close as the action
 - [x] Add 'button' REST API
 - [x] Check door control state for swipe and open actions

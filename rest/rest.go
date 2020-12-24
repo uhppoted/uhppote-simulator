@@ -50,7 +50,6 @@ func Run(ctx *simulator.Context) {
 	d.Add("^/uhppote/simulator/[0-9]+$", device)
 	d.Add("^/uhppote/simulator/[0-9]+/swipe$", swipe)
 	d.Add("^/uhppote/simulator/[0-9]+/door/[1-4]$", door)
-	d.Add("^/uhppote/simulator/[0-9]+/button/[1-4]$", button)
 
 	log.Fatal(http.ListenAndServe(ctx.RestAddress, &d))
 }
@@ -306,8 +305,11 @@ func door(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 	case "close":
 		close(ctx, w, uint32(deviceID), uint8(door), blob)
 
+	case "button":
+		button(ctx, w, uint32(deviceID), uint8(door), blob)
+
 	default:
-		http.Error(w, fmt.Sprintf("%d: invalid door action %d:%s", deviceID, door, request.Action), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("%d: door %d, invalid action '%s'", deviceID, door, request.Action), http.StatusBadRequest)
 	}
 }
 
@@ -398,41 +400,17 @@ func close(ctx *simulator.Context, w http.ResponseWriter, deviceID uint32, door 
 	w.Write(b)
 }
 
-func button(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, fmt.Sprintf("Invalid method:%s - expected POST", r.Method), http.StatusMethodNotAllowed)
-		return
-	}
-
-	url := r.URL.Path
-	matches := regexp.MustCompile("^/uhppote/simulator/([0-9]+)/button/([1-4])$").FindStringSubmatch(url)
-	deviceID, err := strconv.ParseUint(matches[1], 10, 32)
-	if err != nil {
-		http.Error(w, "Error reading request", http.StatusInternalServerError)
-		return
-	}
-
-	door, err := strconv.ParseUint(matches[2], 10, 8)
-	if err != nil {
-		http.Error(w, "Error reading request", http.StatusInternalServerError)
-		return
-	}
-
-	blob, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		http.Error(w, "Error reading request", http.StatusInternalServerError)
-		return
-	}
-
+func button(ctx *simulator.Context, w http.ResponseWriter, deviceID uint32, door uint8, blob []byte) {
 	request := struct {
 		Duration uint `json:"duration"`
 	}{}
 
-	err = json.Unmarshal(blob, &request)
-	if err != nil {
+	if err := json.Unmarshal(blob, &request); err != nil {
 		http.Error(w, "Invalid request format", http.StatusBadRequest)
 		return
 	}
+
+	duration := time.Duration(request.Duration) * time.Second
 
 	s := ctx.DeviceList.Find(uint32(deviceID))
 	if s == nil {
@@ -440,9 +418,9 @@ func button(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	unlocked, err := s.ButtonPressed(uint8(door), time.Duration(request.Duration)*time.Second)
+	unlocked, err := s.ButtonPressed(uint8(door), duration)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Failed to emulate 'door open' (%v)", err), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Failed to emulate 'door button' (%v)", err), http.StatusInternalServerError)
 		return
 	}
 
@@ -452,11 +430,11 @@ func button(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := struct {
-		Unlocked bool   `json:"door-unlocked"`
-		Message  string `json:"message"`
+		Result  bool   `json:"result"`
+		Message string `json:"message"`
 	}{
-		Unlocked: unlocked,
-		Message:  message,
+		Result:  unlocked,
+		Message: message,
 	}
 
 	b, err := json.Marshal(response)
