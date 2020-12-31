@@ -142,16 +142,24 @@ func (d *Door) Unlock(duration time.Duration) bool {
 	return true
 }
 
-func (d *Door) PressButton(duration time.Duration) bool {
+func (d *Door) PressButton(duration time.Duration) (pressed bool, unlocked bool) {
+	pressed = false
+	unlocked = false
+
 	if d == nil {
-		return false
+		return
 	}
 
 	d.guard.Lock()
 	defer d.guard.Unlock()
 
+	now := time.Now().UTC()
 	pressUntil := time.Now().UTC()
 	pressUntil = pressUntil.Add(time.Duration(d.Delay))
+
+	if d.pressedUntil == nil || d.pressedUntil.Before(now) {
+		pressed = true
+	}
 
 	if d.pressedUntil == nil || d.pressedUntil.Before(pressUntil) {
 		d.pressedUntil = &pressUntil
@@ -166,10 +174,10 @@ func (d *Door) PressButton(duration time.Duration) bool {
 			d.unlockedUntil = &unlockUntil
 		}
 
-		return true
+		unlocked = true
 	}
 
-	return false
+	return
 }
 
 func (d *Door) IsOpen() bool {

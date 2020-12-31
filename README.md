@@ -8,6 +8,7 @@ Supported operating systems:
 - Linux
 - MacOS
 - Windows
+- ARM7 (RaspberryPi)
 
 ## Releases
 
@@ -52,6 +53,7 @@ Supported functions:
 - GetCardById
 - PutCard
 - DeleteCard
+- RecordSpecialEvents
 - GetEvent
 - GetEventIndex
 - SetEventIndex

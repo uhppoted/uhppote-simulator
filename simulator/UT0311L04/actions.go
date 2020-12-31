@@ -15,6 +15,11 @@ const (
 	noPass         uint8 = 0x12
 )
 
+// Implements the REST 'swipe' API.
+//
+// Checks the device and card permissions and unlocks the associated door
+// if appropriate, but does not simulate opening the door. A 'swiped' event
+// is generated and sent to the configured event listener (if any).
 func (s *UT0311L04) Swipe(cardNumber uint32, door uint8) (bool, error) {
 	if door < 1 || door > 4 {
 		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID(), door)
@@ -66,6 +71,15 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8) (bool, error) {
 	return false, nil
 }
 
+// Implements the REST 'open door' API.
+//
+// Checks the device and opens the door if has been unlocked by a simulated card
+// swipe, associated button press or is configurated as normally open. The door
+// is closed again after the open duration. A 'nil' duration will keep the door
+// open until a 'door close' action closes it.
+//
+// A 'door open' event is generated and sent to the event listener (if any) if
+// the door was opened and 'record special events' is enabled.
 func (s *UT0311L04) Open(door uint8, duration *time.Duration) (bool, error) {
 	if door < 1 || door > 4 {
 		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID(), door)
@@ -110,6 +124,13 @@ func (s *UT0311L04) Open(door uint8, duration *time.Duration) (bool, error) {
 	return opened, nil
 }
 
+// Implements the REST 'close door' API.
+//
+// Checks the device and closes the door if is has been opened by a simulated
+// open door.
+//
+// A 'door close' event is generated and sent to the event listener (if any) if
+// the door was closed and 'record special events' is enabled.
 func (s *UT0311L04) Close(door uint8) (bool, error) {
 	if door < 1 || door > 4 {
 		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID(), door)
@@ -137,6 +158,15 @@ func (s *UT0311L04) Close(door uint8) (bool, error) {
 	return closed, nil
 }
 
+// Implements the REST 'press button' API.
+//
+// Checks the device and unlocks the associated door as long as it is not configured
+// as normally closed. The button is released the specified duration, with the door
+// being held unlocked while the button is pressed.
+//
+// A 'button pressed' event is generated and sent to the event listener (if any) if
+// 'record special events' is enabled. An event will not be generated if a previous 
+// button press is still active but will extend the duration of the action.
 func (s *UT0311L04) ButtonPressed(door uint8, duration time.Duration) (bool, error) {
 	if door < 1 || door > 4 {
 		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID(), door)
@@ -176,13 +206,15 @@ func (s *UT0311L04) ButtonPressed(door uint8, duration time.Duration) (bool, err
 		}
 	}
 
-	unlocked := s.Doors[door].PressButton(duration)
+	pressed, unlocked := s.Doors[door].PressButton(duration)
 
-	if unlocked {
-		onUnlocked()
-	} else {
-		onNotUnlocked()
+	if pressed {
+		if unlocked {
+			onUnlocked()
+		} else {
+			onNotUnlocked()
+		}
 	}
 
-	return unlocked, nil
+	return pressed && unlocked, nil
 }

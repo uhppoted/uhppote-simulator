@@ -61,6 +61,9 @@ bump:
 debug: build
 	go test ./... -run TestCardListPutWithFullList
 
+godoc:
+	godoc -http=:80	-index_interval=60s
+
 run: build
 	./bin/uhppote-simulator --debug --bind 0.0.0.0:60000 --rest 0.0.0.0:8000 --devices "../runtime/simulation/devices"
 
