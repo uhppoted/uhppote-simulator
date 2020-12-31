@@ -86,4 +86,4 @@ close:
 	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/door/$(DOOR)" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"action\":\"close\"}"
 
 button:
-	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/button/$(DOOR)" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"duration\":10}"
+	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/door/$(DOOR)" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"action\":\"button\", \"duration\":10}"
