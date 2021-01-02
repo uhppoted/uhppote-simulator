@@ -165,7 +165,7 @@ func (s *UT0311L04) Close(door uint8) (bool, error) {
 // being held unlocked while the button is pressed.
 //
 // A 'button pressed' event is generated and sent to the event listener (if any) if
-// 'record special events' is enabled. An event will not be generated if a previous 
+// 'record special events' is enabled. An event will not be generated if a previous
 // button press is still active but will extend the duration of the action.
 func (s *UT0311L04) ButtonPressed(door uint8, duration time.Duration) (bool, error) {
 	if door < 1 || door > 4 {

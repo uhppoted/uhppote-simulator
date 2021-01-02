@@ -14,6 +14,7 @@ Supported operating systems:
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.6.7    | Implements `record-special-events` and door open, close and button actions and events     |
 | v0.6.5    | Maintenance release for version compatibility with `node-red-contrib-uhppoted`            |
 | v0.6.4    | Maintenance release for version compatibility with `uhppoted-app-sheets`                  |
 | v0.6.3    | Reworked card list as fixed length array and emulated deleted records                     |
