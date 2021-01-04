@@ -19,7 +19,7 @@ import (
 	"github.com/uhppoted/uhppote-simulator/entities"
 )
 
-type event messages.GetStatusResponse
+type Event messages.GetStatusResponse
 
 type UT0311L04 struct {
 	file       string
@@ -320,7 +320,7 @@ func (s *UT0311L04) add(e *entities.Event) uint32 {
 		utc := time.Now().UTC()
 		datetime := utc.Add(time.Duration(s.TimeOffset))
 
-		e := event{
+		e := Event{
 			SerialNumber: s.SerialNumber,
 			EventIndex:   s.Events.Last,
 			SystemError:  s.SystemError,

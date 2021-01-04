@@ -90,3 +90,18 @@ close:
 
 button:
 	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/door/$(DOOR)" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"action\":\"button\", \"duration\":10}"
+
+# v06.62 events
+v6.62-swipe:
+	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/662/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"door\":$(DOOR),\"card-number\":$(CARD)}"
+
+v6.62-open:
+	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/662/door/1" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"action\":\"open\",\"duration\":10}"
+
+v6.62-close:
+	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/662/door/1" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"action\":\"close\"}"
+
+v6.62-button:
+	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/662/door/1" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"action\":\"button\", \"duration\":10}"
+
+
