@@ -1,4 +1,4 @@
-VERSION    = v0.6.7
+VERSION    = v0.6.8
 LDFLAGS    = -ldflags "-X uhppote.VERSION=$(VERSION)" 
 DIST      ?= development
 
@@ -63,6 +63,9 @@ debug: build
 
 godoc:
 	godoc -http=:80	-index_interval=60s
+
+version: build
+	./bin/uhppote-simulator version
 
 run: build
 	./bin/uhppote-simulator --debug --bind 0.0.0.0:60000 --rest 0.0.0.0:8000 --devices "../runtime/simulation/devices"
