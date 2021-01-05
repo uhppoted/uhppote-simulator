@@ -19,8 +19,6 @@ import (
 	"github.com/uhppoted/uhppote-simulator/entities"
 )
 
-type Event messages.GetStatusResponse
-
 type UT0311L04 struct {
 	file       string
 	compressed bool
@@ -320,7 +318,7 @@ func (s *UT0311L04) add(e *entities.Event) uint32 {
 		utc := time.Now().UTC()
 		datetime := utc.Add(time.Duration(s.TimeOffset))
 
-		e := Event{
+		e := messages.Event{
 			SerialNumber: s.SerialNumber,
 			EventIndex:   s.Events.Last,
 			SystemError:  s.SystemError,
@@ -350,7 +348,15 @@ func (s *UT0311L04) add(e *entities.Event) uint32 {
 			Direction:  e.Direction,
 		}
 
-		s.send(s.Listener, &e)
+		if fmt.Sprintf("%v", s.Version) == "6.62" {
+			e662 := messages.EventV6_62{
+				Event: e,
+			}
+
+			s.send(s.Listener, &e662)
+		} else {
+			s.send(s.Listener, &e)
+		}
 
 		return s.Events.Last
 	}

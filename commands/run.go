@@ -8,13 +8,11 @@ import (
 	"os"
 	"os/signal"
 	"regexp"
-	"strings"
 
 	codec "github.com/uhppoted/uhppote-core/encoding/UTO311-L0x"
 	"github.com/uhppoted/uhppote-core/messages"
 	"github.com/uhppoted/uhppote-simulator/rest"
 	"github.com/uhppoted/uhppote-simulator/simulator"
-	"github.com/uhppoted/uhppote-simulator/simulator/UT0311L04"
 )
 
 var debug bool = false
@@ -120,17 +118,6 @@ func send(c *net.UDPConn, dest *net.UDPAddr, message interface{}) {
 	if err != nil {
 		fmt.Printf("ERROR: %v\n", err)
 		return
-	}
-
-	// Firmware v6.62 and earlier apparently send 0x19 as the event message type.
-	// Identify (for simulation purposes only) these boards as having a serial number
-	// that starts with '0'. This assumes the convention that one door controllers have
-	// a serial number starting with 1, two door controllers start with 2, etc.
-	if event, ok := message.(*UT0311L04.Event); ok {
-		deviceID := fmt.Sprintf("%09d", event.SerialNumber)
-		if strings.HasPrefix(deviceID, "0") {
-			msg[0] = 0x19
-		}
 	}
 
 	N, err := c.WriteTo(msg, dest)
