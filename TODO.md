@@ -2,22 +2,15 @@
 
 ### IN PROGRESS
 
-- [x] Update godoc for open, close and button pressed
-- [x] Move button API into door API and return door state as opened/closed/locked/unlocked
-- [x] Rework open/close REST API as .../door and open/close as the action
-- [x] Add 'button' REST API
-- [x] Check door control state for swipe and open actions
-- [x] Remove relay state from JSON
-- [x] Add 'close' REST API
-- [x] Add 'open' REST API
-- [x] Implement record-special-events
-- [x] Date (for get-device) should be the manufactured date i.e. fixed, not 'now'
+- [x] Fix implementation of UHPPOTE v6.62 event messages
+- [x] Explicitly model v6.62 firmware
+- [x] Use EventV6_62 from `uhppote-core`
+
+## TODO
 
 - [ ] Replace UTO311L04.TimeOffset with time zone
 - [ ] Unit tests for EventList
 - [ ] Check real device events list rollover
-
-## TODO
 
 ### simulator
 - [ ] concurrent requests
