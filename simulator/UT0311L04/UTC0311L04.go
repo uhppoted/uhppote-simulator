@@ -134,7 +134,7 @@ func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 	case *messages.GetListenerRequest:
 		s.getListener(src, v)
 
-	case *messages.FindDevicesRequest:
+	case *messages.GetDeviceRequest:
 		s.getDevice(src, v)
 
 	case *messages.SetAddressRequest:

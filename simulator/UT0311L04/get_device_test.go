@@ -37,7 +37,7 @@ func TestGetDeviceWithMatchingAddress(t *testing.T) {
 
 	expected := entities.Message{
 		Destination: &src,
-		Message: &messages.FindDevicesResponse{
+		Message: &messages.GetDeviceResponse{
 			SerialNumber: 12345,
 			IpAddress:    net.IPv4(10, 0, 0, 100),
 			SubnetMask:   net.IPv4(255, 255, 255, 0),
@@ -48,7 +48,7 @@ func TestGetDeviceWithMatchingAddress(t *testing.T) {
 		},
 	}
 
-	request := messages.FindDevicesRequest{
+	request := messages.GetDeviceRequest{
 		SerialNumber: 12345,
 	}
 
@@ -88,7 +88,7 @@ func TestGetDeviceWithAddress0(t *testing.T) {
 
 	expected := entities.Message{
 		Destination: &src,
-		Message: &messages.FindDevicesResponse{
+		Message: &messages.GetDeviceResponse{
 			SerialNumber: 12345,
 			IpAddress:    net.IPv4(10, 0, 0, 100),
 			SubnetMask:   net.IPv4(255, 255, 255, 0),
@@ -99,7 +99,7 @@ func TestGetDeviceWithAddress0(t *testing.T) {
 		},
 	}
 
-	request := messages.FindDevicesRequest{
+	request := messages.GetDeviceRequest{
 		SerialNumber: 0,
 	}
 
@@ -136,7 +136,7 @@ func TestGetDeviceWithDifferentAddress(t *testing.T) {
 
 	src := net.UDPAddr{IP: net.IPv4(10, 0, 0, 1), Port: 12345}
 
-	request := messages.FindDevicesRequest{
+	request := messages.GetDeviceRequest{
 		SerialNumber: 54321,
 	}
 

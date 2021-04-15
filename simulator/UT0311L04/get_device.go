@@ -7,10 +7,10 @@ import (
 	"github.com/uhppoted/uhppote-core/types"
 )
 
-func (s *UT0311L04) getDevice(addr *net.UDPAddr, request *messages.FindDevicesRequest) {
+func (s *UT0311L04) getDevice(addr *net.UDPAddr, request *messages.GetDeviceRequest) {
 	if request.SerialNumber == 0 || request.SerialNumber == s.SerialNumber {
 
-		response := messages.FindDevicesResponse{
+		response := messages.GetDeviceResponse{
 			SerialNumber: s.SerialNumber,
 			IpAddress:    s.IpAddress,
 			SubnetMask:   s.SubnetMask,
