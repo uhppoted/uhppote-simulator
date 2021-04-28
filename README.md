@@ -14,6 +14,7 @@ Supported operating systems:
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.6.12   | Added simulation support for encoding `nil` events for response to `get-status`           |
 | v0.6.10   | Maintenance release for version compatibility with `uhppoted-app-wild-apricot`            |
 | v0.6.8    | Implements firmware _UHPPOTE_ v6.62 event message format                                  |
 | v0.6.7    | Implements `record-special-events` and door open, close and button actions and events     |

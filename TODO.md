@@ -1,10 +1,8 @@
-## v0.6.x
+## v0.6.12
 
 ### IN PROGRESS
 
-- [x] Fix implementation of UHPPOTE v6.62 event messages
-- [x] Explicitly model v6.62 firmware
-- [x] Use EventV6_62 from `uhppote-core`
+- [x] Encode `nil` events in `GetStatusResponse`
 
 ## TODO
 
