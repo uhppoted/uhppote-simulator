@@ -158,6 +158,9 @@ func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 	case *messages.SetTimeProfileRequest:
 		s.setTimeProfile(src, v)
 
+	case *messages.GetTimeProfileRequest:
+		s.getTimeProfile(src, v)
+
 	default:
 		panic(errors.New(fmt.Sprintf("Unsupported message type %T", v)))
 	}
