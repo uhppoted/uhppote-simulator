@@ -15,3 +15,11 @@ func (t TimeProfiles) Set(profile types.TimeProfile) bool {
 
 	return false
 }
+
+func (t TimeProfiles) Clear() bool {
+	for k := range t {
+		delete(t, k)
+	}
+
+	return true
+}
