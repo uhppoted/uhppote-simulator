@@ -1,7 +1,12 @@
-## v0.6.12
+## v0.7.x
 
 ### IN PROGRESS
 
+- [ ] Implement internal time profiles
+- [ ] set-time-profile
+- [ ] get-time-profile
+- [ ] clear-time-profile
+- [ ] swipe with time profile
 - [ ] Fix JSON marshaling for CardList (lots of `nulls`)
 
 ## TODO

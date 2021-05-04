@@ -39,6 +39,7 @@ type UT0311L04 struct {
 	SequenceId          uint32                   `json:"sequence-id"`
 	SpecialInfo         uint8                    `json:"special-info"`
 	InputState          uint8                    `json:"input-state"`
+	TimeProfiles        entities.TimeProfiles    `json:"time-profiles,omitempty"`
 	Cards               entities.CardList        `json:"cards"`
 	Events              entities.EventList       `json:"events"`
 }
@@ -69,6 +70,8 @@ func NewUT0311L04(deviceID uint32, dir string, compressed bool) *UT0311L04 {
 			3: entities.NewDoor(3),
 			4: entities.NewDoor(4),
 		},
+
+		TimeProfiles: entities.TimeProfiles{},
 	}
 
 	return &device
@@ -152,6 +155,9 @@ func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 	case *messages.GetEventIndexRequest:
 		s.getEventIndex(src, v)
 
+	case *messages.SetTimeProfileRequest:
+		s.setTimeProfile(src, v)
+
 	default:
 		panic(errors.New(fmt.Sprintf("Unsupported message type %T", v)))
 	}
@@ -200,7 +206,8 @@ func load(filepath string) (*UT0311L04, error) {
 	}
 
 	simulator := UT0311L04{
-		Released: DefaultReleaseDate(),
+		Released:     DefaultReleaseDate(),
+		TimeProfiles: entities.TimeProfiles{},
 	}
 
 	err = json.Unmarshal(bytes, &simulator)
