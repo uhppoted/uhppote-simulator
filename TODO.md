@@ -2,10 +2,10 @@
 
 ### IN PROGRESS
 
-- [ ] Implement internal time profiles
-- [ ] set-time-profile
-- [ ] get-time-profile
-- [ ] clear-time-profile
+- [x] Implement internal time profiles entity
+- [x] set-time-profile
+- [x] get-time-profile
+- [x] clear-time-profile
 - [ ] swipe with time profile
 - [ ] Fix JSON marshaling for CardList (lots of `nulls`)
 
