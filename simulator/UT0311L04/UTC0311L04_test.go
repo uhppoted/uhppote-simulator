@@ -71,10 +71,10 @@ func TestHandlePutCardRequest(t *testing.T) {
 		CardNumber:   192837465,
 		From:         *from,
 		To:           *to,
-		Door1:        true,
-		Door2:        false,
-		Door3:        true,
-		Door4:        false,
+		Door1:        1,
+		Door2:        0,
+		Door3:        1,
+		Door4:        0,
 	}
 
 	response := messages.PutCardResponse{
@@ -140,10 +140,10 @@ func TestHandleGetCardById(t *testing.T) {
 		CardNumber:   192837465,
 		From:         from,
 		To:           to,
-		Door1:        true,
-		Door2:        false,
-		Door3:        false,
-		Door4:        true,
+		Door1:        1,
+		Door2:        0,
+		Door3:        0,
+		Door4:        1,
 	}
 
 	testHandle(&request, &response, t)
@@ -163,10 +163,10 @@ func TestHandleGetCardByIndex(t *testing.T) {
 		CardNumber:   192837465,
 		From:         from,
 		To:           to,
-		Door1:        true,
-		Door2:        false,
-		Door3:        false,
-		Door4:        true,
+		Door1:        1,
+		Door2:        0,
+		Door3:        0,
+		Door4:        1,
 	}
 
 	testHandle(&request, &response, t)
@@ -338,19 +338,19 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 			CardNumber: 100000001,
 			From:       from,
 			To:         to,
-			Doors:      map[uint8]bool{1: false, 2: false, 3: false, 4: false},
+			Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
 		},
 		&entities.Card{
 			CardNumber: 192837465,
 			From:       from,
 			To:         to,
-			Doors:      map[uint8]bool{1: true, 2: false, 3: false, 4: true},
+			Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1},
 		},
 		&entities.Card{
 			CardNumber: 100000003,
 			From:       from,
 			To:         to,
-			Doors:      map[uint8]bool{1: false, 2: false, 3: false, 4: false},
+			Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
 		},
 	}
 

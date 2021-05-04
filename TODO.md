@@ -2,7 +2,7 @@
 
 ### IN PROGRESS
 
-- [x] Encode `nil` events in `GetStatusResponse`
+- [ ] Fix JSON marshaling for CardList (lots of `nulls`)
 
 ## TODO
 

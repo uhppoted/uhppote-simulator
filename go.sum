@@ -1,2 +1,4 @@
 github.com/uhppoted/uhppote-core v0.6.12 h1:So53J2LaVdJ80YJWOKjmaudrcjUwSJN1GsVLGhiu4pc=
 github.com/uhppoted/uhppote-core v0.6.12/go.mod h1:trhONXGxYU0V5kOzBShTedYcRY98p9uV99JBZ7F1M0k=
+github.com/uhppoted/uhppote-core v0.6.13-0.20210503212520-b5d8b1ab0bee h1:JCHjHmpPmtOKN7UiSGBpvhujXvTB6XDRXxubkk44z8Y=
+github.com/uhppoted/uhppote-core v0.6.13-0.20210503212520-b5d8b1ab0bee/go.mod h1:trhONXGxYU0V5kOzBShTedYcRY98p9uV99JBZ7F1M0k=

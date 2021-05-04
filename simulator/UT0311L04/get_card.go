@@ -1,8 +1,9 @@
 package UT0311L04
 
 import (
-	"github.com/uhppoted/uhppote-core/messages"
 	"net"
+
+	"github.com/uhppoted/uhppote-core/messages"
 )
 
 func (s *UT0311L04) getCardByID(addr *net.UDPAddr, request *messages.GetCardByIDRequest) {

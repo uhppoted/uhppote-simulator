@@ -34,11 +34,11 @@ func TestCardListPutWithNewCard(t *testing.T) {
 		CardNumber: uint32(5000019),
 		From:       date("2020-02-03"),
 		To:         date("2020-11-30"),
-		Doors: map[uint8]bool{
-			1: false,
-			2: true,
-			3: true,
-			4: false,
+		Doors: map[uint8]uint8{
+			1: 0,
+			2: 1,
+			3: 1,
+			4: 0,
 		},
 	}
 
@@ -73,11 +73,11 @@ func TestCardListPutWithExistingCard(t *testing.T) {
 		CardNumber: uint32(6000005),
 		From:       date("2020-02-03"),
 		To:         date("2020-11-30"),
-		Doors: map[uint8]bool{
-			1: false,
-			2: true,
-			3: true,
-			4: false,
+		Doors: map[uint8]uint8{
+			1: 0,
+			2: 1,
+			3: 1,
+			4: 0,
 		},
 	}
 
@@ -105,11 +105,11 @@ func TestCardListPutWithFullList(t *testing.T) {
 			CardNumber: uint32(6000000 + i),
 			From:       date("2020-01-01"),
 			To:         date("2020-12-31"),
-			Doors: map[uint8]bool{
-				1: true,
-				2: false,
-				3: false,
-				4: true,
+			Doors: map[uint8]uint8{
+				1: 1,
+				2: 0,
+				3: 0,
+				4: 1,
 			},
 		}
 	}
@@ -118,11 +118,11 @@ func TestCardListPutWithFullList(t *testing.T) {
 		CardNumber: uint32(5000019),
 		From:       date("2020-01-01"),
 		To:         date("2020-12-31"),
-		Doors: map[uint8]bool{
-			1: false,
-			2: true,
-			3: true,
-			4: false,
+		Doors: map[uint8]uint8{
+			1: 0,
+			2: 1,
+			3: 1,
+			4: 0,
 		},
 	}
 
@@ -203,11 +203,11 @@ func fill(l *CardList) uint32 {
 			CardNumber: uint32(6000000 + i),
 			From:       date("2020-01-01"),
 			To:         date("2020-12-31"),
-			Doors: map[uint8]bool{
-				1: true,
-				2: false,
-				3: false,
-				4: true,
+			Doors: map[uint8]uint8{
+				1: 1,
+				2: 0,
+				3: 0,
+				4: 1,
 			},
 		}
 	}

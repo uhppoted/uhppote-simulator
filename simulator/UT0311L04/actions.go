@@ -45,7 +45,7 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8) (bool, error) {
 			continue
 		}
 
-		if !c.Doors[door] {
+		if c.Doors[door] == 0 {
 			swiped(0x01, false, noPrivilege)
 			return false, nil
 		}

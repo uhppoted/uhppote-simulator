@@ -7,10 +7,10 @@ import (
 )
 
 type Card struct {
-	CardNumber uint32         `json:"number"`
-	From       *types.Date    `json:"from,omitempty"`
-	To         *types.Date    `json:"to,omitempty"`
-	Doors      map[uint8]bool `json:"doors,omitempty"`
+	CardNumber uint32          `json:"number"`
+	From       *types.Date     `json:"from,omitempty"`
+	To         *types.Date     `json:"to,omitempty"`
+	Doors      map[uint8]uint8 `json:"doors,omitempty"`
 }
 
 type CardList [64]*Card
