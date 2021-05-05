@@ -4,8 +4,8 @@ DIST      ?= development
 
 SERIALNO  ?= 405419896
 NEWDEVICE ?= 102030405
-CARD      ?= 65538
-DOOR      ?= 4
+CARD      ?= 8165538
+DOOR      ?= 3
 DEBUG     ?= --debug
 
 .PHONY: bump

@@ -9,10 +9,11 @@ import (
 )
 
 const (
-	swipePass      uint8 = 0x01
-	noPrivilege    uint8 = 0x06
-	normallyClosed uint8 = 0x0b
-	noPass         uint8 = 0x12
+	swipePass       uint8 = 0x01
+	noPrivilege     uint8 = 0x06
+	normallyClosed  uint8 = 0x0b
+	invalidTimezone uint8 = 0x0f
+	noPass          uint8 = 0x12
 )
 
 // Implements the REST 'swipe' API.
@@ -45,11 +46,23 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8) (bool, error) {
 			continue
 		}
 
-		if c.Doors[door] == 0 {
+		profileID := c.Doors[door]
+
+		// no access rights?
+		if profileID < 1 || profileID > 254 {
 			swiped(0x01, false, noPrivilege)
 			return false, nil
 		}
 
+		// check against time profile
+		if profileID >= 2 && profileID <= 254 {
+			if !s.checkTimeProfile(profileID) {
+				swiped(0x01, false, invalidTimezone)
+				return false, nil
+			}
+		}
+
+		// unlock door
 		if d, ok := s.Doors[door]; ok {
 			if d.ControlState == entities.NormallyClosed {
 				swiped(0x01, false, normallyClosed)
@@ -65,7 +78,7 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8) (bool, error) {
 		break
 	}
 
-	// Denied
+	// Denied!
 	swiped(0x01, false, noPass)
 
 	return false, nil
@@ -217,4 +230,64 @@ func (s *UT0311L04) ButtonPressed(door uint8, duration time.Duration) (bool, err
 	}
 
 	return pressed && unlocked, nil
+}
+
+// Builds list of linked time profiles and then checks each individual profile
+func (s *UT0311L04) checkTimeProfile(profileID uint8) bool {
+	profiles := map[uint8]bool{}
+
+	if profile, ok := s.TimeProfiles[profileID]; ok {
+		profiles[profileID] = true
+
+		linked := profile.LinkedProfileID
+		for {
+			if linked < 2 || linked > 254 || profiles[linked] {
+				break
+			}
+
+			profiles[linked] = true
+			if profile, ok := s.TimeProfiles[linked]; ok {
+				linked = profile.LinkedProfileID
+			}
+		}
+
+		for pid, _ := range profiles {
+			if profile, ok := s.TimeProfiles[pid]; !ok {
+				return true // IRL, a controller seems to default to ok if a linked time profile is not present
+			} else if checkTimeProfile(profile) {
+				return true
+			}
+		}
+
+		return false
+	}
+
+	return true // IRL, a controller seems to default to ok if time profile is not present
+}
+
+func checkTimeProfile(profile types.TimeProfile) bool {
+	now := time.Now()
+	today := types.Date(time.Now())
+
+	if profile.From == nil || profile.From.After(today) {
+		return false
+	}
+
+	if profile.To == nil || profile.To.Before(today) {
+		return false
+	}
+
+	if !profile.Weekdays[today.Weekday()] {
+		return false
+	}
+
+	for _, i := range []uint8{1, 2, 3} {
+		if segment, ok := profile.Segments[i]; ok {
+			if segment.Start != nil && !segment.Start.After(now) && segment.End != nil && !segment.End.Before(now) {
+				return true
+			}
+		}
+	}
+
+	return false
 }

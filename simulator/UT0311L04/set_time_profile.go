@@ -3,6 +3,7 @@ package UT0311L04
 import (
 	"fmt"
 	"net"
+	"time"
 
 	"github.com/uhppoted/uhppote-core/messages"
 	"github.com/uhppoted/uhppote-core/types"
@@ -16,13 +17,13 @@ func (s *UT0311L04) setTimeProfile(addr *net.UDPAddr, request *messages.SetTimeP
 			From:            &request.From,
 			To:              &request.To,
 			Weekdays: types.Weekdays{
-				types.Monday:    request.Monday,
-				types.Tuesday:   request.Tuesday,
-				types.Wednesday: request.Wednesday,
-				types.Thursday:  request.Thursday,
-				types.Friday:    request.Friday,
-				types.Saturday:  request.Saturday,
-				types.Sunday:    request.Sunday,
+				time.Monday:    request.Monday,
+				time.Tuesday:   request.Tuesday,
+				time.Wednesday: request.Wednesday,
+				time.Thursday:  request.Thursday,
+				time.Friday:    request.Friday,
+				time.Saturday:  request.Saturday,
+				time.Sunday:    request.Sunday,
 			},
 			Segments: types.Segments{
 				1: types.Segment{

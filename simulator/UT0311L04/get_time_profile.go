@@ -2,9 +2,9 @@ package UT0311L04
 
 import (
 	"net"
+	"time"
 
 	"github.com/uhppoted/uhppote-core/messages"
-	"github.com/uhppoted/uhppote-core/types"
 )
 
 func (s *UT0311L04) getTimeProfile(addr *net.UDPAddr, request *messages.GetTimeProfileRequest) {
@@ -21,13 +21,13 @@ func (s *UT0311L04) getTimeProfile(addr *net.UDPAddr, request *messages.GetTimeP
 				response.From = profile.From
 				response.To = profile.To
 
-				response.Monday = profile.Weekdays[types.Monday]
-				response.Tuesday = profile.Weekdays[types.Tuesday]
-				response.Wednesday = profile.Weekdays[types.Wednesday]
-				response.Thursday = profile.Weekdays[types.Thursday]
-				response.Friday = profile.Weekdays[types.Friday]
-				response.Saturday = profile.Weekdays[types.Saturday]
-				response.Sunday = profile.Weekdays[types.Sunday]
+				response.Monday = profile.Weekdays[time.Monday]
+				response.Tuesday = profile.Weekdays[time.Tuesday]
+				response.Wednesday = profile.Weekdays[time.Wednesday]
+				response.Thursday = profile.Weekdays[time.Thursday]
+				response.Friday = profile.Weekdays[time.Friday]
+				response.Saturday = profile.Weekdays[time.Saturday]
+				response.Sunday = profile.Weekdays[time.Sunday]
 
 				if segment, ok := profile.Segments[1]; ok {
 					response.Segment1Start = segment.Start
