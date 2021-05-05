@@ -7,7 +7,7 @@ import (
 	"github.com/uhppoted/uhppote-core/messages"
 )
 
-func (s *UT0311L04) clearTimeProfilest (addr *net.UDPAddr, request *messages.ClearTimeProfilesRequest) {
+func (s *UT0311L04) clearTimeProfiles(addr *net.UDPAddr, request *messages.ClearTimeProfilesRequest) {
 	if s.SerialNumber == request.SerialNumber {
 		cleared := false
 

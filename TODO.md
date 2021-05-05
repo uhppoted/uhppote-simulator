@@ -6,7 +6,7 @@
 - [x] set-time-profile
 - [x] get-time-profile
 - [x] clear-time-profile
-- [ ] swipe with time profile
+- [ ] Swipe with time profile
 - [ ] Fix JSON marshaling for CardList (lots of `nulls`)
 
 ## TODO
