@@ -1,6 +1,7 @@
 package entities
 
 import (
+	"encoding/json"
 	"reflect"
 	"testing"
 	"time"
@@ -194,6 +195,116 @@ func TestCardListDeleteAll(t *testing.T) {
 		if c != nil {
 			t.Errorf("Invalid CardList entry %v\n   expected: %v\n   got:      %v", i, nil, *c)
 		}
+	}
+}
+
+func TestCardListMarshalJSON(t *testing.T) {
+	expected := `[
+  {
+    "number": 6000001,
+    "from": "2021-01-01",
+    "to": "2021-12-31",
+    "doors": {
+      "1": 1,
+      "2": 0,
+      "3": 0,
+      "4": 29
+    }
+  },
+  null,
+  {
+    "number": 0,
+    "from": "2021-01-01",
+    "to": "2021-12-31",
+    "doors": {
+      "1": 1,
+      "2": 0,
+      "3": 0,
+      "4": 30
+    }
+  },
+  null,
+  {
+    "number": 4294967295,
+    "from": "2021-01-01",
+    "to": "2021-12-31",
+    "doors": {
+      "1": 1,
+      "2": 0,
+      "3": 0,
+      "4": 31
+    }
+  }
+]`
+
+	cards := CardList{}
+	cards[0] = &Card{CardNumber: uint32(6000001), From: date("2021-01-01"), To: date("2021-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 29}}
+	cards[2] = &Card{CardNumber: uint32(0), From: date("2021-01-01"), To: date("2021-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 30}}
+	cards[4] = &Card{CardNumber: uint32(0xffffffff), From: date("2021-01-01"), To: date("2021-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 31}}
+
+	blob, err := json.MarshalIndent(cards, "", "  ")
+	if err != nil {
+		t.Fatalf("Unexpected error marshalling card list (%v)", err)
+	}
+
+	if string(blob) != expected {
+		t.Errorf("Invalid JSON from marshalling\n   expected:%v\n   got:     %v", expected, string(blob))
+	}
+}
+
+func TestCardListUnmarshalJSON(t *testing.T) {
+	expected := CardList{}
+	expected[0] = &Card{CardNumber: uint32(6000001), From: date("2021-01-01"), To: date("2021-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 29}}
+	expected[2] = &Card{CardNumber: uint32(0), From: date("2021-01-01"), To: date("2021-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 30}}
+	expected[4] = &Card{CardNumber: uint32(0xffffffff), From: date("2021-01-01"), To: date("2021-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 31}}
+
+	blob := `[
+  {
+    "number": 6000001,
+    "from": "2021-01-01",
+    "to": "2021-12-31",
+    "doors": {
+      "1": 1,
+      "2": 0,
+      "3": 0,
+      "4": 29
+    }
+  },
+  null,
+  {
+    "number": 0,
+    "from": "2021-01-01",
+    "to": "2021-12-31",
+    "doors": {
+      "1": 1,
+      "2": 0,
+      "3": 0,
+      "4": 30
+    }
+  },
+  null,
+  {
+    "number": 4294967295,
+    "from": "2021-01-01",
+    "to": "2021-12-31",
+    "doors": {
+      "1": 1,
+      "2": 0,
+      "3": 0,
+      "4": 31
+    }
+  }
+]`
+
+	cards := CardList{}
+
+	err := json.Unmarshal([]byte(blob), &cards)
+	if err != nil {
+		t.Fatalf("Unexpected error unmarshalling card list (%v)", err)
+	}
+
+	if !reflect.DeepEqual(cards, expected) {
+		t.Errorf("Invalid card list after unmarshalling JSON\n   expected:%v\n   got:     %v", expected, cards)
 	}
 }
 

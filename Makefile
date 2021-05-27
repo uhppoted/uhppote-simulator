@@ -59,7 +59,7 @@ bump:
 	go get -u github.com/uhppoted/uhppote-core
 
 debug: build
-	go test ./... -run TestCardListPutWithFullList
+	go test ./... -run TestCardListMarshalJSON
 
 godoc:
 	godoc -http=:80	-index_interval=60s

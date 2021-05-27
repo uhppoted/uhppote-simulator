@@ -1,6 +1,7 @@
 package entities
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/uhppoted/uhppote-core/types"
@@ -71,4 +72,19 @@ func (l *CardList) DeleteAll() bool {
 	}
 
 	return true
+}
+
+func (l CardList) MarshalJSON() ([]byte, error) {
+	N := 0
+	for i, c := range l {
+		if c != nil {
+			N = i + 1
+		}
+	}
+
+	list := make([]*Card, N)
+
+	copy(list, l[0:N])
+
+	return json.Marshal(list)
 }
