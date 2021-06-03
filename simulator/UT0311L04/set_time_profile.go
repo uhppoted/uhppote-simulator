@@ -27,16 +27,16 @@ func (s *UT0311L04) setTimeProfile(addr *net.UDPAddr, request *messages.SetTimeP
 			},
 			Segments: types.Segments{
 				1: types.Segment{
-					Start: &request.Segment1Start,
-					End:   &request.Segment1End,
+					Start: request.Segment1Start,
+					End:   request.Segment1End,
 				},
 				2: types.Segment{
-					Start: &request.Segment2Start,
-					End:   &request.Segment2End,
+					Start: request.Segment2Start,
+					End:   request.Segment2End,
 				},
 				3: types.Segment{
-					Start: &request.Segment3Start,
-					End:   &request.Segment3End,
+					Start: request.Segment3Start,
+					End:   request.Segment3End,
 				},
 			},
 		}

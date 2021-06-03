@@ -30,18 +30,18 @@ func (s *UT0311L04) getTimeProfile(addr *net.UDPAddr, request *messages.GetTimeP
 				response.Sunday = profile.Weekdays[time.Sunday]
 
 				if segment, ok := profile.Segments[1]; ok {
-					response.Segment1Start = segment.Start
-					response.Segment1End = segment.End
+					response.Segment1Start = &segment.Start
+					response.Segment1End = &segment.End
 				}
 
 				if segment, ok := profile.Segments[2]; ok {
-					response.Segment2Start = segment.Start
-					response.Segment2End = segment.End
+					response.Segment2Start = &segment.Start
+					response.Segment2End = &segment.End
 				}
 
 				if segment, ok := profile.Segments[3]; ok {
-					response.Segment3Start = segment.Start
-					response.Segment3End = segment.End
+					response.Segment3Start = &segment.Start
+					response.Segment3End = &segment.End
 				}
 			}
 		}

@@ -283,7 +283,7 @@ func checkTimeProfile(profile types.TimeProfile) bool {
 
 	for _, i := range []uint8{1, 2, 3} {
 		if segment, ok := profile.Segments[i]; ok {
-			if segment.Start != nil && !segment.Start.After(now) && segment.End != nil && !segment.End.Before(now) {
+			if !segment.Start.After(now) && !segment.End.Before(now) {
 				return true
 			}
 		}
