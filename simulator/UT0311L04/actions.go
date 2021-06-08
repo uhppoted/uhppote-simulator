@@ -266,7 +266,7 @@ func (s *UT0311L04) checkTimeProfile(profileID uint8) bool {
 }
 
 func checkTimeProfile(profile types.TimeProfile) bool {
-	now := time.Now()
+	now := types.HHmmFromTime(time.Now())
 	today := types.Date(time.Now())
 
 	if profile.From == nil || profile.From.After(today) {
