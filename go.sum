@@ -6,3 +6,5 @@ github.com/uhppoted/uhppote-core v0.6.13-0.20210608170549-b31238e77fe5 h1:lLL6QR
 github.com/uhppoted/uhppote-core v0.6.13-0.20210608170549-b31238e77fe5/go.mod h1:trhONXGxYU0V5kOzBShTedYcRY98p9uV99JBZ7F1M0k=
 github.com/uhppoted/uhppote-core v0.6.13-0.20210608173129-01558a7d3430 h1:YvuNZtwz/dEvS0n8mph8FXV5ow1h8T8Cwpbd7GrkCAg=
 github.com/uhppoted/uhppote-core v0.6.13-0.20210608173129-01558a7d3430/go.mod h1:trhONXGxYU0V5kOzBShTedYcRY98p9uV99JBZ7F1M0k=
+github.com/uhppoted/uhppote-core v0.7.0 h1:6x7GBZzbSv0D43UuCG1I8jvGPW+YmiWHr1G+VG8huHk=
+github.com/uhppoted/uhppote-core v0.7.0/go.mod h1:trhONXGxYU0V5kOzBShTedYcRY98p9uV99JBZ7F1M0k=

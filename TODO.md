@@ -1,6 +1,4 @@
-## v0.7.x
-
-### IN PROGRESS
+## v0.7.0
 
 - [x] Update time profile segment marshalling/unmarshalling
 - [x] Implement internal time profiles entity

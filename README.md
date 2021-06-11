@@ -14,6 +14,7 @@ Supported operating systems:
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.7.0    | Added support for time profiles from the extended API                                     |
 | v0.6.12   | Added simulation support for encoding `nil` events for response to `get-status`           |
 | v0.6.10   | Maintenance release for version compatibility with `uhppoted-app-wild-apricot`            |
 | v0.6.8    | Implements firmware _UHPPOTE_ v6.62 event message format                                  |
@@ -30,6 +31,22 @@ Supported operating systems:
 
 ### Building from source
 
+Assuming you have `Go` and `make` installed:
+
+```
+git clone https://github.com/uhppoted/uhppote-simulator.git
+cd uhppote-simulator
+make build
+```
+
+If you prefer not to use `make`:
+```
+git clone https://github.com/uhppoted/uhppote-simulator.git
+cd uhppote-simulator
+mkdir bin
+go build -o bin ./...
+```
+
 #### Dependencies
 
 | *Dependency*                                             | *Description*                                          |
@@ -37,27 +54,29 @@ Supported operating systems:
 | [uhppote-core](https://github.com/uhppoted/uhppote-core) | Device level API implementation                        |
 | golang.org/x/lint/golint                                 | Additional *lint* check for release builds             |
 
-### Binaries
-
 ## uhppote-simulator
 
 Supported functions:
 - FindDevices
 - FindDevice
 - SetAddress
-- GetStatus
+- GetListener
+- SetListener
 - GetTime
 - SetTime
 - GetDoorControlState
 - SetDoorControlState
-- GetListener
-- SetListener
+- RecordSpecialEvents
+- GetStatus
 - GetCards
-- GetCardByIndex
 - GetCardById
+- GetCardByIndex
 - PutCard
 - DeleteCard
-- RecordSpecialEvents
+- DeleteCards
+- GetTimeProfile
+- SetTimeProfile
+- ClearTimeProfiles
 - GetEvent
 - GetEventIndex
 - SetEventIndex
