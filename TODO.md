@@ -5,6 +5,7 @@
 - [x] `clear-task-list`
 - [ ] `add-task`
 - [ ] `refresh-task-list`
+- [ ] Validate swipe access against task list
 
 ## TODO
 

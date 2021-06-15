@@ -15,3 +15,7 @@ func (t *TaskList) Clear() bool {
 
 	return true
 }
+
+func (t *TaskList) Refresh() bool {
+	return true
+}

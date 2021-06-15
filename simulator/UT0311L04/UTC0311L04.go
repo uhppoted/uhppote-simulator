@@ -169,6 +169,9 @@ func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 	case *messages.ClearTaskListRequest:
 		s.clearTaskList(src, v)
 
+	case *messages.RefreshTaskListRequest:
+		s.refreshTaskList(src, v)
+
 	default:
 		panic(errors.New(fmt.Sprintf("Unsupported message type %T", v)))
 	}
