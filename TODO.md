@@ -1,12 +1,10 @@
-## v0.7.0
+## v0.7.x
 
-- [x] Update time profile segment marshalling/unmarshalling
-- [x] Implement internal time profiles entity
-- [x] set-time-profile
-- [x] get-time-profile
-- [x] clear-time-profile
-- [x] Swipe with time profile
-- [x] Fix JSON marshaling for CardList
+## IN PROGRESS
+
+- [x] `clear-task-list`
+- [ ] `add-task`
+- [ ] `refresh-task-list`
 
 ## TODO
 

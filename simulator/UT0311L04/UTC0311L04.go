@@ -40,6 +40,7 @@ type UT0311L04 struct {
 	SpecialInfo         uint8                    `json:"special-info"`
 	InputState          uint8                    `json:"input-state"`
 	TimeProfiles        entities.TimeProfiles    `json:"time-profiles,omitempty"`
+	TaskList            entities.TaskList        `json:"tasklist,omitempty"`
 	Cards               entities.CardList        `json:"cards"`
 	Events              entities.EventList       `json:"events"`
 }
@@ -72,6 +73,7 @@ func NewUT0311L04(deviceID uint32, dir string, compressed bool) *UT0311L04 {
 		},
 
 		TimeProfiles: entities.TimeProfiles{},
+		TaskList:     entities.TaskList{},
 	}
 
 	return &device
@@ -163,6 +165,9 @@ func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 
 	case *messages.ClearTimeProfilesRequest:
 		s.clearTimeProfiles(src, v)
+
+	case *messages.ClearTaskListRequest:
+		s.clearTaskList(src, v)
 
 	default:
 		panic(errors.New(fmt.Sprintf("Unsupported message type %T", v)))
