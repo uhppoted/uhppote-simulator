@@ -2,10 +2,10 @@
 
 ## IN PROGRESS
 
+- [ ] Validate swipe/pushbutton/etc against task list
 - [x] `clear-task-list`
-- [ ] `add-task`
-- [ ] `refresh-task-list`
-- [ ] Validate swipe access against task list
+- [x] `add-task`
+- [x] `refresh-task-list`
 
 ## TODO
 

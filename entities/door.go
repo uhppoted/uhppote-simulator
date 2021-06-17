@@ -9,14 +9,17 @@ import (
 type Delay time.Duration
 
 type Door struct {
-	ControlState  uint8 `json:"control"`
-	Delay         Delay `json:"delay"`
-	open          bool
-	button        bool
-	openTimer     *time.Timer
-	unlockedUntil *time.Time
-	pressedUntil  *time.Time
-	guard         sync.RWMutex
+	ControlState    uint8 `json:"control"`
+	Delay           Delay `json:"delay"`
+	overrideState   uint8
+	profileDisabled bool
+	buttonDisabled  bool
+	open            bool
+	button          bool
+	openTimer       *time.Timer
+	unlockedUntil   *time.Time
+	pressedUntil    *time.Time
+	guard           sync.RWMutex
 }
 
 const (
@@ -127,7 +130,7 @@ func (d *Door) Unlock(duration time.Duration) bool {
 	d.guard.Lock()
 	defer d.guard.Unlock()
 
-	if d.ControlState == NormallyClosed {
+	if d.ControlState == NormallyClosed || d.overrideState == NormallyClosed {
 		return false
 	}
 
@@ -152,6 +155,10 @@ func (d *Door) PressButton(duration time.Duration) (pressed bool, unlocked bool)
 
 	d.guard.Lock()
 	defer d.guard.Unlock()
+
+	if d.buttonDisabled {
+		return
+	}
 
 	now := time.Now().UTC()
 	pressUntil := time.Now().UTC()
@@ -178,6 +185,56 @@ func (d *Door) PressButton(duration time.Duration) (pressed bool, unlocked bool)
 	}
 
 	return
+}
+
+func (d *Door) OverrideState(state uint8) bool {
+	if d == nil {
+		return false
+	}
+
+	d.guard.Lock()
+	defer d.guard.Unlock()
+
+	d.overrideState = state
+
+	return true
+}
+
+func (d *Door) EnableProfile(enabled bool) bool {
+	if d == nil {
+		return false
+	}
+
+	d.guard.Lock()
+	defer d.guard.Unlock()
+
+	d.profileDisabled = !enabled
+
+	return true
+}
+
+func (d *Door) EnableButton(enabled bool) bool {
+	if d == nil {
+		return false
+	}
+
+	d.guard.Lock()
+	defer d.guard.Unlock()
+
+	d.buttonDisabled = !enabled
+
+	return true
+}
+
+func (d *Door) IsProfileDisabled() bool {
+	if d == nil {
+		return true
+	}
+
+	d.guard.RLock()
+	defer d.guard.RUnlock()
+
+	return d.profileDisabled
 }
 
 func (d *Door) IsOpen() bool {
@@ -214,7 +271,7 @@ func (d *Door) IsButtonPressed() bool {
 }
 
 func (d *Door) unlocked() bool {
-	switch d.ControlState {
+	switch d.overrideState {
 	case NormallyOpen:
 		return true
 
@@ -223,6 +280,18 @@ func (d *Door) unlocked() bool {
 
 	case Controlled:
 		return d.unlockedUntil != nil && d.unlockedUntil.After(time.Now())
+
+	default:
+		switch d.ControlState {
+		case NormallyOpen:
+			return true
+
+		case NormallyClosed:
+			return false
+
+		case Controlled:
+			return d.unlockedUntil != nil && d.unlockedUntil.After(time.Now())
+		}
 	}
 
 	return false

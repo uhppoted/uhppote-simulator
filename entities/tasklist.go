@@ -1,6 +1,9 @@
 package entities
 
 import (
+	"sort"
+	"time"
+
 	"github.com/uhppoted/uhppote-core/types"
 )
 
@@ -27,4 +30,73 @@ func (t *TaskList) Refresh() bool {
 	t.added = []types.Task{}
 
 	return true
+}
+
+func (t *TaskList) Run(handler func(door uint8, task types.TaskType)) {
+	tasks := []types.Task{}
+
+	now := types.HHmmFromTime(time.Now())
+	today := types.Date(time.Now())
+
+	for _, task := range t.Tasks {
+		if !task.From.After(today) && !task.To.Before(today) && !task.Start.After(now) && task.Weekdays[today.Weekday()] {
+			tasks = append(tasks, task)
+		}
+	}
+
+	sort.SliceStable(tasks, func(i, j int) bool { return tasks[i].Start.Before(tasks[j].Start) })
+
+	doors := map[uint8]types.TaskType{}
+	profiles := map[uint8]types.TaskType{}
+	buttons := map[uint8]types.TaskType{}
+
+	for _, task := range tasks {
+		switch task.Task {
+		case types.DoorControlled:
+			doors[task.Door] = types.DoorControlled
+
+		case types.DoorOpen:
+			doors[task.Door] = types.DoorOpen
+
+		case types.DoorClosed:
+			doors[task.Door] = types.DoorClosed
+
+		case types.DisableTimeProfile:
+			profiles[task.Door] = types.DisableTimeProfile
+
+		case types.EnableTimeProfile:
+			profiles[task.Door] = types.EnableTimeProfile
+
+			//	case types.CardNoPassword:
+			//	case types.CardInPassword:
+			//	case types.CardInOutPassword:
+			//	case types.EnableMoreCards:
+			//	case types.DisableMoreCards:
+			//	case types.TriggerOnce:
+
+		case types.DisablePushButton:
+			buttons[task.Door] = types.DisablePushButton
+
+		case types.EnablePushButton:
+			buttons[task.Door] = types.EnablePushButton
+		}
+	}
+
+	for _, d := range []uint8{1, 2, 3, 4} {
+		if v, ok := doors[d]; ok {
+			handler(d, v)
+		}
+	}
+
+	for _, d := range []uint8{1, 2, 3, 4} {
+		if v, ok := profiles[d]; ok {
+			handler(d, v)
+		}
+	}
+
+	for _, d := range []uint8{1, 2, 3, 4} {
+		if v, ok := buttons[d]; ok {
+			handler(d, v)
+		}
+	}
 }
