@@ -41,39 +41,7 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8) (bool, error) {
 		s.add(&event)
 	}
 
-	handler := func(door uint8, task types.TaskType) {
-		switch task {
-		case types.DoorControlled:
-			s.Doors[door].OverrideState(entities.Controlled)
-
-		case types.DoorOpen:
-			s.Doors[door].OverrideState(entities.NormallyOpen)
-
-		case types.DoorClosed:
-			s.Doors[door].OverrideState(entities.NormallyClosed)
-
-		case types.DisableTimeProfile:
-			s.Doors[door].EnableProfile(false)
-
-		case types.EnableTimeProfile:
-			s.Doors[door].EnableProfile(true)
-
-			//	case types.CardNoPassword:
-			//	case types.CardInPassword:
-			//	case types.CardInOutPassword:
-			//	case types.EnableMoreCards:
-			//	case types.DisableMoreCards:
-			//	case types.TriggerOnce:
-
-		case types.DisablePushButton:
-			s.Doors[door].EnableButton(false)
-
-		case types.EnablePushButton:
-			s.Doors[door].EnableButton(true)
-		}
-	}
-
-	s.TaskList.Run(handler)
+	runTasks(s)
 
 	for _, c := range s.Cards {
 		if c == nil || c.CardNumber != cardNumber {
@@ -105,7 +73,7 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8) (bool, error) {
 
 		// unlock door
 		if d, ok := s.Doors[door]; ok {
-			if d.ControlState == entities.NormallyClosed {
+			if d.IsNormallyClosed() {
 				swiped(0x01, false, normallyClosed)
 				return false, nil
 			}
@@ -173,6 +141,8 @@ func (s *UT0311L04) Open(door uint8, duration *time.Duration) (bool, error) {
 		}
 	}
 
+	runTasks(s)
+
 	opened := s.Doors[door].Open(duration, onOpen, onClose)
 
 	return opened, nil
@@ -206,6 +176,8 @@ func (s *UT0311L04) Close(door uint8) (bool, error) {
 			s.add(&event)
 		}
 	}
+
+	runTasks(s)
 
 	closed := s.Doors[door].Close(onClose)
 
@@ -243,7 +215,7 @@ func (s *UT0311L04) ButtonPressed(door uint8, duration time.Duration) (bool, err
 		}
 	}
 
-	onNotUnlocked := func() {
+	onNotUnlocked := func(reason uint8) {
 		if s.RecordSpecialEvents {
 			datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
 			event := entities.Event{
@@ -253,24 +225,26 @@ func (s *UT0311L04) ButtonPressed(door uint8, duration time.Duration) (bool, err
 				Direction:  1,
 				CardNumber: 6,
 				Timestamp:  types.DateTime(datetime),
-				Reason:     0x14,
+				Reason:     reason,
 			}
 
 			s.add(&event)
 		}
 	}
 
-	pressed, unlocked := s.Doors[door].PressButton(duration)
+	runTasks(s)
+
+	pressed, reason := s.Doors[door].PressButton(duration)
 
 	if pressed {
-		if unlocked {
+		if reason == 0x00 {
 			onUnlocked()
 		} else {
-			onNotUnlocked()
+			onNotUnlocked(reason)
 		}
 	}
 
-	return pressed && unlocked, nil
+	return pressed && (reason == 0x00), nil
 }
 
 // Builds list of linked time profiles and then checks each individual profile
@@ -331,4 +305,40 @@ func checkTimeProfile(profile types.TimeProfile) bool {
 	}
 
 	return false
+}
+
+func runTasks(s *UT0311L04) {
+	handler := func(door uint8, task types.TaskType) {
+		switch task {
+		case types.DoorControlled:
+			s.Doors[door].OverrideState(entities.Controlled)
+
+		case types.DoorOpen:
+			s.Doors[door].OverrideState(entities.NormallyOpen)
+
+		case types.DoorClosed:
+			s.Doors[door].OverrideState(entities.NormallyClosed)
+
+		case types.DisableTimeProfile:
+			s.Doors[door].EnableProfile(false)
+
+		case types.EnableTimeProfile:
+			s.Doors[door].EnableProfile(true)
+
+			//	case types.CardNoPassword:
+			//	case types.CardInPassword:
+			//	case types.CardInOutPassword:
+			//	case types.EnableMoreCards:
+			//	case types.DisableMoreCards:
+			//	case types.TriggerOnce:
+
+		case types.DisablePushButton:
+			s.Doors[door].EnableButton(false)
+
+		case types.EnablePushButton:
+			s.Doors[door].EnableButton(true)
+		}
+	}
+
+	s.TaskList.Run(handler)
 }

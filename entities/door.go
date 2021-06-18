@@ -145,9 +145,9 @@ func (d *Door) Unlock(duration time.Duration) bool {
 	return true
 }
 
-func (d *Door) PressButton(duration time.Duration) (pressed bool, unlocked bool) {
+func (d *Door) PressButton(duration time.Duration) (pressed bool, reason uint8) {
 	pressed = false
-	unlocked = false
+	reason = 0x14
 
 	if d == nil {
 		return
@@ -155,10 +155,6 @@ func (d *Door) PressButton(duration time.Duration) (pressed bool, unlocked bool)
 
 	d.guard.Lock()
 	defer d.guard.Unlock()
-
-	if d.buttonDisabled {
-		return
-	}
 
 	now := time.Now().UTC()
 	pressUntil := time.Now().UTC()
@@ -172,17 +168,25 @@ func (d *Door) PressButton(duration time.Duration) (pressed bool, unlocked bool)
 		d.pressedUntil = &pressUntil
 	}
 
-	if d.ControlState != NormallyClosed {
-		unlockUntil := time.Now().UTC()
-		unlockUntil = unlockUntil.Add(duration)
-		unlockUntil = unlockUntil.Add(time.Duration(d.Delay))
-
-		if d.unlockedUntil == nil || d.unlockedUntil.Before(unlockUntil) {
-			d.unlockedUntil = &unlockUntil
-		}
-
-		unlocked = true
+	if d.buttonDisabled {
+		reason = 0x1e
+		return
 	}
+
+	if d.ControlState == NormallyClosed || d.overrideState == NormallyClosed {
+		reason = 0x14
+		return
+	}
+
+	unlockUntil := time.Now().UTC()
+	unlockUntil = unlockUntil.Add(duration)
+	unlockUntil = unlockUntil.Add(time.Duration(d.Delay))
+
+	if d.unlockedUntil == nil || d.unlockedUntil.Before(unlockUntil) {
+		d.unlockedUntil = &unlockUntil
+	}
+
+	reason = 0x00
 
 	return
 }
@@ -224,6 +228,17 @@ func (d *Door) EnableButton(enabled bool) bool {
 	d.buttonDisabled = !enabled
 
 	return true
+}
+
+func (d *Door) IsNormallyClosed() bool {
+	if d == nil {
+		return true
+	}
+
+	d.guard.RLock()
+	defer d.guard.RUnlock()
+
+	return d.ControlState == NormallyClosed || d.overrideState == NormallyClosed
 }
 
 func (d *Door) IsProfileDisabled() bool {
