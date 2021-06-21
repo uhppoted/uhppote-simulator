@@ -49,17 +49,18 @@ func (t *TaskList) Run(handler func(door uint8, task types.TaskType)) {
 	doors := map[uint8]types.TaskType{}
 	profiles := map[uint8]types.TaskType{}
 	buttons := map[uint8]types.TaskType{}
+	other := map[uint8]types.TaskType{}
 
 	for _, task := range tasks {
 		switch task.Task {
 		case types.DoorControlled:
 			doors[task.Door] = types.DoorControlled
 
-		case types.DoorOpen:
-			doors[task.Door] = types.DoorOpen
+		case types.DoorNormallyOpen:
+			doors[task.Door] = types.DoorNormallyOpen
 
-		case types.DoorClosed:
-			doors[task.Door] = types.DoorClosed
+		case types.DoorNormallyClosed:
+			doors[task.Door] = types.DoorNormallyClosed
 
 		case types.DisableTimeProfile:
 			profiles[task.Door] = types.DisableTimeProfile
@@ -72,7 +73,11 @@ func (t *TaskList) Run(handler func(door uint8, task types.TaskType)) {
 			//	case types.CardInOutPassword:
 			//	case types.EnableMoreCards:
 			//	case types.DisableMoreCards:
-			//	case types.TriggerOnce:
+
+		case types.TriggerOnce:
+			if task.Start.Equals(now) {
+				other[task.Door] = types.TriggerOnce
+			}
 
 		case types.DisablePushButton:
 			buttons[task.Door] = types.DisablePushButton
@@ -96,6 +101,12 @@ func (t *TaskList) Run(handler func(door uint8, task types.TaskType)) {
 
 	for _, d := range []uint8{1, 2, 3, 4} {
 		if v, ok := buttons[d]; ok {
+			handler(d, v)
+		}
+	}
+
+	for _, d := range []uint8{1, 2, 3, 4} {
+		if v, ok := other[d]; ok {
 			handler(d, v)
 		}
 	}

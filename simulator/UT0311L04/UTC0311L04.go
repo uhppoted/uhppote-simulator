@@ -186,10 +186,10 @@ func (s *UT0311L04) RunTasks() {
 		case types.DoorControlled:
 			s.Doors[door].OverrideState(entities.Controlled)
 
-		case types.DoorOpen:
+		case types.DoorNormallyOpen:
 			s.Doors[door].OverrideState(entities.NormallyOpen)
 
-		case types.DoorClosed:
+		case types.DoorNormallyClosed:
 			s.Doors[door].OverrideState(entities.NormallyClosed)
 
 		case types.DisableTimeProfile:
@@ -203,7 +203,9 @@ func (s *UT0311L04) RunTasks() {
 			//	case types.CardInOutPassword:
 			//	case types.EnableMoreCards:
 			//	case types.DisableMoreCards:
-			//	case types.TriggerOnce:
+
+		case types.TriggerOnce:
+			s.Doors[door].Unlock(0 * time.Second)
 
 		case types.DisablePushButton:
 			s.Doors[door].EnableButton(false)

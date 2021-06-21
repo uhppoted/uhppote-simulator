@@ -2,17 +2,18 @@
 
 ## IN PROGRESS
 
-- [ ] Implement 'trigger once'
-- [ ] Validate swipe/pushbutton/etc against task list
+- [ ] Update README
+
+- [x] Validate swipe/pushbutton/etc against task list
       - [x] 1   control door
       - [x] 2   unlock door
       - [x] 3   lock door
       - [x] 4   disable time profile
       - [x] 5   enable time profile
-      - [ ] 11  trigger once
+      - [x] 11  trigger once
       - [x] 12  disable pushbutton
       - [x] 13  enable pushbutton
-
+- [x] Implement 'trigger once'
 - [x] `clear-task-list`
 - [x] `add-task`
 - [x] `refresh-task-list`
