@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/signal"
 	"regexp"
+	"time"
 
 	codec "github.com/uhppoted/uhppote-core/encoding/UTO311-L0x"
 	"github.com/uhppoted/uhppote-core/messages"
@@ -68,6 +69,19 @@ func run(ctx *simulator.Context, connection *net.UDPConn, wait chan int) {
 	}()
 
 	go func() {
+		tick := time.Tick(1 * time.Second)
+		last := "00:00"
+		for {
+			<-tick
+			now := time.Now().Format("15:34")
+			if now != last {
+				last = now
+				tasks(ctx)
+			}
+		}
+	}()
+
+	go func() {
 		rest.Run(ctx)
 	}()
 
@@ -93,6 +107,14 @@ func handle(ctx *simulator.Context, c *net.UDPConn, src *net.UDPAddr, bytes []by
 
 	f := func(s simulator.Simulator) {
 		s.Handle(src, request)
+	}
+
+	ctx.DeviceList.Apply(f)
+}
+
+func tasks(ctx *simulator.Context) {
+	f := func(s simulator.Simulator) {
+		s.RunTasks()
 	}
 
 	ctx.DeviceList.Apply(f)

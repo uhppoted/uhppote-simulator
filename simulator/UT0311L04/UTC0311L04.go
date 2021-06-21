@@ -180,6 +180,42 @@ func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 	}
 }
 
+func (s *UT0311L04) RunTasks() {
+	handler := func(door uint8, task types.TaskType) {
+		switch task {
+		case types.DoorControlled:
+			s.Doors[door].OverrideState(entities.Controlled)
+
+		case types.DoorOpen:
+			s.Doors[door].OverrideState(entities.NormallyOpen)
+
+		case types.DoorClosed:
+			s.Doors[door].OverrideState(entities.NormallyClosed)
+
+		case types.DisableTimeProfile:
+			s.Doors[door].EnableProfile(false)
+
+		case types.EnableTimeProfile:
+			s.Doors[door].EnableProfile(true)
+
+			//	case types.CardNoPassword:
+			//	case types.CardInPassword:
+			//	case types.CardInOutPassword:
+			//	case types.EnableMoreCards:
+			//	case types.DisableMoreCards:
+			//	case types.TriggerOnce:
+
+		case types.DisablePushButton:
+			s.Doors[door].EnableButton(false)
+
+		case types.EnablePushButton:
+			s.Doors[door].EnableButton(true)
+		}
+	}
+
+	s.TaskList.Run(handler)
+}
+
 func Load(filepath string, compressed bool) (*UT0311L04, error) {
 	if compressed {
 		return loadGZ(filepath)

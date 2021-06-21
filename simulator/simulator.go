@@ -15,6 +15,7 @@ type Simulator interface {
 	SetTxQ(chan entities.Message)
 
 	Handle(*net.UDPAddr, messages.Request)
+	RunTasks()
 	Save() error
 	Delete() error
 
