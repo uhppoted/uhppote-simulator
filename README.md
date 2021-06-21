@@ -56,7 +56,7 @@ go build -o bin ./...
 
 ## uhppote-simulator
 
-Supported functions:
+Supported `uhppote` functions:
 - FindDevices
 - FindDevice
 - SetAddress
@@ -77,11 +77,19 @@ Supported functions:
 - GetTimeProfile
 - SetTimeProfile
 - ClearTimeProfiles
+- ClearTaskList
+- AddTask
+- RefreshTaskList
 - GetEvent
 - GetEventIndex
 - SetEventIndex
 - OpenDoor
 - Listen
+
+Supported _actions_:
+- swipe card
+- press button
+- open door
 
 Usage: *uhppote-simulator \<command\> --devices=\<dir\>*
 

@@ -2,8 +2,7 @@
 
 ## IN PROGRESS
 
-- [ ] Update README
-
+- [x] Update README
 - [x] Validate swipe/pushbutton/etc against task list
       - [x] 1   control door
       - [x] 2   unlock door
