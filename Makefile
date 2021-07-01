@@ -1,7 +1,4 @@
-VERSION    = v0.7.x
-LDFLAGS    = -ldflags "-X uhppote.VERSION=$(VERSION)" 
 DIST      ?= development
-
 SERIALNO  ?= 405419896
 NEWDEVICE ?= 102030405
 CARD      ?= 8165538

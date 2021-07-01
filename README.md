@@ -14,6 +14,7 @@ Supported operating systems:
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.7.1    | Added support for task list functionality from the extended API                           |
 | v0.7.0    | Added support for time profiles from the extended API                                     |
 | v0.6.12   | Added simulation support for encoding `nil` events for response to `get-status`           |
 | v0.6.10   | Maintenance release for version compatibility with `uhppoted-app-wild-apricot`            |

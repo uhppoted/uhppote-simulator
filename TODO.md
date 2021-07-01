@@ -1,6 +1,4 @@
-## v0.7.x
-
-## IN PROGRESS
+## v0.7.1
 
 - [x] Update README
 - [x] Validate swipe/pushbutton/etc against task list
