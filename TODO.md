@@ -1,34 +1,6 @@
-## v0.7.1
+## v0.7.x
 
-- [x] Update README
-- [x] Validate swipe/pushbutton/etc against task list
-      - [x] 1   control door
-      - [x] 2   unlock door
-      - [x] 3   lock door
-      - [x] 4   disable time profile
-      - [x] 5   enable time profile
-      - [x] 11  trigger once
-      - [x] 12  disable pushbutton
-      - [x] 13  enable pushbutton
-- [x] Implement 'trigger once'
-- [x] `clear-task-list`
-- [x] `add-task`
-- [x] `refresh-task-list`
-- [x] Check swipe event reason when door state managed by task
-```
-      ✓ default swipe         | 518   1   true  3 1     6154410    2021-06-18 12:06:14 1
-      ✓ disable time profile  | 519   1   false 3 1     6154410    2021-06-18 12:07:08 15
-      ✓ enable time profile   | 520   1   true  3 1     6154410    2021-06-18 12:07:40 1
-      ✓ lock door             | 521   1   false 3 1     6154410    2021-06-18 12:08:27 11
-      ✓ unlock door           | 522   1   true  3 1     6154410    2021-06-18 12:11:10 1
-      ✓ control door          | 523   1   true  3 1     6154410    2021-06-18 12:12:16 1
-```
-- [x] Check pushbutton event reason when disabled by task
-```
-      ✓ default button        | 526   2   true  3 1     1          2021-06-18 12:14:39 20
-      ✓ disable pushbutton    | 531   3   false 3 1     4          2021-06-18 12:16:09 30
-      ✓ enable pushbutton     | 532   2   true  3 1     1          2021-06-18 12:17:20 20
-```
+- [ ] Check real device events list rollover
 
 ## TODO
 
@@ -36,7 +8,6 @@
 - [ ] Replace UTO311L04.TimeOffset with time zone
 - [ ] Unit tests for EventList
 - [ ] Unit tests for TaskList
-- [ ] Check real device events list rollover
 
 ### simulator
 - [ ] concurrent requests
