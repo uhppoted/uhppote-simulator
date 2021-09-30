@@ -12,9 +12,9 @@ func TestSetIndex(t *testing.T) {
 		Last:  5,
 		Index: 3,
 		Events: []Event{
-			Event{RecordNumber: 1},
-			Event{RecordNumber: 2},
-			Event{RecordNumber: 3},
+			Event{Index: 1},
+			Event{Index: 2},
+			Event{Index: 3},
 		},
 	}
 
@@ -35,9 +35,9 @@ func TestSetIndexWithOutOfRangeValue(t *testing.T) {
 		Last:  5,
 		Index: 3,
 		Events: []Event{
-			Event{RecordNumber: 1},
-			Event{RecordNumber: 2},
-			Event{RecordNumber: 3},
+			Event{Index: 1},
+			Event{Index: 2},
+			Event{Index: 3},
 		},
 	}
 

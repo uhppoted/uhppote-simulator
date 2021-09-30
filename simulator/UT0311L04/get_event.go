@@ -23,7 +23,7 @@ func (s *UT0311L04) getEvent(addr *net.UDPAddr, request *messages.GetEventReques
 		if event := s.Events.Get(index); event != nil {
 			response := messages.GetEventResponse{
 				SerialNumber: s.SerialNumber,
-				Index:        event.RecordNumber,
+				Index:        event.Index,
 				Type:         event.Type,
 				Granted:      event.Granted,
 				Door:         event.Door,

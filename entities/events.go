@@ -5,14 +5,14 @@ import (
 )
 
 type Event struct {
-	RecordNumber uint32         `json:"record-number"`
-	Type         uint8          `json:"type"`
-	Granted      bool           `json:"granted"`
-	Door         uint8          `json:"door"`
-	Direction    uint8          `json:"direction"`
-	CardNumber   uint32         `json:"CardNumber"`
-	Timestamp    types.DateTime `json:"timestamp"`
-	Reason       uint8          `json:"reason"`
+	Index      uint32         `json:"index"`
+	Type       uint8          `json:"type"`
+	Granted    bool           `json:"granted"`
+	Door       uint8          `json:"door"`
+	Direction  uint8          `json:"direction"`
+	CardNumber uint32         `json:"card"`
+	Timestamp  types.DateTime `json:"timestamp"`
+	Reason     uint8          `json:"reason"`
 }
 
 type EventList struct {
@@ -38,7 +38,7 @@ func (l *EventList) Add(event *Event) {
 			}
 		}
 
-		event.RecordNumber = uint32(l.Last)
+		event.Index = uint32(l.Last)
 
 		index := l.Last
 		if index >= uint32(len(l.Events)) {
