@@ -201,7 +201,7 @@ func TestCardListDeleteAll(t *testing.T) {
 func TestCardListMarshalJSON(t *testing.T) {
 	expected := `[
   {
-    "number": 6000001,
+    "card": 6000001,
     "from": "2021-01-01",
     "to": "2021-12-31",
     "doors": {
@@ -213,7 +213,7 @@ func TestCardListMarshalJSON(t *testing.T) {
   },
   null,
   {
-    "number": 0,
+    "card": 0,
     "from": "2021-01-01",
     "to": "2021-12-31",
     "doors": {
@@ -225,7 +225,7 @@ func TestCardListMarshalJSON(t *testing.T) {
   },
   null,
   {
-    "number": 4294967295,
+    "card": 4294967295,
     "from": "2021-01-01",
     "to": "2021-12-31",
     "doors": {
@@ -260,7 +260,7 @@ func TestCardListUnmarshalJSON(t *testing.T) {
 
 	blob := `[
   {
-    "number": 6000001,
+    "card": 6000001,
     "from": "2021-01-01",
     "to": "2021-12-31",
     "doors": {
@@ -272,7 +272,7 @@ func TestCardListUnmarshalJSON(t *testing.T) {
   },
   null,
   {
-    "number": 0,
+    "card": 0,
     "from": "2021-01-01",
     "to": "2021-12-31",
     "doors": {
@@ -284,7 +284,7 @@ func TestCardListUnmarshalJSON(t *testing.T) {
   },
   null,
   {
-    "number": 4294967295,
+    "card": 4294967295,
     "from": "2021-01-01",
     "to": "2021-12-31",
     "doors": {

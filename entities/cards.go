@@ -8,7 +8,7 @@ import (
 )
 
 type Card struct {
-	CardNumber uint32          `json:"number"`
+	CardNumber uint32          `json:"card"`
 	From       *types.Date     `json:"from,omitempty"`
 	To         *types.Date     `json:"to,omitempty"`
 	Doors      map[uint8]uint8 `json:"doors,omitempty"`
