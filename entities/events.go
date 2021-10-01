@@ -68,8 +68,28 @@ func (l *EventList) Get(index uint32) *Event {
 }
 
 func (l *EventList) SetIndex(index uint32) bool {
-	if index != l.Index && index <= l.Last {
-		l.Index = index
+	if index == 0 || index == l.Index {
+		return false
+	}
+
+	if l.Last >= l.First {
+		if index > l.Last || index < l.First {
+			return false
+		} else {
+			l.Index = index
+			return true
+		}
+	}
+
+	// Events list has rolled over
+	// FIXME verify with actual controller
+	if index <= l.Last || index >= l.First {
+		if index <= l.Size {
+			l.Index = index
+		} else {
+			l.Index = 1
+		}
+
 		return true
 	}
 

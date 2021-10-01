@@ -56,7 +56,7 @@ bump:
 	go get -u github.com/uhppoted/uhppote-core
 
 debug: build
-	go test ./... -run TestCardListMarshalJSON
+	go test ./... -run TestSetIndexWithOutOfRangeValue
 
 godoc:
 	godoc -http=:80	-index_interval=60s
