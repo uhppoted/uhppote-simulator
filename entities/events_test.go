@@ -27,6 +27,29 @@ func TestSetIndex(t *testing.T) {
 	}
 }
 
+func TestSetIndexWithZero(t *testing.T) {
+	events := EventList{
+
+		Size:  8,
+		First: 1,
+		Last:  5,
+		Index: 3,
+		Events: []Event{
+			Event{Index: 1},
+			Event{Index: 2},
+			Event{Index: 3},
+		},
+	}
+
+	if !events.SetIndex(0) {
+		t.Errorf("Incorrect return from SetIndex - expected:%v, got:%v", true, false)
+	}
+
+	if events.Index != 0 {
+		t.Errorf("SetIndex failed to update internal index - expected:%v, got:%v", 0, events.Index)
+	}
+}
+
 func TestSetIndexWithOutOfRangeValue(t *testing.T) {
 	events := EventList{
 
