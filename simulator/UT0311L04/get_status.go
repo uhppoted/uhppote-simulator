@@ -43,7 +43,7 @@ func (s *UT0311L04) getStatus(addr *net.UDPAddr, request *messages.GetStatusRequ
 			response.Granted = event.Granted
 			response.Door = event.Door
 			response.Direction = event.Direction
-			response.CardNumber = event.CardNumber
+			response.CardNumber = event.Card
 			response.Timestamp = &timestamp
 			response.Reason = event.Reason
 		}

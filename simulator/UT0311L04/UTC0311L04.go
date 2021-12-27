@@ -404,7 +404,7 @@ func (s *UT0311L04) add(e *entities.Event) uint32 {
 			EventType:  e.Type,
 			Reason:     e.Reason,
 			Timestamp:  e.Timestamp,
-			CardNumber: e.CardNumber,
+			CardNumber: e.Card,
 			Granted:    e.Granted,
 			Door:       e.Door,
 			Direction:  e.Direction,

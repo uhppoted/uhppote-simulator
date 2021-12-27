@@ -1,6 +1,47 @@
 ## v0.7.x
 
-- [ ] Check real device events list rollover
+- [x] Check real device events list rollover
+- [ ] Rework EventList to emulate actual controller behaviour
+      - [x] Implement JSON Marshal/Unmarshal
+      - [ ] Rework events store as linear array 
+      - [ ] Discard _chunk_ of events on filling store
+      - [ ] Increase event index monotonically
+      - [ ] 0 returns 'first' event
+      - [ ] FFFFFFFF returns 'last' event
+      - [ ] Other 'out of range' events
+```
+ >> before 'first' event -> returns 0xFF (overwritten) for record type
+ ... request
+ ...          00000000  17 b0 00 00 2d 55 39 19  e8 03 00 00 00 00 00 00  |....-U9.........|
+ ...          00000010  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+ ...          00000020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+ ...          00000030  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+ ...
+
+ ... response
+ ...          00000000  17 b0 00 00 2d 55 39 19  00 00 00 00 ff 00 00 00  |....-U9.........|
+ ...          00000010  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+ ...          00000020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+ ...          00000030  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+
+ >> after 'last' event:
+ ... request
+ ...          00000000  17 b0 00 00 2d 55 39 19  e0 93 04 00 00 00 00 00  |....-U9.........|
+ ...          00000010  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+ ...          00000020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+ ...          00000030  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+ ...
+
+ ... response
+ ...          00000000  17 b0 00 00 2d 55 39 19  00 00 00 00 00 00 00 00  |....-U9.........|
+ ...          00000010  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+ ...          00000020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+ ...          00000030  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+ ...
+ ```
+      - [ ] `set-event-index` with out of range values 
+      - [ ] Unit tests
+      - [ ] Fix core.DateTime Unmarshal to set nanos etc to 0
 
 ## TODO
 
