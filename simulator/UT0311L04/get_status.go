@@ -12,11 +12,11 @@ func (s *UT0311L04) getStatus(addr *net.UDPAddr, request *messages.GetStatusRequ
 	if s.SerialNumber == request.SerialNumber {
 		utc := time.Now().UTC()
 		datetime := utc.Add(time.Duration(s.TimeOffset))
-		event := s.Events.Get(s.Events.Last)
+		event := s.Events.Get(0xffffffff)
 
 		response := messages.GetStatusResponse{
 			SerialNumber: s.SerialNumber,
-			EventIndex:   s.Events.Last,
+			EventIndex:   0,
 			SystemError:  s.SystemError,
 			SystemDate:   types.SystemDate(datetime),
 			SystemTime:   types.SystemTime(datetime),
@@ -39,6 +39,7 @@ func (s *UT0311L04) getStatus(addr *net.UDPAddr, request *messages.GetStatusRequ
 		if event != nil {
 			timestamp := event.Timestamp
 
+			response.EventIndex = event.Index
 			response.EventType = event.Type
 			response.Granted = event.Granted
 			response.Door = event.Door

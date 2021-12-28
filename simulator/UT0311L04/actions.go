@@ -38,7 +38,7 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8) (bool, error) {
 			Reason:    reason,
 		}
 
-		s.add(&event)
+		s.add(event)
 	}
 
 	for _, c := range s.Cards {
@@ -118,7 +118,7 @@ func (s *UT0311L04) Open(door uint8, duration *time.Duration) (bool, error) {
 				Reason:    reason,
 			}
 
-			s.add(&event)
+			s.add(event)
 		}
 	}
 
@@ -135,7 +135,7 @@ func (s *UT0311L04) Open(door uint8, duration *time.Duration) (bool, error) {
 				Reason:    0x18,
 			}
 
-			s.add(&event)
+			s.add(event)
 		}
 	}
 
@@ -169,7 +169,7 @@ func (s *UT0311L04) Close(door uint8) (bool, error) {
 				Reason:    0x18,
 			}
 
-			s.add(&event)
+			s.add(event)
 		}
 	}
 
@@ -205,7 +205,7 @@ func (s *UT0311L04) ButtonPressed(door uint8, duration time.Duration) (bool, err
 				Reason:    0x14,
 			}
 
-			s.add(&event)
+			s.add(event)
 		}
 	}
 
@@ -222,7 +222,7 @@ func (s *UT0311L04) ButtonPressed(door uint8, duration time.Duration) (bool, err
 				Reason:    reason,
 			}
 
-			s.add(&event)
+			s.add(event)
 		}
 	}
 

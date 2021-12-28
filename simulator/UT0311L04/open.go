@@ -35,7 +35,7 @@ func (s *UT0311L04) unlockDoor(addr *net.UDPAddr, request *messages.OpenDoorRequ
 				Reason:    0x2c,
 			}
 
-			s.add(&event)
+			s.add(event)
 		}
 	}
 }

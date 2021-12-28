@@ -356,8 +356,6 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 
 	events := entities.EventList{
 		Index: 123,
-		First: 1,
-		Last:  8,
 		Events: []entities.Event{
 			entities.Event{
 				Index:     1,

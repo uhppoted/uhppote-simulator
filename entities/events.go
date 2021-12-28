@@ -2,6 +2,7 @@ package entities
 
 import (
 	"encoding/json"
+	"sort"
 	"time"
 
 	"github.com/uhppoted/uhppote-core/types"
@@ -21,8 +22,6 @@ type Event struct {
 type EventList struct {
 	Size   uint32  `json:"size"`
 	Chunk  uint32  `json:"chunk"`
-	First  uint32  `json:"first"`
-	Last   uint32  `json:"last"`
 	Index  uint32  `json:"index"`
 	Events []Event `json:"events"`
 }
@@ -90,15 +89,11 @@ func (l EventList) MarshalJSON() ([]byte, error) {
 	list := struct {
 		Size   uint32  `json:"size"`
 		Chunk  uint32  `json:"chunk"`
-		First  uint32  `json:"first"`
-		Last   uint32  `json:"last"`
 		Index  uint32  `json:"index"`
 		Events []Event `json:"events"`
 	}{
 		Size:   l.Size,
 		Chunk:  l.Chunk,
-		First:  l.First,
-		Last:   l.Last,
 		Index:  l.Index,
 		Events: l.Events,
 	}
@@ -112,12 +107,10 @@ func (l *EventList) UnmarshalJSON(b []byte) error {
 	list := struct {
 		Size   uint32  `json:"size"`
 		Chunk  uint32  `json:"chunk"`
-		First  uint32  `json:"first"`
-		Last   uint32  `json:"last"`
 		Index  uint32  `json:"index"`
 		Events []Event `json:"events"`
 	}{
-		Size:  64,
+		Size:  256,
 		Chunk: 8,
 	}
 
@@ -127,47 +120,50 @@ func (l *EventList) UnmarshalJSON(b []byte) error {
 
 	l.Size = list.Size
 	l.Chunk = list.Chunk
-	l.First = list.First
-	l.Last = list.Last
 	l.Index = list.Index
-	l.Events = list.Events
+	l.Events = []Event{}
+
+	sort.SliceStable(list.Events, func(i, j int) bool { return list.Events[i].Index < list.Events[j].Index })
+
+	index := uint32(0)
+	for _, e := range list.Events {
+		if e.Index > index {
+			l.Events = append(l.Events, e)
+			index = e.Index
+		}
+	}
+
+	for len(l.Events) > int(l.Size) {
+		l.Events = l.Events[l.Chunk:]
+	}
 
 	return nil
 }
 
-func (l *EventList) Add(event *Event) {
-	if event != nil {
-		l.Last = l.Last + 1
-		if l.Last > l.Size {
-			l.Last = 1
-		}
-
-		if l.Last == l.First {
-			l.First = l.First + 1
-			if l.First > l.Size {
-				l.First = 1
-			}
-		}
-
-		event.Index = uint32(l.Last)
-
-		index := l.Last
-		if index >= uint32(len(l.Events)) {
-			l.Events = append(l.Events, *event)
-		} else {
-			l.Events[index-1] = *event
-		}
+func (l *EventList) Add(event Event) uint32 {
+	index := uint32(1)
+	if N := len(l.Events); N > 0 {
+		index = l.Events[N-1].Index + 1
 	}
+
+	event.Index = index
+
+	l.Events = append(l.Events, event)
+	if len(l.Events) > int(l.Size) {
+		l.Events = l.Events[l.Chunk:]
+	}
+
+	return index
 }
 
 func (l *EventList) Get(index uint32) *Event {
-	if len(l.Events) > 0 {
+	if N := len(l.Events); N > 0 {
 		if index == 0 {
-			return &l.Events[l.First-1]
+			return &l.Events[0]
 		}
 
-		if index == 0xffffffff || index > uint32(len(l.Events)) {
-			return &l.Events[l.Last-1]
+		if index == 0xffffffff {
+			return &l.Events[N-1]
 		}
 
 		if index > 0 && int(index) <= len(l.Events) {
@@ -188,25 +184,12 @@ func (l *EventList) SetIndex(index uint32) bool {
 		return true
 	}
 
-	if l.Last >= l.First {
-		if index > l.Last || index < l.First {
-			return false
-		} else {
+	if N := len(l.Events); N > 0 {
+		last := l.Events[N-1].Index
+		if index <= last {
 			l.Index = index
 			return true
 		}
-	}
-
-	// Events list has rolled over
-	// FIXME verify with actual controller
-	if index <= l.Last || index >= l.First {
-		if index <= l.Size {
-			l.Index = index
-		} else {
-			l.Index = 1
-		}
-
-		return true
 	}
 
 	return false

@@ -56,8 +56,8 @@ bump:
 	go get -u github.com/uhppoted/uhppote-core
 
 debug: build
-	go test -v ./entities/...
-	# go test ./... -run TestUnmarshalEventList*
+	# go test -v ./entities/...
+	go test ./entities/... -run TestAddEvent*
 
 godoc:
 	godoc -http=:80	-index_interval=60s

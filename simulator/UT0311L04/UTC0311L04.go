@@ -287,18 +287,6 @@ func load(filepath string) (*UT0311L04, error) {
 		}
 	}
 
-	if simulator.Events.Size <= 0 {
-		simulator.Events.Size = 256
-	}
-
-	if simulator.Events.First == 0 {
-		simulator.Events.First = 1
-	}
-
-	if simulator.Events.Last == 0 {
-		simulator.Events.Last = uint32(len(simulator.Events.Events))
-	}
-
 	return &simulator, nil
 }
 
@@ -372,58 +360,52 @@ func save(filepath string, s *UT0311L04) error {
 	return ioutil.WriteFile(filepath, bytes, 0644)
 }
 
-func (s *UT0311L04) add(e *entities.Event) uint32 {
-	if e != nil {
-		s.Events.Add(e)
-		s.Save()
+func (s *UT0311L04) add(event entities.Event) {
+	index := s.Events.Add(event)
+	s.Save()
 
-		utc := time.Now().UTC()
-		datetime := utc.Add(time.Duration(s.TimeOffset))
+	utc := time.Now().UTC()
+	datetime := utc.Add(time.Duration(s.TimeOffset))
 
-		e := messages.Event{
-			SerialNumber: s.SerialNumber,
-			EventIndex:   s.Events.Last,
-			SystemError:  s.SystemError,
-			SystemDate:   types.SystemDate(datetime),
-			SystemTime:   types.SystemTime(datetime),
-			SequenceId:   s.SequenceId,
-			SpecialInfo:  s.SpecialInfo,
-			RelayState:   s.relays(),
-			InputState:   s.InputState,
+	e := messages.Event{
+		SerialNumber: s.SerialNumber,
+		EventIndex:   index,
+		SystemError:  s.SystemError,
+		SystemDate:   types.SystemDate(datetime),
+		SystemTime:   types.SystemTime(datetime),
+		SequenceId:   s.SequenceId,
+		SpecialInfo:  s.SpecialInfo,
+		RelayState:   s.relays(),
+		InputState:   s.InputState,
 
-			Door1State: s.Doors[1].IsOpen(),
-			Door2State: s.Doors[2].IsOpen(),
-			Door3State: s.Doors[3].IsOpen(),
-			Door4State: s.Doors[4].IsOpen(),
+		Door1State: s.Doors[1].IsOpen(),
+		Door2State: s.Doors[2].IsOpen(),
+		Door3State: s.Doors[3].IsOpen(),
+		Door4State: s.Doors[4].IsOpen(),
 
-			Door1Button: s.Doors[1].IsButtonPressed(),
-			Door2Button: s.Doors[2].IsButtonPressed(),
-			Door3Button: s.Doors[3].IsButtonPressed(),
-			Door4Button: s.Doors[4].IsButtonPressed(),
+		Door1Button: s.Doors[1].IsButtonPressed(),
+		Door2Button: s.Doors[2].IsButtonPressed(),
+		Door3Button: s.Doors[3].IsButtonPressed(),
+		Door4Button: s.Doors[4].IsButtonPressed(),
 
-			EventType:  e.Type,
-			Reason:     e.Reason,
-			Timestamp:  e.Timestamp,
-			CardNumber: e.Card,
-			Granted:    e.Granted,
-			Door:       e.Door,
-			Direction:  e.Direction,
-		}
-
-		if fmt.Sprintf("%v", s.Version) == "6.62" {
-			e662 := messages.EventV6_62{
-				Event: e,
-			}
-
-			s.send(s.Listener, &e662)
-		} else {
-			s.send(s.Listener, &e)
-		}
-
-		return s.Events.Last
+		EventType:  event.Type,
+		Reason:     event.Reason,
+		Timestamp:  event.Timestamp,
+		CardNumber: event.Card,
+		Granted:    event.Granted,
+		Door:       event.Door,
+		Direction:  event.Direction,
 	}
 
-	return 0
+	if fmt.Sprintf("%v", s.Version) == "6.62" {
+		e662 := messages.EventV6_62{
+			Event: e,
+		}
+
+		s.send(s.Listener, &e662)
+	} else {
+		s.send(s.Listener, &e)
+	}
 }
 
 func (s *UT0311L04) relays() uint8 {

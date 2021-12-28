@@ -2,12 +2,14 @@
 
 - [x] Check real device events list rollover
 - [ ] Rework EventList to emulate actual controller behaviour
-      - [x] Implement JSON Marshal/Unmarshal
-      - [ ] Rework events store as linear array 
-      - [ ] Discard _chunk_ of events on filling store
-      - [ ] Increase event index monotonically
+      - [x] Rework events store as linear array 
+      - [x] Discard _chunk_ of events on filling store
+      - [x] Increase event index monotonically
       - [ ] 0 returns 'first' event
       - [ ] FFFFFFFF returns 'last' event
+      - [ ] `set-event-index` with out of range values 
+      - [ ] Check GetStatus.EventIndex
+      - [ ] Check GetStatus.Event
       - [ ] Other 'out of range' events
 ```
  >> before 'first' event -> returns 0xFF (overwritten) for record type
@@ -39,7 +41,6 @@
  ...          00000030  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
  ...
  ```
-      - [ ] `set-event-index` with out of range values 
       - [ ] Unit tests
       - [ ] Fix core.DateTime Unmarshal to set nanos etc to 0
 
