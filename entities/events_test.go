@@ -400,6 +400,156 @@ func TestAddEventWithFullList(t *testing.T) {
 	}
 }
 
+func TestGetEventWithNoEvents(t *testing.T) {
+	events := EventList{
+		Size:   8,
+		Index:  0,
+		Events: []Event{},
+	}
+
+	expected := Event{}
+
+	e := events.Get(123)
+
+	if !reflect.DeepEqual(e, expected) {
+		t.Errorf("Incorrect 'no event' return for empty EventList\n   expected:%#v\n   got:     %#v", expected, e)
+	}
+}
+
+func TestGetFirstEvent(t *testing.T) {
+	timestamp := time.Date(2021, time.December, 27, 13, 14, 15, 0, time.Local)
+
+	events := EventList{
+		Size:  8,
+		Index: 0,
+		Events: []Event{
+			Event{Index: 1001, Timestamp: types.DateTime(timestamp), Type: 11},
+			Event{Index: 1002, Timestamp: types.DateTime(timestamp), Type: 12},
+			Event{Index: 1003, Timestamp: types.DateTime(timestamp), Type: 13},
+			Event{Index: 1004, Timestamp: types.DateTime(timestamp), Type: 14},
+			Event{Index: 1005, Timestamp: types.DateTime(timestamp), Type: 15},
+			Event{Index: 1006, Timestamp: types.DateTime(timestamp), Type: 16},
+			Event{Index: 1007, Timestamp: types.DateTime(timestamp), Type: 17},
+			Event{Index: 1008, Timestamp: types.DateTime(timestamp), Type: 18},
+		},
+	}
+
+	expected := Event{Index: 1001, Timestamp: types.DateTime(timestamp), Type: 11}
+
+	e := events.Get(0)
+
+	if !reflect.DeepEqual(e, expected) {
+		t.Errorf("Incorrect 'first event'\n   expected:%#v\n   got:     %#v", expected, e)
+	}
+}
+
+func TestGetLastEvent(t *testing.T) {
+	timestamp := time.Date(2021, time.December, 27, 13, 14, 15, 0, time.Local)
+
+	events := EventList{
+		Size:  8,
+		Index: 0,
+		Events: []Event{
+			Event{Index: 1001, Timestamp: types.DateTime(timestamp), Type: 11},
+			Event{Index: 1002, Timestamp: types.DateTime(timestamp), Type: 12},
+			Event{Index: 1003, Timestamp: types.DateTime(timestamp), Type: 13},
+			Event{Index: 1004, Timestamp: types.DateTime(timestamp), Type: 14},
+			Event{Index: 1005, Timestamp: types.DateTime(timestamp), Type: 15},
+			Event{Index: 1006, Timestamp: types.DateTime(timestamp), Type: 16},
+			Event{Index: 1007, Timestamp: types.DateTime(timestamp), Type: 17},
+			Event{Index: 1008, Timestamp: types.DateTime(timestamp), Type: 18},
+		},
+	}
+
+	expected := Event{Index: 1008, Timestamp: types.DateTime(timestamp), Type: 18}
+
+	e := events.Get(0xffffffff)
+
+	if !reflect.DeepEqual(e, expected) {
+		t.Errorf("Incorrect 'last event'\n   expected:%#v\n   got:     %#v", expected, e)
+	}
+}
+
+func TestGetEventAtIndex(t *testing.T) {
+	timestamp := time.Date(2021, time.December, 27, 13, 14, 15, 0, time.Local)
+
+	events := EventList{
+		Size:  8,
+		Index: 0,
+		Events: []Event{
+			Event{Index: 1001, Timestamp: types.DateTime(timestamp), Type: 11},
+			Event{Index: 1002, Timestamp: types.DateTime(timestamp), Type: 12},
+			Event{Index: 1003, Timestamp: types.DateTime(timestamp), Type: 13},
+			Event{Index: 1004, Timestamp: types.DateTime(timestamp), Type: 14},
+			Event{Index: 1005, Timestamp: types.DateTime(timestamp), Type: 15},
+			Event{Index: 1006, Timestamp: types.DateTime(timestamp), Type: 16},
+			Event{Index: 1007, Timestamp: types.DateTime(timestamp), Type: 17},
+			Event{Index: 1008, Timestamp: types.DateTime(timestamp), Type: 18},
+		},
+	}
+
+	expected := Event{Index: 1003, Timestamp: types.DateTime(timestamp), Type: 13}
+
+	e := events.Get(1003)
+
+	if !reflect.DeepEqual(e, expected) {
+		t.Errorf("Incorrect event\n   expected:%#v\n   got:     %#v", expected, e)
+	}
+}
+
+func TestGetOverwrittenEvent(t *testing.T) {
+	timestamp := time.Date(2021, time.December, 27, 13, 14, 15, 0, time.Local)
+
+	events := EventList{
+		Size:  8,
+		Index: 0,
+		Events: []Event{
+			Event{Index: 1001, Timestamp: types.DateTime(timestamp), Type: 11},
+			Event{Index: 1002, Timestamp: types.DateTime(timestamp), Type: 12},
+			Event{Index: 1003, Timestamp: types.DateTime(timestamp), Type: 13},
+			Event{Index: 1004, Timestamp: types.DateTime(timestamp), Type: 14},
+			Event{Index: 1005, Timestamp: types.DateTime(timestamp), Type: 15},
+			Event{Index: 1006, Timestamp: types.DateTime(timestamp), Type: 16},
+			Event{Index: 1007, Timestamp: types.DateTime(timestamp), Type: 17},
+			Event{Index: 1008, Timestamp: types.DateTime(timestamp), Type: 18},
+		},
+	}
+
+	expected := Event{Type: 0xff}
+
+	e := events.Get(117)
+
+	if !reflect.DeepEqual(e, expected) {
+		t.Errorf("Incorrect 'overwritten event'\n   expected:%#v\n   got:     %#v", expected, e)
+	}
+}
+
+func TestGetOutOfRangeEvent(t *testing.T) {
+	timestamp := time.Date(2021, time.December, 27, 13, 14, 15, 0, time.Local)
+
+	events := EventList{
+		Size:  8,
+		Index: 0,
+		Events: []Event{
+			Event{Index: 1001, Timestamp: types.DateTime(timestamp), Type: 11},
+			Event{Index: 1002, Timestamp: types.DateTime(timestamp), Type: 12},
+			Event{Index: 1003, Timestamp: types.DateTime(timestamp), Type: 13},
+			Event{Index: 1004, Timestamp: types.DateTime(timestamp), Type: 14},
+			Event{Index: 1005, Timestamp: types.DateTime(timestamp), Type: 15},
+			Event{Index: 1006, Timestamp: types.DateTime(timestamp), Type: 16},
+			Event{Index: 1007, Timestamp: types.DateTime(timestamp), Type: 17},
+			Event{Index: 1008, Timestamp: types.DateTime(timestamp), Type: 18},
+		},
+	}
+
+	expected := Event{}
+
+	e := events.Get(12345)
+
+	if !reflect.DeepEqual(e, expected) {
+		t.Errorf("Incorrect 'out of range event'\n   expected:%#v\n   got:     %#v", expected, e)
+	}
+}
 func TestSetIndex(t *testing.T) {
 	events := EventList{
 		Size:  8,

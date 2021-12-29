@@ -156,22 +156,28 @@ func (l *EventList) Add(event Event) uint32 {
 	return index
 }
 
-func (l *EventList) Get(index uint32) *Event {
-	if N := len(l.Events); N > 0 {
-		if index == 0 {
-			return &l.Events[0]
+func (l *EventList) Get(index uint32) Event {
+	if N := len(l.Events); N == 0 {
+		return Event{}
+	} else if index == 0 {
+		return l.Events[0]
+	} else if index == 0xffffffff {
+		return l.Events[N-1]
+	} else if index < l.Events[0].Index {
+		return Event{
+			Type: 0xff,
 		}
-
-		if index == 0xffffffff {
-			return &l.Events[N-1]
-		}
-
-		if index > 0 && int(index) <= len(l.Events) {
-			return &l.Events[index-1]
+	} else if index > l.Events[N-1].Index {
+		return Event{}
+	} else {
+		for _, e := range l.Events {
+			if e.Index == index {
+				return e
+			}
 		}
 	}
 
-	return nil
+	return Event{}
 }
 
 func (l *EventList) SetIndex(index uint32) bool {

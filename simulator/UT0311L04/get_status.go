@@ -36,18 +36,14 @@ func (s *UT0311L04) getStatus(addr *net.UDPAddr, request *messages.GetStatusRequ
 			Door4Button: s.Doors[4].IsButtonPressed(),
 		}
 
-		if event != nil {
-			timestamp := event.Timestamp
-
-			response.EventIndex = event.Index
-			response.EventType = event.Type
-			response.Granted = event.Granted
-			response.Door = event.Door
-			response.Direction = event.Direction
-			response.CardNumber = event.Card
-			response.Timestamp = &timestamp
-			response.Reason = event.Reason
-		}
+		response.EventIndex = event.Index
+		response.EventType = event.Type
+		response.Granted = event.Granted
+		response.Door = event.Door
+		response.Direction = event.Direction
+		response.CardNumber = event.Card
+		response.Timestamp = &event.Timestamp
+		response.Reason = event.Reason
 
 		s.send(addr, &response)
 	}

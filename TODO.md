@@ -1,48 +1,20 @@
 ## v0.7.x
 
-- [x] Check real device events list rollover
 - [ ] Rework EventList to emulate actual controller behaviour
-      - [x] Rework events store as linear array 
-      - [x] Discard _chunk_ of events on filling store
-      - [x] Increase event index monotonically
-      - [ ] 0 returns 'first' event
-      - [ ] FFFFFFFF returns 'last' event
+      - [x] empty EventList returns 'null' event
+      - [x] 0 returns 'first' event
+      - [x] FFFFFFFF returns 'last' event
+      - [x] Returns event with index
+      - [x] Returns 'overwritten' event if index is greater than 0 but less than first event
+      - [x] Returns 'null' event if index is greater than last event index
+      - [ ] Rework 'null' event timestamp - return 0001-01-01 etc
+      - [ ] Don't export EventList internal events, index etc
       - [ ] `set-event-index` with out of range values 
       - [ ] Check GetStatus.EventIndex
       - [ ] Check GetStatus.Event
-      - [ ] Other 'out of range' events
-```
- >> before 'first' event -> returns 0xFF (overwritten) for record type
- ... request
- ...          00000000  17 b0 00 00 2d 55 39 19  e8 03 00 00 00 00 00 00  |....-U9.........|
- ...          00000010  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
- ...          00000020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
- ...          00000030  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
- ...
-
- ... response
- ...          00000000  17 b0 00 00 2d 55 39 19  00 00 00 00 ff 00 00 00  |....-U9.........|
- ...          00000010  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
- ...          00000020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
- ...          00000030  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-
- >> after 'last' event:
- ... request
- ...          00000000  17 b0 00 00 2d 55 39 19  e0 93 04 00 00 00 00 00  |....-U9.........|
- ...          00000010  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
- ...          00000020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
- ...          00000030  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
- ...
-
- ... response
- ...          00000000  17 b0 00 00 2d 55 39 19  00 00 00 00 00 00 00 00  |....-U9.........|
- ...          00000010  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
- ...          00000020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
- ...          00000030  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
- ...
- ```
       - [ ] Unit tests
       - [ ] Fix core.DateTime Unmarshal to set nanos etc to 0
+      - [ ] (?) Rework core.Event to use Timestamp pointer (or .. how to handle 00 00.. value ???)
 
 ## TODO
 
