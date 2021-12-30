@@ -552,6 +552,7 @@ func TestGetOutOfRangeEvent(t *testing.T) {
 		t.Errorf("Incorrect 'out of range event'\n   expected:%#v\n   got:     %#v", expected, e)
 	}
 }
+
 func TestSetIndex(t *testing.T) {
 	events := EventList{
 		size:  8,
@@ -570,6 +571,27 @@ func TestSetIndex(t *testing.T) {
 
 	if events.index != 4 {
 		t.Errorf("SetIndex failed to update internal index - expected:%v, got:%v", 4, events.index)
+	}
+}
+
+func TestSetIndexWithSameValue(t *testing.T) {
+	events := EventList{
+		size:  8,
+		index: 3,
+		events: []Event{
+			Event{Index: 1},
+			Event{Index: 2},
+			Event{Index: 3},
+			Event{Index: 4},
+		},
+	}
+
+	if events.SetIndex(3) {
+		t.Errorf("Incorrect return from SetIndex - expected:%v, got:%v", false, true)
+	}
+
+	if events.index != 3 {
+		t.Errorf("SetIndex updated internal index - expected:%v, got:%v", 3, events.index)
 	}
 }
 
@@ -593,10 +615,10 @@ func TestSetIndexWithZero(t *testing.T) {
 	}
 }
 
-func TestSetIndexWithOutOfRangeValue(t *testing.T) {
+func TestSetIndexWithAlreadyZero(t *testing.T) {
 	events := EventList{
 		size:  8,
-		index: 3,
+		index: 0,
 		events: []Event{
 			Event{Index: 1},
 			Event{Index: 2},
@@ -604,50 +626,71 @@ func TestSetIndexWithOutOfRangeValue(t *testing.T) {
 		},
 	}
 
-	if events.SetIndex(6) {
+	if events.SetIndex(0) {
 		t.Errorf("Incorrect return from SetIndex - expected:%v, got:%v", false, true)
 	}
 
-	if events.index != 3 {
-		t.Errorf("SetIndex incorrected updated internal index - expected:%v, got:%v", 3, events.index)
+	if events.index != 0 {
+		t.Errorf("SetIndex updated internal index - expected:%v, got:%v", 0, events.index)
 	}
 }
 
-// // FIXME (provisional - pending validation against controller)
-// func TestSetIndexWithRollover(t *testing.T) {
-// 	events := EventList{
-//
-// 		Size:   32,
-// 		First:  27,
-// 		Last:   5,
-// 		Index:  20,
-// 		Events: []Event{},
-// 	}
-//
-// 	if !events.SetIndex(34) {
-// 		t.Errorf("Incorrect return from SetIndex - expected:%v, got:%v", true, true)
-// 	}
-//
-// 	if events.Index != 1 {
-// 		t.Errorf("SetIndex incorrected updated internal index - expected:%v, got:%v", 1, events.Index)
-// 	}
-// }
+func TestSetIndexWithLessThanFirstIndex(t *testing.T) {
+	events := EventList{
+		size:  8,
+		index: 1002,
+		events: []Event{
+			Event{Index: 1001},
+			Event{Index: 1002},
+			Event{Index: 1003},
+		},
+	}
 
-// func TestSetIndexWithRolloverAndOutOfRange(t *testing.T) {
-// 	events := EventList{
-//
-// 		Size:   32,
-// 		First:  27,
-// 		Last:   5,
-// 		Index:  20,
-// 		Events: []Event{},
-// 	}
-//
-// 	if events.SetIndex(6) {
-// 		t.Errorf("Incorrect return from SetIndex - expected:%v, got:%v", false, true)
-// 	}
-//
-// 	if events.Index != 20 {
-// 		t.Errorf("SetIndex incorrected updated internal index - expected:%v, got:%v", 20, events.Index)
-// 	}
-// }
+	if !events.SetIndex(123) {
+		t.Errorf("Incorrect return from SetIndex - expected:%v, got:%v", false, true)
+	}
+
+	if events.index != 123 {
+		t.Errorf("SetIndex incorrected updated internal index - expected:%v, got:%v", 123, events.index)
+	}
+}
+
+func TestSetIndexWithLastIndex(t *testing.T) {
+	events := EventList{
+		size:  8,
+		index: 123,
+		events: []Event{
+			Event{Index: 1001},
+			Event{Index: 1002},
+			Event{Index: 1003},
+		},
+	}
+
+	if !events.SetIndex(1003) {
+		t.Errorf("Incorrect return from SetIndex - expected:%v, got:%v", false, true)
+	}
+
+	if events.index != 1003 {
+		t.Errorf("SetIndex incorrected updated internal index - expected:%v, got:%v", 1003, events.index)
+	}
+}
+
+func TestSetIndexWithGreaterThanLastIndex(t *testing.T) {
+	events := EventList{
+		size:  8,
+		index: 123,
+		events: []Event{
+			Event{Index: 1001},
+			Event{Index: 1002},
+			Event{Index: 1003},
+		},
+	}
+
+	if events.SetIndex(1006) {
+		t.Errorf("Incorrect return from SetIndex - expected:%v, got:%v", false, true)
+	}
+
+	if events.index != 123 {
+		t.Errorf("SetIndex incorrected updated internal index - expected:%v, got:%v", 123, events.index)
+	}
+}

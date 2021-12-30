@@ -142,15 +142,6 @@ func (l *EventList) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func MakeEventList(index uint32, events []Event) EventList {
-	return EventList{
-		size:   256,
-		chunk:  8,
-		index:  index,
-		events: events,
-	}
-}
-
 func (l *EventList) Add(event Event) uint32 {
 	index := uint32(1)
 	if N := len(l.events); N > 0 {
@@ -214,4 +205,14 @@ func (l *EventList) SetIndex(index uint32) bool {
 	}
 
 	return false
+}
+
+// NOTE: no validation - for unit tests only
+func MakeEventList(index uint32, events []Event) EventList {
+	return EventList{
+		size:   256,
+		chunk:  8,
+		index:  index,
+		events: events,
+	}
 }
