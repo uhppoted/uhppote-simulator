@@ -20,10 +20,10 @@ type Event struct {
 }
 
 type EventList struct {
-	Size   uint32  `json:"size"`
-	Chunk  uint32  `json:"chunk"`
-	Index  uint32  `json:"index"`
-	Events []Event `json:"events"`
+	size   uint32
+	chunk  uint32
+	index  uint32
+	events []Event
 }
 
 // PENDING rework of uhpppote-core::DateTime.MarshalJSON
@@ -94,10 +94,10 @@ func (l EventList) MarshalJSON() ([]byte, error) {
 		Index  uint32  `json:"index"`
 		Events []Event `json:"events"`
 	}{
-		Size:   l.Size,
-		Chunk:  l.Chunk,
-		Index:  l.Index,
-		Events: l.Events,
+		Size:   l.size,
+		Chunk:  l.chunk,
+		Index:  l.index,
+		Events: l.events,
 	}
 
 	b, err := json.Marshal(list)
@@ -120,59 +120,68 @@ func (l *EventList) UnmarshalJSON(b []byte) error {
 		return err
 	}
 
-	l.Size = list.Size
-	l.Chunk = list.Chunk
-	l.Index = list.Index
-	l.Events = []Event{}
+	l.size = list.Size
+	l.chunk = list.Chunk
+	l.index = list.Index
+	l.events = []Event{}
 
 	sort.SliceStable(list.Events, func(i, j int) bool { return list.Events[i].Index < list.Events[j].Index })
 
 	index := uint32(0)
 	for _, e := range list.Events {
 		if e.Index > index {
-			l.Events = append(l.Events, e)
+			l.events = append(l.events, e)
 			index = e.Index
 		}
 	}
 
-	for len(l.Events) > int(l.Size) {
-		l.Events = l.Events[l.Chunk:]
+	for len(l.events) > int(l.size) {
+		l.events = l.events[l.chunk:]
 	}
 
 	return nil
 }
 
+func MakeEventList(index uint32, events []Event) EventList {
+	return EventList{
+		size:   256,
+		chunk:  8,
+		index:  index,
+		events: events,
+	}
+}
+
 func (l *EventList) Add(event Event) uint32 {
 	index := uint32(1)
-	if N := len(l.Events); N > 0 {
-		index = l.Events[N-1].Index + 1
+	if N := len(l.events); N > 0 {
+		index = l.events[N-1].Index + 1
 	}
 
 	event.Index = index
 
-	l.Events = append(l.Events, event)
-	if len(l.Events) > int(l.Size) {
-		l.Events = l.Events[l.Chunk:]
+	l.events = append(l.events, event)
+	if len(l.events) > int(l.size) {
+		l.events = l.events[l.chunk:]
 	}
 
 	return index
 }
 
 func (l *EventList) Get(index uint32) Event {
-	if N := len(l.Events); N == 0 {
+	if N := len(l.events); N == 0 {
 		return Event{}
 	} else if index == 0 {
-		return l.Events[0]
+		return l.events[0]
 	} else if index == 0xffffffff {
-		return l.Events[N-1]
-	} else if index < l.Events[0].Index {
+		return l.events[N-1]
+	} else if index < l.events[0].Index {
 		return Event{
 			Type: 0xff,
 		}
-	} else if index > l.Events[N-1].Index {
+	} else if index > l.events[N-1].Index {
 		return Event{}
 	} else {
-		for _, e := range l.Events {
+		for _, e := range l.events {
 			if e.Index == index {
 				return e
 			}
@@ -182,20 +191,24 @@ func (l *EventList) Get(index uint32) Event {
 	return Event{}
 }
 
+func (l *EventList) GetIndex() uint32 {
+	return l.index
+}
+
 func (l *EventList) SetIndex(index uint32) bool {
-	if index == l.Index {
+	if index == l.index {
 		return false
 	}
 
 	if index == 0 {
-		l.Index = index
+		l.index = index
 		return true
 	}
 
-	if N := len(l.Events); N > 0 {
-		last := l.Events[N-1].Index
+	if N := len(l.events); N > 0 {
+		last := l.events[N-1].Index
 		if index <= last {
-			l.Index = index
+			l.index = index
 			return true
 		}
 	}

@@ -2,7 +2,7 @@
 
 - [ ] Rework EventList to emulate actual controller behaviour
       - [x] Rework 'null/overwritten' event timestamp - returns 0001-01-01 instead of 00 00 00...
-      - [ ] Don't export EventList internal events, index etc
+      - [x] Don't export EventList internal events, index etc
       - [ ] `set-event-index` with out of range values 
       - [ ] Check GetStatus.EventIndex
       - [ ] Check GetStatus.Event

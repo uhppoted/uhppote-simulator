@@ -354,9 +354,9 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 		},
 	}
 
-	events := entities.EventList{
-		Index: 123,
-		Events: []entities.Event{
+	events := entities.MakeEventList(
+		123,
+		[]entities.Event{
 			entities.Event{
 				Index:     1,
 				Type:      0x05,
@@ -437,8 +437,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 				Timestamp: &timestamp,
 				Reason:    1,
 			},
-		},
-	}
+		})
 
 	txq := make(chan entities.Message, 8)
 	src := net.UDPAddr{IP: net.IPv4(10, 0, 0, 1), Port: 12345}

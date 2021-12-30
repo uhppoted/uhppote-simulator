@@ -74,10 +74,10 @@ func TestMarshalEventList(t *testing.T) {
 	timestamp := types.DateTime(time.Date(2021, time.December, 27, 13, 14, 15, 0, time.Local))
 
 	l := EventList{
-		Size:  64,
-		Chunk: 8,
-		Index: 19,
-		Events: []Event{
+		size:  64,
+		chunk: 8,
+		index: 19,
+		events: []Event{
 			Event{Index: 1, Timestamp: &timestamp},
 			Event{Index: 2, Timestamp: &timestamp},
 			Event{Index: 3, Timestamp: &timestamp},
@@ -147,10 +147,10 @@ func TestUnmarshalEventList(t *testing.T) {
 }`)
 
 	expected := EventList{
-		Size:  64,
-		Chunk: 8,
-		Index: 19,
-		Events: []Event{
+		size:  64,
+		chunk: 8,
+		index: 19,
+		events: []Event{
 			Event{Index: 1, Timestamp: &timestamp},
 			Event{Index: 2, Timestamp: &timestamp},
 			Event{Index: 3, Timestamp: &timestamp},
@@ -182,10 +182,10 @@ func TestUnmarshalEventListWithUnOrderedEvents(t *testing.T) {
 }`)
 
 	expected := EventList{
-		Size:  64,
-		Chunk: 8,
-		Index: 19,
-		Events: []Event{
+		size:  64,
+		chunk: 8,
+		index: 19,
+		events: []Event{
 			Event{Index: 1, Timestamp: &timestamp},
 			Event{Index: 2, Timestamp: &timestamp},
 			Event{Index: 3, Timestamp: &timestamp},
@@ -226,10 +226,10 @@ func TestUnmarshalEventListWithTooManyEvents(t *testing.T) {
 }`)
 
 	expected := EventList{
-		Size:  8,
-		Chunk: 2,
-		Index: 19,
-		Events: []Event{
+		size:  8,
+		chunk: 2,
+		index: 19,
+		events: []Event{
 			Event{Index: 5, Type: 105, Timestamp: &timestamp},
 			Event{Index: 6, Type: 106, Timestamp: &timestamp},
 			Event{Index: 7, Type: 107, Timestamp: &timestamp},
@@ -264,10 +264,10 @@ func TestUnmarshalEventListWithDefaultSizeAndChunk(t *testing.T) {
 }`)
 
 	expected := EventList{
-		Size:  256,
-		Chunk: 8,
-		Index: 19,
-		Events: []Event{
+		size:  256,
+		chunk: 8,
+		index: 19,
+		events: []Event{
 			Event{Index: 1, Timestamp: &timestamp},
 			Event{Index: 2, Timestamp: &timestamp},
 			Event{Index: 3, Timestamp: &timestamp},
@@ -288,10 +288,10 @@ func TestAddEvent(t *testing.T) {
 	timestamp := types.DateTime(time.Date(2021, time.December, 27, 13, 14, 15, 0, time.Local))
 
 	expected := EventList{
-		Size:  64,
-		Chunk: 8,
-		Index: 19,
-		Events: []Event{
+		size:  64,
+		chunk: 8,
+		index: 19,
+		events: []Event{
 			Event{Index: 1, Timestamp: &timestamp, Type: 101},
 			Event{Index: 2, Timestamp: &timestamp, Type: 102},
 			Event{Index: 3, Timestamp: &timestamp, Type: 103},
@@ -300,10 +300,10 @@ func TestAddEvent(t *testing.T) {
 	}
 
 	events := EventList{
-		Size:  64,
-		Chunk: 8,
-		Index: 19,
-		Events: []Event{
+		size:  64,
+		chunk: 8,
+		index: 19,
+		events: []Event{
 			Event{Index: 1, Timestamp: &timestamp, Type: 101},
 			Event{Index: 2, Timestamp: &timestamp, Type: 102},
 			Event{Index: 3, Timestamp: &timestamp, Type: 103},
@@ -327,19 +327,19 @@ func TestAddEventWithEmptyList(t *testing.T) {
 	timestamp := types.DateTime(time.Date(2021, time.December, 27, 13, 14, 15, 0, time.Local))
 
 	expected := EventList{
-		Size:  64,
-		Chunk: 8,
-		Index: 19,
-		Events: []Event{
+		size:  64,
+		chunk: 8,
+		index: 19,
+		events: []Event{
 			Event{Index: 1, Timestamp: &timestamp, Type: 105},
 		},
 	}
 
 	events := EventList{
-		Size:   64,
-		Chunk:  8,
-		Index:  19,
-		Events: []Event{},
+		size:   64,
+		chunk:  8,
+		index:  19,
+		events: []Event{},
 	}
 
 	event := Event{Timestamp: &timestamp, Type: 105}
@@ -359,10 +359,10 @@ func TestAddEventWithFullList(t *testing.T) {
 	timestamp := types.DateTime(time.Date(2021, time.December, 27, 13, 14, 15, 0, time.Local))
 
 	expected := EventList{
-		Size:  8,
-		Chunk: 2,
-		Index: 19,
-		Events: []Event{
+		size:  8,
+		chunk: 2,
+		index: 19,
+		events: []Event{
 			Event{Index: 3, Timestamp: &timestamp, Type: 103},
 			Event{Index: 4, Timestamp: &timestamp, Type: 104},
 			Event{Index: 5, Timestamp: &timestamp, Type: 105},
@@ -374,10 +374,10 @@ func TestAddEventWithFullList(t *testing.T) {
 	}
 
 	events := EventList{
-		Size:  8,
-		Chunk: 2,
-		Index: 19,
-		Events: []Event{
+		size:  8,
+		chunk: 2,
+		index: 19,
+		events: []Event{
 			Event{Index: 1, Timestamp: &timestamp, Type: 101},
 			Event{Index: 2, Timestamp: &timestamp, Type: 102},
 			Event{Index: 3, Timestamp: &timestamp, Type: 103},
@@ -404,9 +404,9 @@ func TestAddEventWithFullList(t *testing.T) {
 
 func TestGetEventWithNoEvents(t *testing.T) {
 	events := EventList{
-		Size:   8,
-		Index:  0,
-		Events: []Event{},
+		size:   8,
+		index:  0,
+		events: []Event{},
 	}
 
 	expected := Event{}
@@ -422,9 +422,9 @@ func TestGetFirstEvent(t *testing.T) {
 	timestamp := types.DateTime(time.Date(2021, time.December, 27, 13, 14, 15, 0, time.Local))
 
 	events := EventList{
-		Size:  8,
-		Index: 0,
-		Events: []Event{
+		size:  8,
+		index: 0,
+		events: []Event{
 			Event{Index: 1001, Timestamp: &timestamp, Type: 11},
 			Event{Index: 1002, Timestamp: &timestamp, Type: 12},
 			Event{Index: 1003, Timestamp: &timestamp, Type: 13},
@@ -449,9 +449,9 @@ func TestGetLastEvent(t *testing.T) {
 	timestamp := types.DateTime(time.Date(2021, time.December, 27, 13, 14, 15, 0, time.Local))
 
 	events := EventList{
-		Size:  8,
-		Index: 0,
-		Events: []Event{
+		size:  8,
+		index: 0,
+		events: []Event{
 			Event{Index: 1001, Timestamp: &timestamp, Type: 11},
 			Event{Index: 1002, Timestamp: &timestamp, Type: 12},
 			Event{Index: 1003, Timestamp: &timestamp, Type: 13},
@@ -476,9 +476,9 @@ func TestGetEventAtIndex(t *testing.T) {
 	timestamp := types.DateTime(time.Date(2021, time.December, 27, 13, 14, 15, 0, time.Local))
 
 	events := EventList{
-		Size:  8,
-		Index: 0,
-		Events: []Event{
+		size:  8,
+		index: 0,
+		events: []Event{
 			Event{Index: 1001, Timestamp: &timestamp, Type: 11},
 			Event{Index: 1002, Timestamp: &timestamp, Type: 12},
 			Event{Index: 1003, Timestamp: &timestamp, Type: 13},
@@ -503,9 +503,9 @@ func TestGetOverwrittenEvent(t *testing.T) {
 	timestamp := types.DateTime(time.Date(2021, time.December, 27, 13, 14, 15, 0, time.Local))
 
 	events := EventList{
-		Size:  8,
-		Index: 0,
-		Events: []Event{
+		size:  8,
+		index: 0,
+		events: []Event{
 			Event{Index: 1001, Timestamp: &timestamp, Type: 11},
 			Event{Index: 1002, Timestamp: &timestamp, Type: 12},
 			Event{Index: 1003, Timestamp: &timestamp, Type: 13},
@@ -530,9 +530,9 @@ func TestGetOutOfRangeEvent(t *testing.T) {
 	timestamp := types.DateTime(time.Date(2021, time.December, 27, 13, 14, 15, 0, time.Local))
 
 	events := EventList{
-		Size:  8,
-		Index: 0,
-		Events: []Event{
+		size:  8,
+		index: 0,
+		events: []Event{
 			Event{Index: 1001, Timestamp: &timestamp, Type: 11},
 			Event{Index: 1002, Timestamp: &timestamp, Type: 12},
 			Event{Index: 1003, Timestamp: &timestamp, Type: 13},
@@ -554,9 +554,9 @@ func TestGetOutOfRangeEvent(t *testing.T) {
 }
 func TestSetIndex(t *testing.T) {
 	events := EventList{
-		Size:  8,
-		Index: 3,
-		Events: []Event{
+		size:  8,
+		index: 3,
+		events: []Event{
 			Event{Index: 1},
 			Event{Index: 2},
 			Event{Index: 3},
@@ -568,16 +568,16 @@ func TestSetIndex(t *testing.T) {
 		t.Errorf("Incorrect return from SetIndex - expected:%v, got:%v", true, false)
 	}
 
-	if events.Index != 4 {
-		t.Errorf("SetIndex failed to update internal index - expected:%v, got:%v", 4, events.Index)
+	if events.index != 4 {
+		t.Errorf("SetIndex failed to update internal index - expected:%v, got:%v", 4, events.index)
 	}
 }
 
 func TestSetIndexWithZero(t *testing.T) {
 	events := EventList{
-		Size:  8,
-		Index: 3,
-		Events: []Event{
+		size:  8,
+		index: 3,
+		events: []Event{
 			Event{Index: 1},
 			Event{Index: 2},
 			Event{Index: 3},
@@ -588,16 +588,16 @@ func TestSetIndexWithZero(t *testing.T) {
 		t.Errorf("Incorrect return from SetIndex - expected:%v, got:%v", true, false)
 	}
 
-	if events.Index != 0 {
-		t.Errorf("SetIndex failed to update internal index - expected:%v, got:%v", 0, events.Index)
+	if events.index != 0 {
+		t.Errorf("SetIndex failed to update internal index - expected:%v, got:%v", 0, events.index)
 	}
 }
 
 func TestSetIndexWithOutOfRangeValue(t *testing.T) {
 	events := EventList{
-		Size:  8,
-		Index: 3,
-		Events: []Event{
+		size:  8,
+		index: 3,
+		events: []Event{
 			Event{Index: 1},
 			Event{Index: 2},
 			Event{Index: 3},
@@ -608,8 +608,8 @@ func TestSetIndexWithOutOfRangeValue(t *testing.T) {
 		t.Errorf("Incorrect return from SetIndex - expected:%v, got:%v", false, true)
 	}
 
-	if events.Index != 3 {
-		t.Errorf("SetIndex incorrected updated internal index - expected:%v, got:%v", 3, events.Index)
+	if events.index != 3 {
+		t.Errorf("SetIndex incorrected updated internal index - expected:%v, got:%v", 3, events.index)
 	}
 }
 

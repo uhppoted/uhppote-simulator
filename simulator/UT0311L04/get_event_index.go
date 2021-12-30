@@ -9,7 +9,7 @@ func (s *UT0311L04) getEventIndex(addr *net.UDPAddr, request *messages.GetEventI
 	if s.SerialNumber == request.SerialNumber {
 		response := messages.GetEventIndexResponse{
 			SerialNumber: s.SerialNumber,
-			Index:        s.Events.Index,
+			Index:        s.Events.GetIndex(),
 		}
 
 		s.send(addr, &response)
