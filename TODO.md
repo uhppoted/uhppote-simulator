@@ -7,10 +7,10 @@
             - [x] `set-event-index` returns false if index is not changed
             - [x] `set-event-index` return true if index is not greater than last event index
             - [x] `set-event-index` return false if index is greater than last event index
-      - [ ] Check GetStatus.EventIndex
-      - [ ] Check GetStatus.Event
-      - [ ] Unit tests
-      - [ ] Fix core.DateTime Unmarshal to set nanos etc to 0
+      - [x] Check GetStatus.Event
+            - [x] status.event is the `last` event
+            - [x] status.event.index is the index of the `last` event
+      - [x] Unit tests
 
 ## TODO
 
