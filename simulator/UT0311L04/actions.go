@@ -27,14 +27,14 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8) (bool, error) {
 	}
 
 	swiped := func(eventType uint8, granted bool, reason uint8) {
-		datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
+		datetime := types.DateTime(time.Now().UTC().Add(time.Duration(s.TimeOffset)))
 		event := entities.Event{
 			Type:      eventType,
 			Granted:   granted,
 			Door:      door,
 			Direction: 1,
 			Card:      cardNumber,
-			Timestamp: types.DateTime(datetime),
+			Timestamp: &datetime,
 			Reason:    reason,
 		}
 
@@ -107,14 +107,14 @@ func (s *UT0311L04) Open(door uint8, duration *time.Duration) (bool, error) {
 
 	onOpen := func(reason uint8) {
 		if s.RecordSpecialEvents {
-			datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
+			datetime := types.DateTime(time.Now().UTC().Add(time.Duration(s.TimeOffset)))
 			event := entities.Event{
 				Type:      0x02,
 				Granted:   true,
 				Door:      door,
 				Direction: 1,
 				Card:      8,
-				Timestamp: types.DateTime(datetime),
+				Timestamp: &datetime,
 				Reason:    reason,
 			}
 
@@ -124,14 +124,14 @@ func (s *UT0311L04) Open(door uint8, duration *time.Duration) (bool, error) {
 
 	onClose := func() {
 		if s.RecordSpecialEvents {
-			datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
+			datetime := types.DateTime(time.Now().UTC().Add(time.Duration(s.TimeOffset)))
 			event := entities.Event{
 				Type:      0x02,
 				Granted:   true,
 				Door:      door,
 				Direction: 1,
 				Card:      9,
-				Timestamp: types.DateTime(datetime),
+				Timestamp: &datetime,
 				Reason:    0x18,
 			}
 
@@ -158,14 +158,14 @@ func (s *UT0311L04) Close(door uint8) (bool, error) {
 
 	onClose := func() {
 		if s.RecordSpecialEvents {
-			datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
+			datetime := types.DateTime(time.Now().UTC().Add(time.Duration(s.TimeOffset)))
 			event := entities.Event{
 				Type:      0x02,
 				Granted:   true,
 				Door:      door,
 				Direction: 1,
 				Card:      9,
-				Timestamp: types.DateTime(datetime),
+				Timestamp: &datetime,
 				Reason:    0x18,
 			}
 
@@ -194,14 +194,14 @@ func (s *UT0311L04) ButtonPressed(door uint8, duration time.Duration) (bool, err
 
 	onUnlocked := func() {
 		if s.RecordSpecialEvents {
-			datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
+			datetime := types.DateTime(time.Now().UTC().Add(time.Duration(s.TimeOffset)))
 			event := entities.Event{
 				Type:      0x02,
 				Granted:   true,
 				Door:      door,
 				Direction: 1,
 				Card:      1,
-				Timestamp: types.DateTime(datetime),
+				Timestamp: &datetime,
 				Reason:    0x14,
 			}
 
@@ -211,14 +211,14 @@ func (s *UT0311L04) ButtonPressed(door uint8, duration time.Duration) (bool, err
 
 	onNotUnlocked := func(reason uint8) {
 		if s.RecordSpecialEvents {
-			datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
+			datetime := types.DateTime(time.Now().UTC().Add(time.Duration(s.TimeOffset)))
 			event := entities.Event{
 				Type:      0x03,
 				Granted:   false,
 				Door:      door,
 				Direction: 1,
 				Card:      6,
-				Timestamp: types.DateTime(datetime),
+				Timestamp: &datetime,
 				Reason:    reason,
 			}
 

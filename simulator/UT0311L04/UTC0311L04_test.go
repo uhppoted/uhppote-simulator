@@ -323,7 +323,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 	MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
 	from, _ := types.DateFromString("2019-01-01")
 	to, _ := types.DateFromString("2019-12-31")
-	timestamp := time.Date(2019, time.August, 1, 12, 34, 56, 0, time.Local)
+	timestamp := types.DateTime(time.Date(2019, time.August, 1, 12, 34, 56, 0, time.Local))
 	listener := net.UDPAddr{IP: net.IPv4(10, 0, 0, 10), Port: 43210}
 
 	doors := map[uint8]*entities.Door{
@@ -364,7 +364,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 				Door:      3,
 				Direction: 0x01,
 				Card:      1234567890,
-				Timestamp: types.DateTime(timestamp),
+				Timestamp: &timestamp,
 				Reason:    1,
 			},
 			entities.Event{
@@ -374,7 +374,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 				Door:      4,
 				Direction: 0x01,
 				Card:      555444321,
-				Timestamp: types.DateTime(timestamp),
+				Timestamp: &timestamp,
 				Reason:    9,
 			},
 			entities.Event{
@@ -384,7 +384,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 				Door:      3,
 				Direction: 0x01,
 				Card:      1234567890,
-				Timestamp: types.DateTime(timestamp),
+				Timestamp: &timestamp,
 				Reason:    1,
 			},
 			entities.Event{
@@ -394,7 +394,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 				Door:      3,
 				Direction: 0x01,
 				Card:      1234567891,
-				Timestamp: types.DateTime(timestamp),
+				Timestamp: &timestamp,
 				Reason:    1,
 			},
 			entities.Event{
@@ -404,7 +404,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 				Door:      4,
 				Direction: 0x01,
 				Card:      1234567892,
-				Timestamp: types.DateTime(timestamp),
+				Timestamp: &timestamp,
 				Reason:    1,
 			},
 			entities.Event{
@@ -414,7 +414,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 				Door:      1,
 				Direction: 0x01,
 				Card:      1234567892,
-				Timestamp: types.DateTime(timestamp),
+				Timestamp: &timestamp,
 				Reason:    1,
 			},
 			entities.Event{
@@ -424,7 +424,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 				Door:      2,
 				Direction: 0x02,
 				Card:      1234567893,
-				Timestamp: types.DateTime(timestamp),
+				Timestamp: &timestamp,
 				Reason:    1,
 			},
 			entities.Event{
@@ -434,7 +434,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 				Door:      3,
 				Direction: 0x02,
 				Card:      1234567894,
-				Timestamp: types.DateTime(timestamp),
+				Timestamp: &timestamp,
 				Reason:    1,
 			},
 		},

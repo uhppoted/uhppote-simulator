@@ -21,7 +21,7 @@ func (s *UT0311L04) getEvent(addr *net.UDPAddr, request *messages.GetEventReques
 		Door:         event.Door,
 		Direction:    event.Direction,
 		CardNumber:   event.Card,
-		Timestamp:    &event.Timestamp,
+		Timestamp:    event.Timestamp,
 		Reason:       event.Reason,
 	}
 

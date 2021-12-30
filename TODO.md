@@ -1,20 +1,13 @@
 ## v0.7.x
 
 - [ ] Rework EventList to emulate actual controller behaviour
-      - [x] empty EventList returns 'null' event
-      - [x] 0 returns 'first' event
-      - [x] FFFFFFFF returns 'last' event
-      - [x] Returns event with index
-      - [x] Returns 'overwritten' event if index is greater than 0 but less than first event
-      - [x] Returns 'null' event if index is greater than last event index
-      - [ ] Rework 'null' event timestamp - return 0001-01-01 etc
+      - [x] Rework 'null/overwritten' event timestamp - returns 0001-01-01 instead of 00 00 00...
       - [ ] Don't export EventList internal events, index etc
       - [ ] `set-event-index` with out of range values 
       - [ ] Check GetStatus.EventIndex
       - [ ] Check GetStatus.Event
       - [ ] Unit tests
       - [ ] Fix core.DateTime Unmarshal to set nanos etc to 0
-      - [ ] (?) Rework core.Event to use Timestamp pointer (or .. how to handle 00 00.. value ???)
 
 ## TODO
 

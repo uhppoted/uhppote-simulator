@@ -24,14 +24,14 @@ func (s *UT0311L04) unlockDoor(addr *net.UDPAddr, request *messages.OpenDoorRequ
 
 			s.send(addr, &response)
 
-			datetime := time.Now().UTC().Add(time.Duration(s.TimeOffset))
+			datetime := types.DateTime(time.Now().UTC().Add(time.Duration(s.TimeOffset)))
 			event := entities.Event{
 				Type:      0x02,
 				Granted:   granted,
 				Door:      door,
 				Direction: 0x01,
 				Card:      3922570474,
-				Timestamp: types.DateTime(datetime),
+				Timestamp: &datetime,
 				Reason:    0x2c,
 			}
 

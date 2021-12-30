@@ -9,14 +9,14 @@ import (
 )
 
 type Event struct {
-	Index     uint32         `json:"index"`
-	Type      uint8          `json:"type"`
-	Granted   bool           `json:"granted"`
-	Door      uint8          `json:"door"`
-	Direction uint8          `json:"direction"`
-	Card      uint32         `json:"card"`
-	Timestamp types.DateTime `json:"timestamp"`
-	Reason    uint8          `json:"reason"`
+	Index     uint32          `json:"index"`
+	Type      uint8           `json:"type"`
+	Granted   bool            `json:"granted"`
+	Door      uint8           `json:"door"`
+	Direction uint8           `json:"direction"`
+	Card      uint32          `json:"card"`
+	Timestamp *types.DateTime `json:"timestamp,omitempty"`
+	Reason    uint8           `json:"reason"`
 }
 
 type EventList struct {
@@ -35,7 +35,7 @@ func (e Event) MarshalJSON() ([]byte, error) {
 		Door      uint8  `json:"door"`
 		Direction uint8  `json:"direction"`
 		Card      uint32 `json:"card"`
-		Timestamp string `json:"timestamp"`
+		Timestamp string `json:"timestamp,omitempty"`
 		Reason    uint8  `json:"reason"`
 	}{
 		Index:     e.Index,
@@ -44,8 +44,11 @@ func (e Event) MarshalJSON() ([]byte, error) {
 		Door:      e.Door,
 		Direction: e.Direction,
 		Card:      e.Card,
-		Timestamp: time.Time(e.Timestamp).Format("2006-01-02 15:04:05"),
 		Reason:    e.Reason,
+	}
+
+	if e.Timestamp != nil {
+		event.Timestamp = (*time.Time)(e.Timestamp).Format("2006-01-02 15:04:05")
 	}
 
 	return json.Marshal(event)
@@ -76,10 +79,9 @@ func (e *Event) UnmarshalJSON(b []byte) error {
 	e.Card = event.Card
 	e.Reason = event.Reason
 
-	if t, err := time.ParseInLocation("2006-01-02 15:04:05", event.Timestamp, time.Local); err != nil {
-		return err
-	} else {
-		e.Timestamp = types.DateTime(time.Date(t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second(), 0, time.Local))
+	if t, err := time.ParseInLocation("2006-01-02 15:04:05", event.Timestamp, time.Local); err == nil {
+		timestamp := types.DateTime(time.Date(t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second(), 0, time.Local))
+		e.Timestamp = &timestamp
 	}
 
 	return nil
