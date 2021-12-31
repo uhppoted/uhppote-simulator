@@ -1,6 +1,6 @@
 ## v0.7.x
 
-- [ ] Rework EventList to emulate actual controller behaviour
+- [x] Rework EventList to emulate actual controller behaviour
       - [x] Rework 'null/overwritten' event timestamp - returns 0001-01-01 instead of 00 00 00...
       - [x] Don't export EventList internal events, index etc
       - [x] `set-event-index` with out of range values 
