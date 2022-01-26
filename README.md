@@ -14,6 +14,7 @@ Supported operating systems:
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.7.2    | Replaced event list rollover to discard a 'chunk' of events when the list is full         |
 | v0.7.1    | Added support for task list functionality from the extended API                           |
 | v0.7.0    | Added support for time profiles from the extended API                                     |
 | v0.6.12   | Added simulation support for encoding `nil` events for response to `get-status`           |
@@ -53,7 +54,7 @@ go build -o bin ./...
 | *Dependency*                                             | *Description*                                          |
 | -------------------------------------------------------- | ------------------------------------------------------ |
 | [uhppote-core](https://github.com/uhppoted/uhppote-core) | Device level API implementation                        |
-| golang.org/x/lint/golint                                 | Additional *lint* check for release builds             |
+
 
 ## uhppote-simulator
 

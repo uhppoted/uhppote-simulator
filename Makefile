@@ -5,7 +5,9 @@ CARD      ?= 8165538
 DOOR      ?= 3
 DEBUG     ?= --debug
 
-.PHONY: bump
+.PHONY: clean
+.PHONY: update
+.PHONY: update-release
 
 all: test      \
 	 benchmark \
@@ -14,6 +16,12 @@ all: test      \
 clean:
 	go clean
 	rm -rf bin
+
+update:
+	go get -u github.com/uhppoted/uhppote-core@master
+
+update-release:
+	go get -u github.com/uhppoted/uhppote-core
 
 format: 
 	go fmt ./...
@@ -47,13 +55,10 @@ build-all: test vet
 	env GOOS=darwin  GOARCH=amd64       go build -o dist/$(DIST)/darwin  ./...
 	env GOOS=windows GOARCH=amd64       go build -o dist/$(DIST)/windows ./...
 
-release: build-all
+release: update-release build-all
 	find . -name ".DS_Store" -delete
 	tar --directory=dist --exclude=".DS_Store" -cvzf dist/$(DIST).tar.gz $(DIST)
 	cd dist; zip --recurse-paths $(DIST).zip $(DIST)
-
-bump:
-	go get -u github.com/uhppoted/uhppote-core
 
 debug: build
 	# go test -v ./entities/...

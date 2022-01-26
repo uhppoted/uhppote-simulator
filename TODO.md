@@ -1,4 +1,4 @@
-## v0.7.x
+## v0.7.2
 
 - [x] Rework EventList to emulate actual controller behaviour
       - [x] Rework 'null/overwritten' event timestamp - returns 0001-01-01 instead of 00 00 00...
@@ -14,9 +14,11 @@
 
 ## TODO
 
+- [ ] Reimplement event list as circular buffer
+- [ ] Verify fields in listen events/status replies against SDK
+      - Battery status can be (at least) 0x00, 0x01 and 0x04
 - [ ] Emulate PIN pad
 - [ ] Replace UTO311L04.TimeOffset with time zone
-- [ ] Unit tests for EventList
 - [ ] Unit tests for TaskList
 
 ### simulator
@@ -43,5 +45,3 @@
 ### Other
 
 1.  Integration tests
-2.  Verify fields in listen events/status replies against SDK:
-    - battery status can be (at least) 0x00, 0x01 and 0x04
