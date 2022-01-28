@@ -46,7 +46,7 @@ If you prefer not to use `make`:
 git clone https://github.com/uhppoted/uhppote-simulator.git
 cd uhppote-simulator
 mkdir bin
-go build -o bin ./...
+go build -trimpath -o bin ./...
 ```
 
 #### Dependencies

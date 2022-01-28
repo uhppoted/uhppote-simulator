@@ -1,16 +1,6 @@
-## v0.7.2
+## v0.7.x
 
-- [x] Rework EventList to emulate actual controller behaviour
-      - [x] Rework 'null/overwritten' event timestamp - returns 0001-01-01 instead of 00 00 00...
-      - [x] Don't export EventList internal events, index etc
-      - [x] `set-event-index` with out of range values 
-            - [x] `set-event-index` returns false if index is not changed
-            - [x] `set-event-index` return true if index is not greater than last event index
-            - [x] `set-event-index` return false if index is greater than last event index
-      - [x] Check GetStatus.Event
-            - [x] status.event is the `last` event
-            - [x] status.event.index is the index of the `last` event
-      - [x] Unit tests
+- [x] Add -trimpath to `go build`
 
 ## TODO
 
