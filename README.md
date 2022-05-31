@@ -14,6 +14,7 @@ Supported operating systems:
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.7.3    | Maintenance release for version compatibility with `uhppote-core` v0.7.3                  |
 | v0.7.2    | Replaced event list rollover to discard a 'chunk' of events when the list is full         |
 | v0.7.1    | Added support for task list functionality from the extended API                           |
 | v0.7.0    | Added support for time profiles from the extended API                                     |

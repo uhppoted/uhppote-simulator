@@ -23,7 +23,7 @@ func TestGetDeviceWithMatchingAddress(t *testing.T) {
 		Gateway:      net.IPv4(10, 0, 0, 1),
 		MacAddress:   types.MacAddress(MAC),
 		Version:      9876,
-		Released:     (*ReleaseDate)(released),
+		Released:     (*ReleaseDate)(&released),
 		Listener:     &listener,
 		Cards:        entities.CardList{},
 		Events:       entities.EventList{},
@@ -44,7 +44,7 @@ func TestGetDeviceWithMatchingAddress(t *testing.T) {
 			Gateway:      net.IPv4(10, 0, 0, 1),
 			MacAddress:   types.MacAddress(MAC),
 			Version:      9876,
-			Date:         *date,
+			Date:         date,
 		},
 	}
 
@@ -74,7 +74,7 @@ func TestGetDeviceWithAddress0(t *testing.T) {
 		Gateway:      net.IPv4(10, 0, 0, 1),
 		MacAddress:   types.MacAddress(MAC),
 		Version:      9876,
-		Released:     (*ReleaseDate)(released),
+		Released:     (*ReleaseDate)(&released),
 		Listener:     &listener,
 		Cards:        entities.CardList{},
 		Events:       entities.EventList{},
@@ -95,7 +95,7 @@ func TestGetDeviceWithAddress0(t *testing.T) {
 			Gateway:      net.IPv4(10, 0, 0, 1),
 			MacAddress:   types.MacAddress(MAC),
 			Version:      9876,
-			Date:         *date,
+			Date:         date,
 		},
 	}
 
@@ -125,7 +125,7 @@ func TestGetDeviceWithDifferentAddress(t *testing.T) {
 		Gateway:      net.IPv4(10, 0, 0, 1),
 		MacAddress:   types.MacAddress(MAC),
 		Version:      9876,
-		Released:     (*ReleaseDate)(released),
+		Released:     (*ReleaseDate)(&released),
 		Listener:     &listener,
 		Cards:        entities.CardList{},
 		Events:       entities.EventList{},

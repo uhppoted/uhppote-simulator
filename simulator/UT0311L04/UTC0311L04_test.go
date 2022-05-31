@@ -69,8 +69,8 @@ func TestHandlePutCardRequest(t *testing.T) {
 	request := messages.PutCardRequest{
 		SerialNumber: 12345,
 		CardNumber:   192837465,
-		From:         *from,
-		To:           *to,
+		From:         from,
+		To:           to,
 		Door1:        1,
 		Door2:        0,
 		Door3:        1,
@@ -138,8 +138,8 @@ func TestHandleGetCardById(t *testing.T) {
 	response := messages.GetCardByIDResponse{
 		SerialNumber: 12345,
 		CardNumber:   192837465,
-		From:         from,
-		To:           to,
+		From:         &from,
+		To:           &to,
 		Door1:        1,
 		Door2:        0,
 		Door3:        0,
@@ -161,8 +161,8 @@ func TestHandleGetCardByIndex(t *testing.T) {
 	response := messages.GetCardByIndexResponse{
 		SerialNumber: 12345,
 		CardNumber:   192837465,
-		From:         from,
-		To:           to,
+		From:         &from,
+		To:           &to,
 		Door1:        1,
 		Door2:        0,
 		Door3:        0,
@@ -336,20 +336,20 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 	cards := entities.CardList{
 		&entities.Card{
 			CardNumber: 100000001,
-			From:       from,
-			To:         to,
+			From:       &from,
+			To:         &to,
 			Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
 		},
 		&entities.Card{
 			CardNumber: 192837465,
-			From:       from,
-			To:         to,
+			From:       &from,
+			To:         &to,
 			Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1},
 		},
 		&entities.Card{
 			CardNumber: 100000003,
-			From:       from,
-			To:         to,
+			From:       &from,
+			To:         &to,
 			Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
 		},
 	}
