@@ -61,8 +61,10 @@ release: update-release build-all
 	cd dist; zip --recurse-paths $(DIST).zip $(DIST)
 
 debug: build
-	# go test -v ./entities/...
-	go test ./entities/... -run TestAddEvent*
+	go test -v ./simulator/UT0311L04/... -run TestCheckTimeProfileInTimeSegment
+
+delve: build
+	dlv test github.com/uhppoted/uhppote-simulator/simulator/UT0311L04 -- run TestCheckTimeProfileInTimeSegmentWithOffset
 
 godoc:
 	godoc -http=:80	-index_interval=60s

@@ -261,7 +261,7 @@ func (s *UT0311L04) checkTimeProfile(profileID uint8) bool {
 		for pid, _ := range profiles {
 			if profile, ok := s.TimeProfiles[pid]; !ok {
 				return true // IRL, a controller seems to default to ok if a linked time profile is not present
-			} else if checkTimeProfile(profile) {
+			} else if checkTimeProfile(profile, s.TimeOffset) {
 				return true
 			}
 		}
@@ -272,8 +272,11 @@ func (s *UT0311L04) checkTimeProfile(profileID uint8) bool {
 	return true // IRL, a controller seems to default to ok if time profile is not present
 }
 
-func checkTimeProfile(profile types.TimeProfile) bool {
-	now := types.HHmmFromTime(time.Now())
+func checkTimeProfile(profile types.TimeProfile, offset entities.Offset) bool {
+	utc := time.Now().UTC().Add(time.Duration(offset))
+	adjusted := utc.Local()
+	now := types.HHmmFromTime(adjusted)
+
 	today := types.Date(time.Now())
 
 	if profile.From == nil || profile.From.After(today) {
