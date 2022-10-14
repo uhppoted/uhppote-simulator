@@ -26,6 +26,9 @@ type EventList struct {
 	events []Event
 }
 
+const DEFAULT_EVENTLIST_SIZE = 256
+const DEFAULT_EVENTLIST_CHUNK = 8
+
 // PENDING rework of uhpppote-core::DateTime.MarshalJSON
 func (e Event) MarshalJSON() ([]byte, error) {
 	event := struct {
@@ -107,23 +110,31 @@ func (l EventList) MarshalJSON() ([]byte, error) {
 
 func (l *EventList) UnmarshalJSON(b []byte) error {
 	list := struct {
-		Size   uint32  `json:"size"`
-		Chunk  uint32  `json:"chunk"`
+		Size   uint32  `json:"size,omitempty"`
+		Chunk  uint32  `json:"chunk,omitempty"`
 		Index  uint32  `json:"index"`
 		Events []Event `json:"events"`
 	}{
-		Size:  256,
-		Chunk: 8,
+		Size:  DEFAULT_EVENTLIST_SIZE,
+		Chunk: DEFAULT_EVENTLIST_CHUNK,
 	}
 
 	if err := json.Unmarshal(b, &list); err != nil {
 		return err
 	}
 
-	l.size = list.Size
-	l.chunk = list.Chunk
+	l.size = DEFAULT_EVENTLIST_SIZE
+	l.chunk = DEFAULT_EVENTLIST_CHUNK
 	l.index = list.Index
 	l.events = []Event{}
+
+	if list.Size > 0 {
+		l.size = list.Size
+	}
+
+	if list.Chunk > 0 {
+		l.chunk = list.Chunk
+	}
 
 	sort.SliceStable(list.Events, func(i, j int) bool { return list.Events[i].Index < list.Events[j].Index })
 
