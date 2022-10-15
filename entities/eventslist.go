@@ -81,13 +81,15 @@ func (l *EventList) UnmarshalJSON(b []byte) error {
 		}
 	}
 
-	if l.chunk > 0 {
-		if N := len(l.events) - int(l.size); N > 0 {
+	if N := len(l.events) - int(l.size); N > 0 {
+		if l.chunk > 0 {
 			n := float64(N)
 			chunk := int(l.chunk)
 			offset := chunk * int(math.Ceil(n/float64(chunk)))
 
 			l.events = l.events[offset:]
+		} else {
+			l.events = l.events[N:]
 		}
 	}
 
