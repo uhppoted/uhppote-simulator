@@ -1,5 +1,8 @@
 # TODO
 
+- [ ] https://github.com/uhppoted/uhppote-simulator/issues/6
+- [ ] https://github.com/uhppoted/uhppote-simulator/issues/5
+
 ### IN PROGRESS
 
 ## TODO
