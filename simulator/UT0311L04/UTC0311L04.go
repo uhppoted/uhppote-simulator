@@ -74,6 +74,7 @@ func NewUT0311L04(deviceID uint32, dir string, compressed bool) *UT0311L04 {
 
 		TimeProfiles: entities.TimeProfiles{},
 		TaskList:     entities.TaskList{},
+		Events:       entities.NewEventList(),
 	}
 
 	return &device

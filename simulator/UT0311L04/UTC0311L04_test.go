@@ -11,6 +11,66 @@ import (
 	"github.com/uhppoted/uhppote-simulator/entities"
 )
 
+func TestNewUT0311L04(t *testing.T) {
+	expected := UT0311L04{
+		SerialNumber: types.SerialNumber(405060708),
+		IpAddress:    net.IPv4(0, 0, 0, 0),
+		SubnetMask:   net.IPv4(255, 255, 255, 0),
+		Gateway:      net.IPv4(0, 0, 0, 0),
+		// MacAddress:   types.MacAddress(mac),
+		Version:  0x0892,
+		Released: DefaultReleaseDate(),
+		Doors: map[uint8]*entities.Door{
+			1: entities.NewDoor(1),
+			2: entities.NewDoor(2),
+			3: entities.NewDoor(3),
+			4: entities.NewDoor(4),
+		},
+
+		TimeProfiles: entities.TimeProfiles{},
+		TaskList:     entities.TaskList{},
+		Events:       entities.NewEventList(),
+	}
+
+	controller := NewUT0311L04(405060708, ".", false)
+
+	if controller.SerialNumber != expected.SerialNumber {
+		t.Errorf("incorrect serial number - expected:%v, got:%v", expected.SerialNumber, controller.SerialNumber)
+	}
+
+	if !reflect.DeepEqual(controller.IpAddress, expected.IpAddress) {
+		t.Errorf("incorrect IP address - expected:%v, got:%v", expected.IpAddress, controller.IpAddress)
+	}
+
+	if !reflect.DeepEqual(controller.SubnetMask, expected.SubnetMask) {
+		t.Errorf("incorrect netmask - expected:%v, got:%v", expected.SubnetMask, controller.SubnetMask)
+	}
+
+	if controller.Version != expected.Version {
+		t.Errorf("incorrect version - expected:%v, got:%v", expected.Version, controller.Version)
+	}
+
+	if !reflect.DeepEqual(controller.Released, expected.Released) {
+		t.Errorf("incorrect firmware date - expected:%v, got:%v", expected.Released, controller.Released)
+	}
+
+	if !reflect.DeepEqual(controller.Doors, expected.Doors) {
+		t.Errorf("incorrect doors map - expected:%v, got:%v", expected.Doors, controller.Doors)
+	}
+
+	if !reflect.DeepEqual(controller.TimeProfiles, expected.TimeProfiles) {
+		t.Errorf("incorrect time profiles list - expected:%v, got:%v", expected.TimeProfiles, controller.TimeProfiles)
+	}
+
+	if !reflect.DeepEqual(controller.TaskList, expected.TaskList) {
+		t.Errorf("incorrect task list - expected:%v, got:%v", expected.TaskList, controller.TaskList)
+	}
+
+	if !reflect.DeepEqual(controller.Events, expected.Events) {
+		t.Errorf("incorrect events list - expected:%v, got:%v", expected.Events, controller.Events)
+	}
+}
+
 // TODO: ignore date/time fields
 // func TestHandleGetStatus(t *testing.T) {
 // 	swipeDateTime, _ := types.DateTimeFromString("2019-08-01 12:34:56")
