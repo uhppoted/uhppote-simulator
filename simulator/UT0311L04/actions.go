@@ -273,11 +273,10 @@ func (s *UT0311L04) checkTimeProfile(profileID uint8) bool {
 }
 
 func checkTimeProfile(profile types.TimeProfile, offset entities.Offset) bool {
-	utc := time.Now().UTC().Add(time.Duration(offset))
-	adjusted := utc.Local()
-	now := types.HHmmFromTime(adjusted)
-
 	today := types.Date(time.Now())
+	utc := time.Now().UTC()
+	adjusted := utc.Add(time.Duration(offset))
+	now := types.HHmmFromTime(adjusted)
 
 	if profile.From == nil || profile.From.After(today) {
 		return false

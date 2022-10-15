@@ -2,6 +2,23 @@
 
 - [ ] https://github.com/uhppoted/uhppote-simulator/issues/6
 - [ ] https://github.com/uhppoted/uhppote-simulator/issues/5
+- [ ] github workflow
+```
+go: downloading github.com/uhppoted/uhppote-core v0.8.3-0.20221014202027-b01c41cc87cb
+mkdir -p bin
+go build -trimpath -o bin ./...
+go test ./...
+?       github.com/uhppoted/uhppote-simulator/cmd/uhppote-simulator [no test files]
+?       github.com/uhppoted/uhppote-simulator/commands  [no test files]
+ok      github.com/uhppoted/uhppote-simulator/entities  0.008s
+?       github.com/uhppoted/uhppote-simulator/rest  [no test files]
+?       github.com/uhppoted/uhppote-simulator/simulator [no test files]
+--- FAIL: TestCheckTimeProfileInTimeSegment (0.00s)
+    actions_test.go:81: checkTimeProfile returned false for an in-bounds time segment - expected: true
+FAIL
+FAIL    github.com/uhppoted/uhppote-simulator/simulator/UT0311L04   0.004s
+FAIL
+```
 
 ### IN PROGRESS
 

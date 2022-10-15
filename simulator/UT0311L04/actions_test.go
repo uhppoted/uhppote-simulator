@@ -48,7 +48,7 @@ func TestCheckTimeProfileWithValidProfile(t *testing.T) {
 func TestCheckTimeProfileInTimeSegment(t *testing.T) {
 	from := types.ToDate(2000, time.January, 1)
 	to := types.ToDate(2099, time.December, 31)
-	now := time.Now()
+	now := time.Now().UTC()
 	start := types.HHmmFromTime(now.Add(-10 * time.Minute))
 	end := types.HHmmFromTime(now.Add(10 * time.Minute))
 
@@ -86,7 +86,7 @@ func TestCheckTimeProfileInTimeSegment(t *testing.T) {
 func TestCheckTimeProfileBeforeTimeSegment(t *testing.T) {
 	from := types.ToDate(2000, time.January, 1)
 	to := types.ToDate(2099, time.December, 31)
-	now := time.Now()
+	now := time.Now().UTC()
 	start := types.HHmmFromTime(now.Add(10 * time.Minute))
 	end := types.HHmmFromTime(now.Add(60 * time.Minute))
 
@@ -124,7 +124,7 @@ func TestCheckTimeProfileBeforeTimeSegment(t *testing.T) {
 func TestCheckTimeProfileAfterTimeSegment(t *testing.T) {
 	from := types.ToDate(2000, time.January, 1)
 	to := types.ToDate(2099, time.December, 31)
-	now := time.Now()
+	now := time.Now().UTC()
 	start := types.HHmmFromTime(now.Add(-60 * time.Minute))
 	end := types.HHmmFromTime(now.Add(-10 * time.Minute))
 
@@ -200,7 +200,7 @@ func TestCheckTimeProfileInTimeSegmentWithOffset(t *testing.T) {
 	start := types.NewHHmm(11, 30)
 	end := types.NewHHmm(12, 30)
 
-	now := time.Now()
+	now := time.Now().UTC()
 	datetime := fmt.Sprintf("%v 11:57:32", now.Format("2006-01-02"))
 
 	profile := types.TimeProfile{
@@ -239,7 +239,7 @@ func TestCheckTimeProfileBeforeTimeSegmentWithOffset(t *testing.T) {
 	start := types.NewHHmm(11, 30)
 	end := types.NewHHmm(12, 30)
 
-	now := time.Now()
+	now := time.Now().UTC()
 	datetime := fmt.Sprintf("%v 11:05:32", now.Format("2006-01-02"))
 
 	profile := types.TimeProfile{
@@ -278,7 +278,7 @@ func TestCheckTimeProfileAfterTimeSegmentWithOffset(t *testing.T) {
 	start := types.NewHHmm(11, 30)
 	end := types.NewHHmm(12, 30)
 
-	now := time.Now()
+	now := time.Now().UTC()
 	datetime := fmt.Sprintf("%v 13:13:13", now.Format("2006-01-02"))
 
 	profile := types.TimeProfile{
@@ -312,8 +312,8 @@ func TestCheckTimeProfileAfterTimeSegmentWithOffset(t *testing.T) {
 }
 
 func offset(datetime string) entities.Offset {
-	utc, _ := time.ParseInLocation("2006-01-02 15:04:05", datetime, time.Local)
-	now := time.Now()
+	utc, _ := time.ParseInLocation("2006-01-02 15:04:05", datetime, time.UTC)
+	now := time.Now().UTC()
 	delta := utc.Sub(now)
 
 	return entities.Offset(delta)
