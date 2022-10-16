@@ -4,20 +4,23 @@
 - [ ] https://github.com/uhppoted/uhppote-simulator/issues/5
 - [ ] github workflow
 ```
-go: downloading github.com/uhppoted/uhppote-core v0.8.3-0.20221014202027-b01c41cc87cb
-mkdir -p bin
-go build -trimpath -o bin ./...
-go test ./...
-?       github.com/uhppoted/uhppote-simulator/cmd/uhppote-simulator [no test files]
-?       github.com/uhppoted/uhppote-simulator/commands  [no test files]
-ok      github.com/uhppoted/uhppote-simulator/entities  0.008s
-?       github.com/uhppoted/uhppote-simulator/rest  [no test files]
-?       github.com/uhppoted/uhppote-simulator/simulator [no test files]
---- FAIL: TestCheckTimeProfileInTimeSegment (0.00s)
-    actions_test.go:81: checkTimeProfile returned false for an in-bounds time segment - expected: true
-FAIL
-FAIL    github.com/uhppoted/uhppote-simulator/simulator/UT0311L04   0.004s
-FAIL
+00154321 doors: 1 2 4            
+00112345 doors: 1:2 2:2 4:2
+
+2 Mon,Tue,Wed,Thu,Fri 16:45-22:15 3
+3 Sat,Sun             11:45-17:15
+
+# test 1 - door 1 prior to time on Monday
+# card 1 should have access, card 2 should not
+set-time 2022-10-03 16:35:00  # monday
+154321 - granted
+112345 - granted ???
+
+# test 2 - door 1 during time on Monday
+# both cards should have access
+set-time 2021-10-03 16:55:00
+154321 - granted
+112345 - granted
 ```
 
 ### IN PROGRESS
