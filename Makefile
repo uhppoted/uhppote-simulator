@@ -61,7 +61,7 @@ release: update-release build-all
 	cd dist; zip --recurse-paths $(DIST).zip $(DIST)
 
 debug: build
-	go test -v ./simulator/UT0311L04/... -run TestCheckTime
+	go test -v ./simulator/UT0311L04/... -run TestCheckTimeProfile
 
 delve: build
 	dlv test github.com/uhppoted/uhppote-simulator/simulator/UT0311L04 -- run TestCheckTimeProfileInTimeSegmentWithOffset

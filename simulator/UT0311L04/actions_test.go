@@ -194,7 +194,7 @@ func TestCheckTimeProfileWithValidProfileAndTimeOffset(t *testing.T) {
 	}
 }
 
-func TestCheckTimeProfileInTimeSegmentWithOffset(t *testing.T) {
+func TestCheckTimeProfileInTimeSegmentWithTimeOffset(t *testing.T) {
 	from := types.ToDate(2000, time.January, 1)
 	to := types.ToDate(2099, time.December, 31)
 	start := types.NewHHmm(11, 30)
@@ -233,7 +233,7 @@ func TestCheckTimeProfileInTimeSegmentWithOffset(t *testing.T) {
 	}
 }
 
-func TestCheckTimeProfileBeforeTimeSegmentWithOffset(t *testing.T) {
+func TestCheckTimeProfileBeforeTimeSegmentWithTimeOffset(t *testing.T) {
 	from := types.ToDate(2000, time.January, 1)
 	to := types.ToDate(2099, time.December, 31)
 	start := types.NewHHmm(11, 30)
@@ -272,7 +272,7 @@ func TestCheckTimeProfileBeforeTimeSegmentWithOffset(t *testing.T) {
 	}
 }
 
-func TestCheckTimeProfileAfterTimeSegmentWithOffset(t *testing.T) {
+func TestCheckTimeProfileAfterTimeSegmentWithTimeOffset(t *testing.T) {
 	from := types.ToDate(2000, time.January, 1)
 	to := types.ToDate(2099, time.December, 31)
 	start := types.NewHHmm(11, 30)
@@ -305,6 +305,150 @@ func TestCheckTimeProfileAfterTimeSegmentWithOffset(t *testing.T) {
 
 	expected := false
 	ok := checkTimeProfile(profile, offset(datetime))
+
+	if ok != expected {
+		t.Errorf("checkTimeProfile returned %v for an out-of-bounds time segment + offset - expected: %v", ok, expected)
+	}
+}
+
+func TestCheckTimeProfileWeekdayInDateTimeSegmentWithDateTimeOffset(t *testing.T) {
+	from := types.ToDate(2022, time.October, 3)
+	to := types.ToDate(2022, time.October, 3)
+	start := types.NewHHmm(16, 45)
+	end := types.NewHHmm(17, 30)
+
+	profile := types.TimeProfile{
+		ID:              37,
+		LinkedProfileID: 0,
+		From:            &from,
+		To:              &to,
+		Weekdays: types.Weekdays{
+			time.Monday:    true,
+			time.Tuesday:   false,
+			time.Wednesday: false,
+			time.Thursday:  false,
+			time.Friday:    false,
+			time.Saturday:  false,
+			time.Sunday:    false,
+		},
+		Segments: types.Segments{
+			1: types.Segment{
+				Start: start,
+				End:   end,
+			},
+		},
+	}
+
+	expected := true
+	ok := checkTimeProfile(profile, offset("2022-10-03 16:55:00"))
+
+	if ok != expected {
+		t.Errorf("checkTimeProfile returned %v for an in-bounds time segment + offset - expected: %v", ok, expected)
+	}
+}
+
+func TestCheckTimeProfileWeekdayNotInDateTimeSegmentWithDateTimeOffset(t *testing.T) {
+	from := types.ToDate(2000, time.January, 1)
+	to := types.ToDate(2099, time.December, 31)
+	start := types.NewHHmm(16, 30)
+	end := types.NewHHmm(17, 30)
+
+	profile := types.TimeProfile{
+		ID:              37,
+		LinkedProfileID: 0,
+		From:            &from,
+		To:              &to,
+		Weekdays: types.Weekdays{
+			time.Monday:    false,
+			time.Tuesday:   true,
+			time.Wednesday: true,
+			time.Thursday:  true,
+			time.Friday:    true,
+			time.Saturday:  true,
+			time.Sunday:    true,
+		},
+		Segments: types.Segments{
+			1: types.Segment{
+				Start: start,
+				End:   end,
+			},
+		},
+	}
+
+	expected := false
+	ok := checkTimeProfile(profile, offset("2022-10-03 16:35:00"))
+
+	if ok != expected {
+		t.Errorf("checkTimeProfile returned %v for an in-bounds time segment + offset - expected: %v", ok, expected)
+	}
+}
+
+func TestCheckTimeProfileWeekdayBeforeTimeSegmentWithDateTimeOffset(t *testing.T) {
+	from := types.ToDate(2022, time.October, 3)
+	to := types.ToDate(2022, time.October, 3)
+	start := types.NewHHmm(16, 45)
+	end := types.NewHHmm(17, 30)
+
+	profile := types.TimeProfile{
+		ID:              37,
+		LinkedProfileID: 0,
+		From:            &from,
+		To:              &to,
+		Weekdays: types.Weekdays{
+			time.Monday:    true,
+			time.Tuesday:   false,
+			time.Wednesday: false,
+			time.Thursday:  false,
+			time.Friday:    false,
+			time.Saturday:  false,
+			time.Sunday:    false,
+		},
+		Segments: types.Segments{
+			1: types.Segment{
+				Start: start,
+				End:   end,
+			},
+		},
+	}
+
+	expected := false
+	ok := checkTimeProfile(profile, offset("2022-10-03 16:35:00"))
+
+	if ok != expected {
+		t.Errorf("checkTimeProfile returned %v for an out-of-bounds time segment + offset - expected: %v", ok, expected)
+	}
+}
+
+func TestCheckTimeProfileWeekdayAfterTimeSegmentWithDateTimeOffset(t *testing.T) {
+	from := types.ToDate(2022, time.October, 3)
+	to := types.ToDate(2022, time.October, 3)
+	start := types.NewHHmm(16, 45)
+	end := types.NewHHmm(17, 30)
+
+	profile := types.TimeProfile{
+		ID:              37,
+		LinkedProfileID: 0,
+		From:            &from,
+		To:              &to,
+		Weekdays: types.Weekdays{
+			time.Monday:    true,
+			time.Tuesday:   false,
+			time.Wednesday: false,
+			time.Thursday:  false,
+			time.Friday:    false,
+			time.Saturday:  false,
+			time.Sunday:    false,
+		},
+		Segments: types.Segments{
+			1: types.Segment{
+				Start: start,
+				End:   end,
+			},
+		},
+	}
+
+	expected := false
+	ok := checkTimeProfile(profile, offset("2022-10-03 17:35:00"))
 
 	if ok != expected {
 		t.Errorf("checkTimeProfile returned %v for an out-of-bounds time segment + offset - expected: %v", ok, expected)
