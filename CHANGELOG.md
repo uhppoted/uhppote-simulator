@@ -3,12 +3,12 @@
 ## [Unreleased]
 
 ### Changed
-1. Initialised EventsList in simulator default constructor (cf. https://github.com/uhppoted/uhppote-simulator/issues/6)
-2. Reworked EventsList unmarshalling from JSON (cf. https://github.com/uhppoted/uhppote-simulator/issues/6)
-   - Replaced zero values for EventList size and chunk with defaults 
+1. Initialised `EventsList` in simulator default constructor (cf. https://github.com/uhppoted/uhppote-simulator/issues/6)
+2. Reworked `EventsList` unmarshalling from JSON (cf. https://github.com/uhppoted/uhppote-simulator/issues/6)
+   - Replaced zero values for `EventList` size and chunk with defaults 
    - Added check for zero chunk size before truncating
    - Reworked truncation to use calculated offset rather than loop
-3. Reworked checkTimeProfile to include the controller time offset (cf. https://github.com/uhppoted/uhppote-simulator/issues/5)
+3. Reworked `checkTimeProfile` to include the controller time offset (cf. https://github.com/uhppoted/uhppote-simulator/issues/5)
 
 
 ## [0.8.2](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.2) - 2022-10-14
