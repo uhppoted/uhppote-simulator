@@ -1,27 +1,8 @@
 # TODO
 
-- [ ] https://github.com/uhppoted/uhppote-simulator/issues/6
-- [ ] https://github.com/uhppoted/uhppote-simulator/issues/5
-- [ ] github workflow
-```
-00154321 doors: 1 2 4            
-00112345 doors: 1:2 2:2 4:2
-
-2 Mon,Tue,Wed,Thu,Fri 16:45-22:15 3
-3 Sat,Sun             11:45-17:15
-
-# test 1 - door 1 prior to time on Monday
-# card 1 should have access, card 2 should not
-set-time 2022-10-03 16:35:00  # monday
-154321 - granted
-112345 - granted ???
-
-# test 2 - door 1 during time on Monday
-# both cards should have access
-set-time 2021-10-03 16:55:00
-154321 - granted
-112345 - granted
-```
+- [x] https://github.com/uhppoted/uhppote-simulator/issues/6
+- [x] https://github.com/uhppoted/uhppote-simulator/issues/5
+- [x] github workflow
 
 ### IN PROGRESS
 

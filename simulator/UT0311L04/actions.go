@@ -279,24 +279,6 @@ func checkTimeProfile(profile types.TimeProfile, offset entities.Offset) bool {
 	today := types.Date(adjusted)
 	weekday := today.Weekday()
 
-	// fmt.Printf(">> CHECK TIME PROFILE\n")
-	// fmt.Printf(">> Offset:             %v\n", time.Duration(offset).Round(1*time.Minute))
-	// fmt.Printf(">> Current time:       %v\n", time.Now())
-	// fmt.Printf(">> Current time (UTC): %v\n", utc)
-	// fmt.Printf(">> Adjusted tme (UTC): %v\n", adjusted)
-	// fmt.Printf(">> Adjusted weekday:   %v\n", adjusted.Weekday())
-	// fmt.Printf(">> Controller time:    %v\n", now)
-	// fmt.Printf(">>            date:    %v\n", today)
-	// fmt.Printf(">>            day:     %v\n", weekday)
-	//
-	// for _, i := range []uint8{1, 2, 3} {
-	// 	if segment, ok := profile.Segments[i]; ok {
-	// 		fmt.Printf(">>       segment %v:    start:%v  end:%v\n", i, segment.Start, segment.End)
-	// 	}
-	// }
-	//
-	// fmt.Println()
-
 	if profile.From == nil || profile.From.After(today) {
 		return false
 	}
