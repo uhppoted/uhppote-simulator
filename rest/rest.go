@@ -3,7 +3,7 @@ package rest
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"regexp"
@@ -105,7 +105,7 @@ func device(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 }
 
 func list(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
-	_, err := ioutil.ReadAll(r.Body)
+	_, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Error reading request", http.StatusInternalServerError)
 		return
@@ -132,7 +132,7 @@ func list(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 }
 
 func create(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
-	blob, err := ioutil.ReadAll(r.Body)
+	blob, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Error reading request", http.StatusInternalServerError)
 		return
@@ -180,7 +180,7 @@ func delete(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = ioutil.ReadAll(r.Body)
+	_, err = io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Error reading request", http.StatusInternalServerError)
 		return
@@ -210,7 +210,7 @@ func swipe(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	blob, err := ioutil.ReadAll(r.Body)
+	blob, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Error reading request", http.StatusInternalServerError)
 		return
@@ -282,7 +282,7 @@ func door(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	blob, err := ioutil.ReadAll(r.Body)
+	blob, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Error reading request", http.StatusInternalServerError)
 		return

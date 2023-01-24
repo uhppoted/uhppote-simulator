@@ -4,9 +4,8 @@ import (
 	"bytes"
 	"compress/gzip"
 	"encoding/json"
-	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"math/rand"
 	"net"
 	"os"
@@ -177,7 +176,7 @@ func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 		s.refreshTaskList(src, v)
 
 	default:
-		panic(errors.New(fmt.Sprintf("Unsupported message type %T", v)))
+		panic(fmt.Errorf("unsupported message type %T", v))
 	}
 }
 
@@ -228,7 +227,7 @@ func Load(filepath string, compressed bool) (*UT0311L04, error) {
 }
 
 func loadGZ(filepath string) (*UT0311L04, error) {
-	b, err := ioutil.ReadFile(filepath)
+	b, err := os.ReadFile(filepath)
 	if err != nil {
 		return nil, err
 	}
@@ -238,7 +237,7 @@ func loadGZ(filepath string) (*UT0311L04, error) {
 		return nil, err
 	}
 
-	buffer, err := ioutil.ReadAll(zr)
+	buffer, err := io.ReadAll(zr)
 	if err != nil {
 		return nil, err
 	}
@@ -256,7 +255,7 @@ func loadGZ(filepath string) (*UT0311L04, error) {
 }
 
 func load(filepath string) (*UT0311L04, error) {
-	bytes, err := ioutil.ReadFile(filepath)
+	bytes, err := os.ReadFile(filepath)
 	if err != nil {
 		return nil, err
 	}
@@ -349,7 +348,7 @@ func saveGZ(filepath string, s *UT0311L04) error {
 		return err
 	}
 
-	return ioutil.WriteFile(filepath, buffer.Bytes(), 0644)
+	return os.WriteFile(filepath, buffer.Bytes(), 0644)
 }
 
 func save(filepath string, s *UT0311L04) error {
@@ -358,7 +357,7 @@ func save(filepath string, s *UT0311L04) error {
 		return err
 	}
 
-	return ioutil.WriteFile(filepath, bytes, 0644)
+	return os.WriteFile(filepath, bytes, 0644)
 }
 
 func (s *UT0311L04) add(event entities.Event) {

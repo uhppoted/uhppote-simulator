@@ -47,7 +47,7 @@ func (l *CardList) Put(card *Card) error {
 		}
 	}
 
-	return fmt.Errorf("Insufficient space in card list")
+	return fmt.Errorf("insufficient space in card list")
 }
 
 func (l *CardList) Delete(cardNumber uint32) bool {
@@ -67,7 +67,7 @@ func (l *CardList) Delete(cardNumber uint32) bool {
 }
 
 func (l *CardList) DeleteAll() bool {
-	for ix, _ := range *l {
+	for ix := range *l {
 		(*l)[ix] = nil
 	}
 

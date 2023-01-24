@@ -37,7 +37,7 @@ vet: build
 	go vet ./...
 
 lint: build
-	golint ./...
+	staticcheck ./...
 
 benchmark: build
 	go test -bench ./...
@@ -45,7 +45,7 @@ benchmark: build
 coverage: build
 	go test -cover ./...
 
-build-all: test vet
+build-all: test vet lint
 	mkdir -p dist/$(DIST)/windows
 	mkdir -p dist/$(DIST)/darwin
 	mkdir -p dist/$(DIST)/linux

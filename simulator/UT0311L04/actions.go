@@ -258,7 +258,7 @@ func (s *UT0311L04) checkTimeProfile(profileID uint8) bool {
 			}
 		}
 
-		for pid, _ := range profiles {
+		for pid := range profiles {
 			if profile, ok := s.TimeProfiles[pid]; !ok {
 				return true // IRL, a controller seems to default to ok if a linked time profile is not present
 			} else if checkTimeProfile(profile, s.TimeOffset) {

@@ -2,7 +2,6 @@ package commands
 
 import (
 	"encoding/hex"
-	"errors"
 	"fmt"
 	"net"
 	"os"
@@ -22,13 +21,13 @@ func Simulate(ctx *simulator.Context, dbg bool) {
 	debug = dbg
 	bind, err := net.ResolveUDPAddr("udp4", ctx.BindAddress)
 	if err != nil {
-		fmt.Printf("%v\n", errors.New(fmt.Sprintf("Failed to resolve UDP bind address [%v]", err)))
+		fmt.Printf("Failed to resolve UDP bind address [%v]\n", err)
 		return
 	}
 
 	connection, err := net.ListenUDP("udp", bind)
 	if err != nil {
-		fmt.Printf("%v\n", errors.New(fmt.Sprintf("Failed to bind to UDP socket [%v]", err)))
+		fmt.Printf("Failed to bind to UDP socket [%v]", err)
 		return
 	}
 
@@ -69,10 +68,12 @@ func run(ctx *simulator.Context, connection *net.UDPConn, wait chan int) {
 	}()
 
 	go func() {
-		tick := time.Tick(1 * time.Second)
+		ticker := time.NewTicker(1 * time.Second)
+		defer ticker.Stop()
+
 		last := "00:00"
 		for {
-			<-tick
+			<-ticker.C
 			now := time.Now().Format("15:34")
 			if now != last {
 				last = now
@@ -125,7 +126,7 @@ func receive(c *net.UDPConn) ([]byte, *net.UDPAddr, error) {
 
 	N, remote, err := c.ReadFromUDP(request)
 	if err != nil {
-		return []byte{}, nil, errors.New(fmt.Sprintf("Failed to read from UDP socket [%v]", err))
+		return []byte{}, nil, fmt.Errorf("failed to read from UDP socket [%v]", err)
 	}
 
 	if debug {
@@ -144,7 +145,7 @@ func send(c *net.UDPConn, dest *net.UDPAddr, message interface{}) {
 
 	N, err := c.WriteTo(msg, dest)
 	if err != nil {
-		fmt.Printf("ERROR: %v\n", errors.New(fmt.Sprintf("Failed to write to UDP socket [%v]", err)))
+		fmt.Printf("ERROR: failed to write to UDP socket [%v]\n", err)
 	} else {
 		if debug {
 			fmt.Printf(" ... sent %v bytes to %v\n%s\n", N, dest, dump(msg[0:N], " ...          "))
@@ -153,7 +154,5 @@ func send(c *net.UDPConn, dest *net.UDPAddr, message interface{}) {
 }
 
 func dump(m []byte, prefix string) string {
-	regex := regexp.MustCompile("(?m)^(.*)")
-
-	return fmt.Sprintf("%s", regex.ReplaceAllString(hex.Dump(m), prefix+"$1"))
+	return regexp.MustCompile("(?m)^(.*)").ReplaceAllString(hex.Dump(m), prefix+"$1")
 }
