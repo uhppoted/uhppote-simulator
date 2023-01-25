@@ -91,6 +91,7 @@ Supported `uhppote` functions:
 - GetEventIndex
 - SetEventIndex
 - OpenDoor
+- SetPCControl
 - Listen
 
 Supported _actions_:

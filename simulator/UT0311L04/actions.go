@@ -10,6 +10,7 @@ import (
 
 const (
 	swipePass       uint8 = 0x01
+	pcControl       uint8 = 0x05
 	noPrivilege     uint8 = 0x06
 	normallyClosed  uint8 = 0x0b
 	invalidTimezone uint8 = 0x0f
@@ -47,6 +48,13 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8) (bool, error) {
 		}
 
 		profileID := c.Doors[door]
+
+		// PC control ?
+		lastTouched := time.Since(s.touched)
+		if s.PCControl && lastTouched < (30*time.Second) {
+			swiped(0x01, false, pcControl)
+			return false, nil
+		}
 
 		// no access rights?
 		if profileID < 1 || profileID > 254 {

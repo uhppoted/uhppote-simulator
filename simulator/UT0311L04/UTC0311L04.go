@@ -21,6 +21,7 @@ import (
 type UT0311L04 struct {
 	file       string
 	compressed bool
+	touched    time.Time
 	txq        chan entities.Message
 
 	SerialNumber        types.SerialNumber       `json:"serial-number"`
@@ -34,6 +35,7 @@ type UT0311L04 struct {
 	Doors               map[uint8]*entities.Door `json:"doors"`
 	Listener            *net.UDPAddr             `json:"listener"`
 	RecordSpecialEvents bool                     `json:"record-special-events"`
+	PCControl           bool                     `json:"pc-control"`
 	SystemError         uint8                    `json:"system-error"`
 	SequenceId          uint32                   `json:"sequence-id"`
 	SpecialInfo         uint8                    `json:"special-info"`
@@ -56,6 +58,7 @@ func NewUT0311L04(deviceID uint32, dir string, compressed bool) *UT0311L04 {
 	device := UT0311L04{
 		file:       filepath.Join(dir, filename),
 		compressed: compressed,
+		touched:    time.Now(),
 
 		SerialNumber: types.SerialNumber(deviceID),
 		IpAddress:    net.IPv4(0, 0, 0, 0),
@@ -175,9 +178,14 @@ func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 	case *messages.RefreshTaskListRequest:
 		s.refreshTaskList(src, v)
 
+	case *messages.SetPCControlRequest:
+		s.setPCControl(src, v)
+
 	default:
 		panic(fmt.Errorf("unsupported message type %T", v))
 	}
+
+	s.touched = time.Now()
 }
 
 func (s *UT0311L04) RunTasks() {
@@ -250,6 +258,7 @@ func loadGZ(filepath string) (*UT0311L04, error) {
 
 	simulator.file = filepath
 	simulator.compressed = true
+	simulator.touched = time.Now()
 
 	return simulator, nil
 }
@@ -272,6 +281,7 @@ func load(filepath string) (*UT0311L04, error) {
 
 	simulator.file = filepath
 	simulator.compressed = false
+	simulator.touched = time.Now()
 
 	if simulator.Doors == nil {
 		simulator.Doors = make(map[uint8]*entities.Door)

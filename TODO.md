@@ -1,10 +1,8 @@
 # TODO
 
-- [x] https://github.com/uhppoted/uhppote-simulator/issues/6
-- [x] https://github.com/uhppoted/uhppote-simulator/issues/5
-- [x] github workflow
-
-### IN PROGRESS
+- [x] set-pc-control
+      - [x] handle request/response
+      - [x] checked 'touched' time for swipe events
 
 ## TODO
 
