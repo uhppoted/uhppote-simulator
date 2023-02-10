@@ -219,6 +219,7 @@ func swipe(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 	request := struct {
 		Door       uint8  `json:"door"`
 		CardNumber uint32 `json:"card-number"`
+		PIN        uint32 `json:"PIN,omitempty"`
 	}{}
 
 	err = json.Unmarshal(blob, &request)
@@ -233,7 +234,7 @@ func swipe(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	granted, err := s.Swipe(request.CardNumber, request.Door)
+	granted, err := s.Swipe(request.CardNumber, request.Door, request.PIN)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to emulate 'door open' (%v)", err), http.StatusInternalServerError)
 		return

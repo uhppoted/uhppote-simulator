@@ -2,6 +2,7 @@ DIST      ?= development
 SERIALNO  ?= 405419896
 NEWDEVICE ?= 102030405
 CARD      ?= 8165538
+PIN       ?= 7531
 DOOR      ?= 3
 DEBUG     ?= --debug
 
@@ -96,7 +97,7 @@ delete-device:
 	curl -X DELETE "http://127.0.0.1:8000/uhppote/simulator/$(NEWDEVICE)" -H "accept: */*"
 
 swipe:
-	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"door\":$(DOOR),\"card-number\":$(CARD)}"
+	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"door\":$(DOOR),\"card-number\":$(CARD),\"PIN\":$(PIN)}"
 
 open:
 	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/door/$(DOOR)" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"action\":\"open\",\"duration\":10}"

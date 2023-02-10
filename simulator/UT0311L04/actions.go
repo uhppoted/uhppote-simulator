@@ -12,6 +12,7 @@ const (
 	swipePass       uint8 = 0x01
 	pcControl       uint8 = 0x05
 	noPrivilege     uint8 = 0x06
+	invalidPIN      uint8 = 0x07
 	normallyClosed  uint8 = 0x0b
 	invalidTimezone uint8 = 0x0f
 	noPass          uint8 = 0x12
@@ -22,7 +23,7 @@ const (
 // Checks the device and card permissions and unlocks the associated door
 // if appropriate, but does not simulate opening the door. A 'swiped' event
 // is generated and sent to the configured event listener (if any).
-func (s *UT0311L04) Swipe(cardNumber uint32, door uint8) (bool, error) {
+func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, PIN uint32) (bool, error) {
 	if door < 1 || door > 4 {
 		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID(), door)
 	}
@@ -47,7 +48,14 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8) (bool, error) {
 			continue
 		}
 
-		profileID := c.Doors[door]
+		// PIN?
+
+		if c.PIN != 0 && c.PIN < 1000000 {
+			if PIN != c.PIN {
+				swiped(0x01, false, invalidPIN)
+				return false, nil
+			}
+		}
 
 		// PC control ?
 		lastTouched := time.Since(s.touched)
@@ -57,6 +65,8 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8) (bool, error) {
 		}
 
 		// no access rights?
+		profileID := c.Doors[door]
+
 		if profileID < 1 || profileID > 254 {
 			swiped(0x01, false, noPrivilege)
 			return false, nil
