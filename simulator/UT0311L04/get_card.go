@@ -4,6 +4,7 @@ import (
 	"net"
 
 	"github.com/uhppoted/uhppote-core/messages"
+	"github.com/uhppoted/uhppote-core/types"
 )
 
 func (s *UT0311L04) getCardByID(addr *net.UDPAddr, request *messages.GetCardByIDRequest) {
@@ -22,6 +23,11 @@ func (s *UT0311L04) getCardByID(addr *net.UDPAddr, request *messages.GetCardByID
 				response.Door2 = card.Doors[2]
 				response.Door3 = card.Doors[3]
 				response.Door4 = card.Doors[4]
+
+				if card.PIN < 1000000 {
+					response.PIN = types.PIN(card.PIN)
+				}
+
 				break
 			}
 		}
@@ -48,6 +54,10 @@ func (s *UT0311L04) getCardByIndex(addr *net.UDPAddr, request *messages.GetCardB
 				response.Door2 = card.Doors[2]
 				response.Door3 = card.Doors[3]
 				response.Door4 = card.Doors[4]
+
+				if card.PIN < 1000000 {
+					response.PIN = types.PIN(card.PIN)
+				}
 			}
 
 			s.send(addr, &response)

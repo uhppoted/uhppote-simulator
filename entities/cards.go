@@ -12,6 +12,7 @@ type Card struct {
 	From       *types.Date     `json:"from,omitempty"`
 	To         *types.Date     `json:"to,omitempty"`
 	Doors      map[uint8]uint8 `json:"doors,omitempty"`
+	PIN        uint32          `json:"PIN,omitempty"`
 }
 
 type CardList [64]*Card

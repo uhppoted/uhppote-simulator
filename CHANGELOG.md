@@ -5,6 +5,7 @@
 ### Added
 1. `doc.go` package overview documentation.
 2. `set-pc-control` command and emulation.
+3. Added PIN to card record
 
 
 ## [0.8.3](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.3) - 2022-12-16
