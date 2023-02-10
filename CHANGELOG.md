@@ -7,6 +7,9 @@
 2. `set-pc-control` command and emulation.
 3. Added PIN to card record
 
+### Updated
+1. Replaced `math/rand` with `crypto/rand` for MAC address in create-device.
+
 
 ## [0.8.3](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.3) - 2022-12-16
 

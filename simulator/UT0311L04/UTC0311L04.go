@@ -3,10 +3,10 @@ package UT0311L04
 import (
 	"bytes"
 	"compress/gzip"
+	"crypto/rand"
 	"encoding/json"
 	"fmt"
 	"io"
-	"crypto/rand"
 	"net"
 	"os"
 	"path/filepath"
