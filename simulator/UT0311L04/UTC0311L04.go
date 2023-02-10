@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"math/rand"
+	"crypto/rand"
 	"net"
 	"os"
 	"path/filepath"
@@ -52,8 +52,10 @@ func NewUT0311L04(deviceID uint32, dir string, compressed bool) *UT0311L04 {
 		filename = fmt.Sprintf("%d.json.gz", deviceID)
 	}
 
-	mac := make([]byte, 6)
-	rand.Read(mac)
+	mac := []byte{0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc}
+	if _, err := rand.Read(mac); err != nil {
+		fmt.Printf("   ... using default MAC address (%v)\n", err)
+	}
 
 	device := UT0311L04{
 		file:       filepath.Join(dir, filename),
