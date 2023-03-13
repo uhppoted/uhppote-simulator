@@ -344,7 +344,7 @@ func TestHandleGetEvent(t *testing.T) {
 		Door:         4,
 		Direction:    0x01,
 		CardNumber:   555444321,
-		Timestamp:    &timestamp,
+		Timestamp:    timestamp,
 		Reason:       9,
 	}
 
