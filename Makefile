@@ -6,6 +6,7 @@ PIN       ?= 7531
 DOOR      ?= 3
 DEBUG     ?= --debug
 
+.DEFAULT_GOAL := test
 .PHONY: clean
 .PHONY: update
 .PHONY: update-release

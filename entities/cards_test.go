@@ -9,10 +9,12 @@ import (
 	"github.com/uhppoted/uhppote-core/types"
 )
 
-var date = func(s string) *types.Date {
-	d, _ := time.ParseInLocation("2006-01-02", s, time.Local)
-	p := types.Date(d)
-	return &p
+var date = func(s string) types.Date {
+	if d, err := time.ParseInLocation("2006-01-02", s, time.Local); err != nil {
+		return types.Date{}
+	} else {
+		return types.Date(d)
+	}
 }
 
 func TestCardListSize(t *testing.T) {
