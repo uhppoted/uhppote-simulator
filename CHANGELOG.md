@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+1. `set-interlock` command and emulation.
+
 ### Updated
 1. Replaced card `From` and `To` field pointers with zero values.
 

@@ -25,15 +25,15 @@ func (s *UT0311L04) getStatus(addr *net.UDPAddr, request *messages.GetStatusRequ
 			RelayState:   s.relays(),
 			InputState:   s.InputState,
 
-			Door1State: s.Doors[1].IsOpen(),
-			Door2State: s.Doors[2].IsOpen(),
-			Door3State: s.Doors[3].IsOpen(),
-			Door4State: s.Doors[4].IsOpen(),
+			Door1State: s.Doors.IsOpen(1),
+			Door2State: s.Doors.IsOpen(2),
+			Door3State: s.Doors.IsOpen(3),
+			Door4State: s.Doors.IsOpen(4),
 
-			Door1Button: s.Doors[1].IsButtonPressed(),
-			Door2Button: s.Doors[2].IsButtonPressed(),
-			Door3Button: s.Doors[3].IsButtonPressed(),
-			Door4Button: s.Doors[4].IsButtonPressed(),
+			Door1Button: s.Doors.IsButtonPressed(1),
+			Door2Button: s.Doors.IsButtonPressed(2),
+			Door3Button: s.Doors.IsButtonPressed(3),
+			Door4Button: s.Doors.IsButtonPressed(4),
 		}
 
 		response.EventIndex = event.Index

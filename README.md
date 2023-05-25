@@ -93,6 +93,7 @@ Supported `uhppote` functions:
 - SetEventIndex
 - OpenDoor
 - SetPCControl
+- SetInterlock
 - Listen
 
 Supported _actions_:

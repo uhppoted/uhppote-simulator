@@ -15,14 +15,14 @@ func (s *UT0311L04) setDoorControlState(addr *net.UDPAddr, request *messages.Set
 			return
 		}
 
-		s.Doors[door].ControlState = request.ControlState
-		s.Doors[door].Delay = entities.Delay(uint64(request.Delay) * 1000000000)
+		s.Doors.SetControlState(door, request.ControlState)
+		s.Doors.SetDelay(door, entities.Delay(uint64(request.Delay)*1000000000))
 
 		response := messages.SetDoorControlStateResponse{
 			SerialNumber: s.SerialNumber,
 			Door:         door,
-			ControlState: s.Doors[door].ControlState,
-			Delay:        s.Doors[door].Delay.Seconds(),
+			ControlState: s.Doors.ControlState(door),
+			Delay:        s.Doors.Delay(door).Seconds(),
 		}
 
 		s.send(addr, &response)

@@ -27,7 +27,7 @@ func TestGetDeviceWithMatchingAddress(t *testing.T) {
 		Listener:     &listener,
 		Cards:        entities.CardList{},
 		Events:       entities.EventList{},
-		Doors:        map[uint8]*entities.Door{},
+		Doors:        entities.MakeDoors(),
 
 		txq: txq,
 	}
@@ -78,7 +78,7 @@ func TestGetDeviceWithAddress0(t *testing.T) {
 		Listener:     &listener,
 		Cards:        entities.CardList{},
 		Events:       entities.EventList{},
-		Doors:        map[uint8]*entities.Door{},
+		Doors:        entities.MakeDoors(),
 
 		txq: txq,
 	}
@@ -129,7 +129,7 @@ func TestGetDeviceWithDifferentAddress(t *testing.T) {
 		Listener:     &listener,
 		Cards:        entities.CardList{},
 		Events:       entities.EventList{},
-		Doors:        map[uint8]*entities.Door{},
+		Doors:        entities.MakeDoors(),
 
 		txq: txq,
 	}

@@ -18,15 +18,9 @@ func TestNewUT0311L04(t *testing.T) {
 		SubnetMask:   net.IPv4(255, 255, 255, 0),
 		Gateway:      net.IPv4(0, 0, 0, 0),
 		// MacAddress:   types.MacAddress(mac),
-		Version:  0x0892,
-		Released: DefaultReleaseDate(),
-		Doors: map[uint8]*entities.Door{
-			1: entities.NewDoor(1),
-			2: entities.NewDoor(2),
-			3: entities.NewDoor(3),
-			4: entities.NewDoor(4),
-		},
-
+		Version:      0x0892,
+		Released:     DefaultReleaseDate(),
+		Doors:        entities.MakeDoors(),
 		TimeProfiles: entities.TimeProfiles{},
 		TaskList:     entities.TaskList{},
 		Events:       entities.NewEventList(),
@@ -386,12 +380,17 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 	timestamp := types.DateTime(time.Date(2019, time.August, 1, 12, 34, 56, 0, time.Local))
 	listener := net.UDPAddr{IP: net.IPv4(10, 0, 0, 10), Port: 43210}
 
-	doors := map[uint8]*entities.Door{
-		1: &entities.Door{ControlState: 3, Delay: entities.DelayFromSeconds(11)},
-		2: &entities.Door{ControlState: 2, Delay: entities.DelayFromSeconds(22)},
-		3: &entities.Door{ControlState: 3, Delay: entities.DelayFromSeconds(33)},
-		4: &entities.Door{ControlState: 3, Delay: entities.DelayFromSeconds(44)},
-	}
+	doors := entities.MakeDoors()
+
+	doors.SetControlState(1, 3)
+	doors.SetControlState(2, 2)
+	doors.SetControlState(3, 3)
+	doors.SetControlState(4, 3)
+
+	doors.SetDelay(1, entities.DelayFromSeconds(11))
+	doors.SetDelay(2, entities.DelayFromSeconds(22))
+	doors.SetDelay(3, entities.DelayFromSeconds(33))
+	doors.SetDelay(4, entities.DelayFromSeconds(44))
 
 	cards := entities.CardList{
 		&entities.Card{

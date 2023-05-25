@@ -12,8 +12,8 @@ func (s *UT0311L04) getDoorControlState(addr *net.UDPAddr, request *messages.Get
 			response := messages.GetDoorControlStateResponse{
 				SerialNumber: s.SerialNumber,
 				Door:         request.Door,
-				ControlState: s.Doors[request.Door].ControlState,
-				Delay:        s.Doors[request.Door].Delay.Seconds(),
+				ControlState: s.Doors.ControlState(request.Door),
+				Delay:        s.Doors.Delay(request.Door).Seconds(),
 			}
 
 			s.send(addr, &response)

@@ -74,11 +74,9 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, PIN uint32) (bool, erro
 
 		// check against time profile
 		if profileID >= 2 && profileID <= 254 {
-			if d, ok := s.Doors[door]; ok {
-				if d.IsProfileDisabled() {
-					swiped(0x01, false, invalidTimezone)
-					return false, nil
-				}
+			if s.Doors.IsProfileDisabled(door) {
+				swiped(0x01, false, invalidTimezone)
+				return false, nil
 			}
 
 			if !s.checkTimeProfile(profileID) {
@@ -88,16 +86,14 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, PIN uint32) (bool, erro
 		}
 
 		// unlock door
-		if d, ok := s.Doors[door]; ok {
-			if d.IsNormallyClosed() {
-				swiped(0x01, false, normallyClosed)
-				return false, nil
-			}
+		if s.Doors.IsNormallyClosed(door) {
+			swiped(0x01, false, normallyClosed)
+			return false, nil
+		}
 
-			if d.Unlock(0 * time.Second) {
-				swiped(0x02, true, swipePass)
-				return true, nil
-			}
+		if s.Doors.Unlock(door, 0*time.Second) {
+			swiped(0x02, true, swipePass)
+			return true, nil
 		}
 
 		break
@@ -157,7 +153,7 @@ func (s *UT0311L04) Open(door uint8, duration *time.Duration) (bool, error) {
 		}
 	}
 
-	opened := s.Doors[door].Open(duration, onOpen, onClose)
+	opened := s.Doors.Open(door, duration, onOpen, onClose)
 
 	return opened, nil
 }
@@ -191,7 +187,7 @@ func (s *UT0311L04) Close(door uint8) (bool, error) {
 		}
 	}
 
-	closed := s.Doors[door].Close(onClose)
+	closed := s.Doors.Close(door, onClose)
 
 	return closed, nil
 }
@@ -244,7 +240,9 @@ func (s *UT0311L04) ButtonPressed(door uint8, duration time.Duration) (bool, err
 		}
 	}
 
-	pressed, reason := s.Doors[door].PressButton(duration)
+	pressed, reason := s.Doors.PressButton(door, duration)
+
+	// fmt.Printf(">> PB: door:%v interlock:%v  pressed:%v  reason:%v\n", door, s.Interlock, pressed, reason)
 
 	if pressed {
 		if reason == 0x00 {

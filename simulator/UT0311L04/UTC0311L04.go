@@ -24,27 +24,27 @@ type UT0311L04 struct {
 	touched    time.Time
 	txq        chan entities.Message
 
-	SerialNumber        types.SerialNumber       `json:"serial-number"`
-	IpAddress           net.IP                   `json:"address"`
-	SubnetMask          net.IP                   `json:"subnet"`
-	Gateway             net.IP                   `json:"gateway"`
-	MacAddress          types.MacAddress         `json:"MAC"`
-	Version             types.Version            `json:"version"`
-	Released            *ReleaseDate             `json:"released"`
-	TimeOffset          entities.Offset          `json:"offset"`
-	Doors               map[uint8]*entities.Door `json:"doors"`
-	Listener            *net.UDPAddr             `json:"listener"`
-	RecordSpecialEvents bool                     `json:"record-special-events"`
-	PCControl           bool                     `json:"pc-control"`
-	Interlock           uint8                    `json:"interlock"`
-	SystemError         uint8                    `json:"system-error"`
-	SequenceId          uint32                   `json:"sequence-id"`
-	SpecialInfo         uint8                    `json:"special-info"`
-	InputState          uint8                    `json:"input-state"`
-	TimeProfiles        entities.TimeProfiles    `json:"time-profiles,omitempty"`
-	TaskList            entities.TaskList        `json:"tasklist,omitempty"`
-	Cards               entities.CardList        `json:"cards"`
-	Events              entities.EventList       `json:"events"`
+	SerialNumber        types.SerialNumber    `json:"serial-number"`
+	IpAddress           net.IP                `json:"address"`
+	SubnetMask          net.IP                `json:"subnet"`
+	Gateway             net.IP                `json:"gateway"`
+	MacAddress          types.MacAddress      `json:"MAC"`
+	Version             types.Version         `json:"version"`
+	Released            *ReleaseDate          `json:"released"`
+	TimeOffset          entities.Offset       `json:"offset"`
+	Doors               entities.Doors        `json:"doors"`
+	Listener            *net.UDPAddr          `json:"listener"`
+	RecordSpecialEvents bool                  `json:"record-special-events"`
+	PCControl           bool                  `json:"pc-control"`
+	Interlock           uint8                 `json:"interlock"`
+	SystemError         uint8                 `json:"system-error"`
+	SequenceId          uint32                `json:"sequence-id"`
+	SpecialInfo         uint8                 `json:"special-info"`
+	InputState          uint8                 `json:"input-state"`
+	TimeProfiles        entities.TimeProfiles `json:"time-profiles,omitempty"`
+	TaskList            entities.TaskList     `json:"tasklist,omitempty"`
+	Cards               entities.CardList     `json:"cards"`
+	Events              entities.EventList    `json:"events"`
 }
 
 func NewUT0311L04(deviceID uint32, dir string, compressed bool) *UT0311L04 {
@@ -70,13 +70,7 @@ func NewUT0311L04(deviceID uint32, dir string, compressed bool) *UT0311L04 {
 		MacAddress:   types.MacAddress(mac),
 		Version:      0x0892,
 		Released:     DefaultReleaseDate(),
-		Doors: map[uint8]*entities.Door{
-			1: entities.NewDoor(1),
-			2: entities.NewDoor(2),
-			3: entities.NewDoor(3),
-			4: entities.NewDoor(4),
-		},
-
+		Doors:        entities.MakeDoors(),
 		TimeProfiles: entities.TimeProfiles{},
 		TaskList:     entities.TaskList{},
 		Events:       entities.NewEventList(),
@@ -198,19 +192,19 @@ func (s *UT0311L04) RunTasks() {
 	handler := func(door uint8, task types.TaskType) {
 		switch task {
 		case types.DoorControlled:
-			s.Doors[door].OverrideState(entities.Controlled)
+			s.Doors.OverrideState(door, entities.Controlled)
 
 		case types.DoorNormallyOpen:
-			s.Doors[door].OverrideState(entities.NormallyOpen)
+			s.Doors.OverrideState(door, entities.NormallyOpen)
 
 		case types.DoorNormallyClosed:
-			s.Doors[door].OverrideState(entities.NormallyClosed)
+			s.Doors.OverrideState(door, entities.NormallyClosed)
 
 		case types.DisableTimeProfile:
-			s.Doors[door].EnableProfile(false)
+			s.Doors.EnableProfile(door, false)
 
 		case types.EnableTimeProfile:
-			s.Doors[door].EnableProfile(true)
+			s.Doors.EnableProfile(door, true)
 
 			//	case types.CardNoPassword:
 			//	case types.CardInPassword:
@@ -219,13 +213,13 @@ func (s *UT0311L04) RunTasks() {
 			//	case types.DisableMoreCards:
 
 		case types.TriggerOnce:
-			s.Doors[door].Unlock(0 * time.Second)
+			s.Doors.Unlock(door, 0*time.Second)
 
 		case types.DisablePushButton:
-			s.Doors[door].EnableButton(false)
+			s.Doors.EnableButton(door, false)
 
 		case types.EnablePushButton:
-			s.Doors[door].EnableButton(true)
+			s.Doors.EnableButton(door, true)
 		}
 	}
 
@@ -277,6 +271,7 @@ func load(filepath string) (*UT0311L04, error) {
 
 	simulator := UT0311L04{
 		Released:     DefaultReleaseDate(),
+		Doors:        entities.MakeDoors(),
 		TimeProfiles: entities.TimeProfiles{},
 	}
 
@@ -288,20 +283,6 @@ func load(filepath string) (*UT0311L04, error) {
 	simulator.file = filepath
 	simulator.compressed = false
 	simulator.touched = time.Now()
-
-	if simulator.Doors == nil {
-		simulator.Doors = make(map[uint8]*entities.Door)
-	}
-
-	for i := uint8(1); i <= 4; i++ {
-		if simulator.Doors[i] == nil {
-			simulator.Doors[i] = entities.NewDoor(i)
-		}
-
-		if simulator.Doors[i].ControlState < 1 || simulator.Doors[i].ControlState > 3 {
-			simulator.Doors[i].ControlState = 3
-		}
-	}
 
 	return &simulator, nil
 }
@@ -394,15 +375,15 @@ func (s *UT0311L04) add(event entities.Event) {
 		RelayState:   s.relays(),
 		InputState:   s.InputState,
 
-		Door1State: s.Doors[1].IsOpen(),
-		Door2State: s.Doors[2].IsOpen(),
-		Door3State: s.Doors[3].IsOpen(),
-		Door4State: s.Doors[4].IsOpen(),
+		Door1State: s.Doors.IsOpen(1),
+		Door2State: s.Doors.IsOpen(2),
+		Door3State: s.Doors.IsOpen(3),
+		Door4State: s.Doors.IsOpen(4),
 
-		Door1Button: s.Doors[1].IsButtonPressed(),
-		Door2Button: s.Doors[2].IsButtonPressed(),
-		Door3Button: s.Doors[3].IsButtonPressed(),
-		Door4Button: s.Doors[4].IsButtonPressed(),
+		Door1Button: s.Doors.IsButtonPressed(1),
+		Door2Button: s.Doors.IsButtonPressed(2),
+		Door3Button: s.Doors.IsButtonPressed(3),
+		Door4Button: s.Doors.IsButtonPressed(4),
 
 		EventType:  event.Type,
 		Reason:     event.Reason,
@@ -434,7 +415,7 @@ func (s *UT0311L04) relays() uint8 {
 	}
 
 	for k, mask := range doors {
-		if s.Doors[k].IsUnlocked() {
+		if s.Doors.IsUnlocked(k) {
 			state |= mask
 		}
 	}

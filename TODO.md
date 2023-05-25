@@ -4,9 +4,16 @@
       - [x] request/reply
       - [x] save/restore
       - [ ] interlock door open
+            - [ ] Remodel doors as type (not as an array)
+            - [ ] Test unmarshal invalid control state
+            - [ ] Swipe
+            - [ ] Pushbutton
+            - [ ] Remote open
+            - [ ] Opened door should stay open until closed (i.e. seperate door from lock)
+            - [ ] Unlocked while button is pressed (i.e. delay is just a minimum time - check against controller)
       - [ ] event reason
-      - [ ] CHANGELOG
-      - [ ] README
+      - [x] CHANGELOG
+      - [x] README
 
 - [ ] Only allow valid Wiegand-26 cards
 ```
