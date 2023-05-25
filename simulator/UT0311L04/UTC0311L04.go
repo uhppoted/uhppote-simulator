@@ -36,6 +36,7 @@ type UT0311L04 struct {
 	Listener            *net.UDPAddr             `json:"listener"`
 	RecordSpecialEvents bool                     `json:"record-special-events"`
 	PCControl           bool                     `json:"pc-control"`
+	Interlock           uint8                    `json:"interlock"`
 	SystemError         uint8                    `json:"system-error"`
 	SequenceId          uint32                   `json:"sequence-id"`
 	SpecialInfo         uint8                    `json:"special-info"`
@@ -182,6 +183,9 @@ func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 
 	case *messages.SetPCControlRequest:
 		s.setPCControl(src, v)
+
+	case *messages.SetInterlockRequest:
+		s.setInterlock(src, v)
 
 	default:
 		panic(fmt.Errorf("unsupported message type %T", v))
