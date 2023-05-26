@@ -186,7 +186,7 @@ func (d *Door) PressButton(duration time.Duration) (pressed bool, reason uint8) 
 		d.unlockedUntil = &unlockUntil
 	}
 
-	reason = 0x00
+	reason = ReasonOk
 
 	return
 }

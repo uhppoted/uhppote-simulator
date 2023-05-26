@@ -242,7 +242,7 @@ func (s *UT0311L04) ButtonPressed(door uint8, duration time.Duration) (bool, err
 
 	pressed, reason := s.Doors.PressButton(door, duration)
 
-	// fmt.Printf(">> PB: door:%v interlock:%v  pressed:%v  reason:%v\n", door, s.Interlock, pressed, reason)
+	// fmt.Printf(">>>>> PB: door:%v interlock:%v  pressed:%v  reason:%v\n", door, s.Interlock, pressed, reason)
 
 	if pressed {
 		if reason == 0x00 {
