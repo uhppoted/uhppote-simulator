@@ -9,6 +9,7 @@ import (
 
 func TestDoorsMarshalJSON(t *testing.T) {
 	doors := Doors{
+		Interlock: 3,
 		doors: map[uint8]*Door{
 			1: &Door{
 				ControlState: 1,
@@ -29,7 +30,7 @@ func TestDoorsMarshalJSON(t *testing.T) {
 		},
 	}
 
-	expected := `{"doors":{"1":{"control":1,"delay":"5s"},"2":{"control":2,"delay":"7.5s"},"3":{"control":3,"delay":"7s"},"4":{"control":3,"delay":"5s"}}}`
+	expected := `{"doors":{"interlock":3,"1":{"control":1,"delay":"5s"},"2":{"control":2,"delay":"7.5s"},"3":{"control":3,"delay":"7s"},"4":{"control":3,"delay":"5s"}}}`
 
 	bytes, err := json.Marshal(doors)
 	if err != nil {
@@ -42,13 +43,14 @@ func TestDoorsMarshalJSON(t *testing.T) {
 }
 
 func TestDoorsUnmarshalJSON(t *testing.T) {
-	bytes := []byte(`{"doors":{"1":{"control":1,"delay":"5s"},"2":{"control":2,"delay":"7.5s"},"3":{"control":3,"delay":"7s"},"4":{"control":3,"delay":"5s"}}}`)
+	bytes := []byte(`{"doors":{"1":{"control":1,"delay":"5s"},"2":{"control":2,"delay":"7.5s"},"3":{"control":3,"delay":"7s"},"4":{"control":3,"delay":"5s"},"interlock":3}}`)
 
 	doors := Doors{
 		doors: map[uint8]*Door{},
 	}
 
 	expected := Doors{
+		Interlock: 3,
 		doors: map[uint8]*Door{
 			1: &Door{
 				ControlState: 1,
@@ -78,4 +80,40 @@ func TestDoorsUnmarshalJSON(t *testing.T) {
 	}
 }
 
-// TODO check unmarshal invalid control state
+func TestDoorsUnmarshalInvalidJSON(t *testing.T) {
+	bytes := []byte(`{"doors":{"1":{"control":0,"delay":"5s"},"2":{"control":4,"delay":"7.5s"},"3":{"control":5,"delay":"7s"},"4":{"control":6,"delay":"5s"},"interlock":3}}`)
+
+	doors := Doors{
+		doors: map[uint8]*Door{},
+	}
+
+	expected := Doors{
+		Interlock: 3,
+		doors: map[uint8]*Door{
+			1: &Door{
+				ControlState: 3,
+				Delay:        Delay(5 * time.Second),
+			},
+			2: &Door{
+				ControlState: 3,
+				Delay:        Delay(7500 * time.Millisecond),
+			},
+			3: &Door{
+				ControlState: 3,
+				Delay:        Delay(7 * time.Second),
+			},
+			4: &Door{
+				ControlState: 3,
+				Delay:        Delay(5 * time.Second),
+			},
+		},
+	}
+
+	if err := json.Unmarshal(bytes, &doors); err != nil {
+		t.Fatalf("Error unmarshalling 'doors' JSON with invalid control state (%v)", err)
+	}
+
+	if !reflect.DeepEqual(doors, expected) {
+		t.Errorf("Incorrectly unmarshalled 'doors' struct\n   expected:%#v\n   got:     %#v", expected, doors)
+	}
+}

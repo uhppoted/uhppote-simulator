@@ -14,7 +14,7 @@ func TestSetInterlock1(t *testing.T) {
 
 	s := UT0311L04{
 		SerialNumber: 12345,
-		Interlock:    0,
+		Doors:        entities.MakeDoors(),
 
 		txq: txq,
 	}
@@ -42,8 +42,8 @@ func TestSetInterlock1(t *testing.T) {
 		t.Errorf("'set-interlock' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, response)
 	}
 
-	if s.Interlock != 1 {
-		t.Errorf("'set-interlock' failed to update simulator 'interlock' field\n   expected: %+v\n   got:      %+v\n", 1, s.Interlock)
+	if s.Doors.Interlock != 1 {
+		t.Errorf("'set-interlock' failed to update simulator 'interlock' field\n   expected: %+v\n   got:      %+v\n", 1, s.Doors.Interlock)
 	}
 }
 
@@ -52,7 +52,7 @@ func TestSetInterlock2(t *testing.T) {
 
 	s := UT0311L04{
 		SerialNumber: 12345,
-		Interlock:    0,
+		Doors:        entities.MakeDoors(),
 
 		txq: txq,
 	}
@@ -80,8 +80,8 @@ func TestSetInterlock2(t *testing.T) {
 		t.Errorf("'set-interlock' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, response)
 	}
 
-	if s.Interlock != 2 {
-		t.Errorf("'set-interlock' failed to update simulator 'interlock' field\n   expected: %+v\n   got:      %+v\n", 2, s.Interlock)
+	if s.Doors.Interlock != 2 {
+		t.Errorf("'set-interlock' failed to update simulator 'interlock' field\n   expected: %+v\n   got:      %+v\n", 2, s.Doors.Interlock)
 	}
 }
 
@@ -90,7 +90,7 @@ func TestSetInterlock3(t *testing.T) {
 
 	s := UT0311L04{
 		SerialNumber: 12345,
-		Interlock:    0,
+		Doors:        entities.MakeDoors(),
 
 		txq: txq,
 	}
@@ -118,8 +118,8 @@ func TestSetInterlock3(t *testing.T) {
 		t.Errorf("'set-interlock' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, response)
 	}
 
-	if s.Interlock != 3 {
-		t.Errorf("'set-interlock' failed to update simulator 'interlock' field\n   expected: %+v\n   got:      %+v\n", 3, s.Interlock)
+	if s.Doors.Interlock != 3 {
+		t.Errorf("'set-interlock' failed to update simulator 'interlock' field\n   expected: %+v\n   got:      %+v\n", 3, s.Doors.Interlock)
 	}
 }
 
@@ -128,7 +128,7 @@ func TestSetInterlock4(t *testing.T) {
 
 	s := UT0311L04{
 		SerialNumber: 12345,
-		Interlock:    0,
+		Doors:        entities.MakeDoors(),
 
 		txq: txq,
 	}
@@ -156,8 +156,8 @@ func TestSetInterlock4(t *testing.T) {
 		t.Errorf("'set-interlock' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, response)
 	}
 
-	if s.Interlock != 4 {
-		t.Errorf("'set-interlock' failed to update simulator 'interlock' field\n   expected: %+v\n   got:      %+v\n", 4, s.Interlock)
+	if s.Doors.Interlock != 4 {
+		t.Errorf("'set-interlock' failed to update simulator 'interlock' field\n   expected: %+v\n   got:      %+v\n", 4, s.Doors.Interlock)
 	}
 }
 
@@ -166,10 +166,12 @@ func TestSetInterlockDisable(t *testing.T) {
 
 	s := UT0311L04{
 		SerialNumber: 12345,
-		Interlock:    1,
+		Doors:        entities.MakeDoors(),
 
 		txq: txq,
 	}
+
+	s.Doors.Interlock = 1
 
 	src := net.UDPAddr{IP: net.IPv4(10, 0, 0, 1), Port: 12345}
 
@@ -194,8 +196,8 @@ func TestSetInterlockDisable(t *testing.T) {
 		t.Errorf("'set-interlock' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, response)
 	}
 
-	if s.Interlock != 0 {
-		t.Errorf("'set-interlock' failed to update simulator 'interlock' field\n   expected: %+v\n   got:      %+v\n", 0, s.Interlock)
+	if s.Doors.Interlock != 0 {
+		t.Errorf("'set-interlock' failed to update simulator 'interlock' field\n   expected: %+v\n   got:      %+v\n", 0, s.Doors.Interlock)
 	}
 }
 
@@ -204,10 +206,12 @@ func TestSetInvalidInterlock(t *testing.T) {
 
 	s := UT0311L04{
 		SerialNumber: 12345,
-		Interlock:    3,
+		Doors:        entities.MakeDoors(),
 
 		txq: txq,
 	}
+
+	s.Doors.Interlock = 3
 
 	src := net.UDPAddr{IP: net.IPv4(10, 0, 0, 1), Port: 12345}
 
@@ -232,7 +236,7 @@ func TestSetInvalidInterlock(t *testing.T) {
 		t.Errorf("'set-interlock' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, response)
 	}
 
-	if s.Interlock != 3 {
-		t.Errorf("'set-interlock' erroneously updated simulator 'interlock' field\n   expected: %+v\n   got:      %+v\n", 3, s.Interlock)
+	if s.Doors.Interlock != 3 {
+		t.Errorf("'set-interlock' erroneously updated simulator 'interlock' field\n   expected: %+v\n   got:      %+v\n", 3, s.Doors.Interlock)
 	}
 }

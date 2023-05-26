@@ -6,11 +6,13 @@ import (
 )
 
 type Doors struct {
-	doors map[uint8]*Door
+	Interlock uint8
+	doors     map[uint8]*Door
 }
 
 func MakeDoors() Doors {
 	return Doors{
+		Interlock: 0,
 		doors: map[uint8]*Door{
 			1: NewDoor(1),
 			2: NewDoor(2),
@@ -146,9 +148,27 @@ func (dd *Doors) IsNormallyClosed(door uint8) bool {
 
 func (d Doors) MarshalJSON() ([]byte, error) {
 	serializable := struct {
-		Doors map[uint8]*Door `json:"doors"`
+		Doors struct {
+			Interlock uint8 `json:"interlock"`
+			Door1     *Door `json:"1"`
+			Door2     *Door `json:"2"`
+			Door3     *Door `json:"3"`
+			Door4     *Door `json:"4"`
+		} `json:"doors"`
 	}{
-		Doors: d.doors,
+		Doors: struct {
+			Interlock uint8 `json:"interlock"`
+			Door1     *Door `json:"1"`
+			Door2     *Door `json:"2"`
+			Door3     *Door `json:"3"`
+			Door4     *Door `json:"4"`
+		}{
+			Interlock: d.Interlock,
+			Door1:     d.doors[1],
+			Door2:     d.doors[2],
+			Door3:     d.doors[3],
+			Door4:     d.doors[4],
+		},
 	}
 
 	return json.Marshal(serializable)
@@ -156,21 +176,24 @@ func (d Doors) MarshalJSON() ([]byte, error) {
 
 func (d *Doors) UnmarshalJSON(bytes []byte) error {
 	serializable := struct {
-		Doors map[uint8]*Door `json:"doors"`
-	}{
-		Doors: d.doors,
-	}
+		Doors struct {
+			Interlock uint8 `json:"interlock"`
+			Door1     *Door `json:"1"`
+			Door2     *Door `json:"2"`
+			Door3     *Door `json:"3"`
+			Door4     *Door `json:"4"`
+		} `json:"doors"`
+	}{}
 
 	if err := json.Unmarshal(bytes, &serializable); err != nil {
 		return err
 	}
 
-	d.doors = map[uint8]*Door{
-		1: serializable.Doors[1],
-		2: serializable.Doors[2],
-		3: serializable.Doors[3],
-		4: serializable.Doors[4],
-	}
+	d.Interlock = serializable.Doors.Interlock
+	d.doors[1] = serializable.Doors.Door1
+	d.doors[2] = serializable.Doors.Door2
+	d.doors[3] = serializable.Doors.Door3
+	d.doors[4] = serializable.Doors.Door4
 
 	for _, ix := range []uint8{1, 2, 3, 4} {
 		if d.doors[ix].ControlState < 1 || d.doors[ix].ControlState > 3 {

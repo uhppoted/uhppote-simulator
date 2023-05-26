@@ -36,7 +36,6 @@ type UT0311L04 struct {
 	Listener            *net.UDPAddr          `json:"listener"`
 	RecordSpecialEvents bool                  `json:"record-special-events"`
 	PCControl           bool                  `json:"pc-control"`
-	Interlock           uint8                 `json:"interlock"`
 	SystemError         uint8                 `json:"system-error"`
 	SequenceId          uint32                `json:"sequence-id"`
 	SpecialInfo         uint8                 `json:"special-info"`

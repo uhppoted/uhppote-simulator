@@ -4,8 +4,8 @@
       - [x] request/reply
       - [x] save/restore
       - [ ] interlock door open
-            - [ ] Remodel doors as type (not as an array)
-            - [ ] Test unmarshal invalid control state
+            - [x] Remodel doors as type (not as an array)
+            - [x] Unit test unmarshal invalid control state
             - [ ] Swipe
             - [ ] Pushbutton
             - [ ] Remote open
