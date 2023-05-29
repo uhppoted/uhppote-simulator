@@ -42,36 +42,36 @@ func (dd *Doors) PressButton(door uint8, duration time.Duration) (pressed bool, 
 
 		case 1:
 			if door == 1 && dd.IsOpen(2) || door == 2 && dd.IsOpen(1) {
-				return false, ReasonInterlock
+				return true, ReasonInterlock
 			} else if door == 3 && dd.IsOpen(4) || door == 4 && dd.IsOpen(3) {
-				return false, ReasonInterlock
+				return true, ReasonInterlock
 			}
 
 		case 2:
 			if door == 1 && dd.IsOpen(3) || door == 3 && dd.IsOpen(1) {
-				return false, ReasonInterlock
+				return true, ReasonInterlock
 			} else if door == 2 && dd.IsOpen(4) || door == 4 && dd.IsOpen(2) {
-				return false, ReasonInterlock
+				return true, ReasonInterlock
 			}
 
 		case 3:
 			if door == 1 && (dd.IsOpen(2, 3)) {
 				return false, ReasonInterlock
 			} else if door == 2 && (dd.IsOpen(1, 3)) {
-				return false, ReasonInterlock
+				return true, ReasonInterlock
 			} else if door == 3 && (dd.IsOpen(1, 2)) {
-				return false, ReasonInterlock
+				return true, ReasonInterlock
 			}
 
 		case 4:
 			if door == 1 && dd.IsOpen(2, 3, 4) {
-				return false, ReasonInterlock
+				return true, ReasonInterlock
 			} else if door == 2 && dd.IsOpen(1, 3, 4) {
-				return false, ReasonInterlock
+				return true, ReasonInterlock
 			} else if door == 3 && dd.IsOpen(1, 2, 4) {
-				return false, ReasonInterlock
+				return true, ReasonInterlock
 			} else if door == 4 && dd.IsOpen(1, 2, 3) {
-				return false, ReasonInterlock
+				return true, ReasonInterlock
 			}
 		}
 
