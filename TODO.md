@@ -7,11 +7,11 @@
             - [x] Remodel doors as type (not as an array)
             - [x] Unit test unmarshal invalid control state
             - [x] Pushbutton
-                  - [x] Interlock event
-            - [ ] Swipe
+            - [x] Interlock event
+            - [x] Swipe
             - [ ] Remote open
             - [ ] Opened door should stay open until closed (i.e. seperate door from lock)
-            - [ ] Unlocked while button is pressed (i.e. delay is just a minimum time - check against controller)
+            - [ ] Door should stay unlocked while button is pressed (i.e. delay is just a minimum time - check against controller)
       - [ ] event reason
       - [x] CHANGELOG
       - [x] README

@@ -36,45 +36,6 @@ func (dd *Doors) SetDelay(door uint8, delay Delay) {
 
 func (dd *Doors) PressButton(door uint8, duration time.Duration) (pressed bool, reason uint8) {
 	if d, ok := dd.doors[door]; ok {
-		switch dd.Interlock {
-		case 0:
-			return d.PressButton(duration)
-
-		case 1:
-			if door == 1 && dd.IsOpen(2) || door == 2 && dd.IsOpen(1) {
-				return true, ReasonInterlock
-			} else if door == 3 && dd.IsOpen(4) || door == 4 && dd.IsOpen(3) {
-				return true, ReasonInterlock
-			}
-
-		case 2:
-			if door == 1 && dd.IsOpen(3) || door == 3 && dd.IsOpen(1) {
-				return true, ReasonInterlock
-			} else if door == 2 && dd.IsOpen(4) || door == 4 && dd.IsOpen(2) {
-				return true, ReasonInterlock
-			}
-
-		case 3:
-			if door == 1 && (dd.IsOpen(2, 3)) {
-				return false, ReasonInterlock
-			} else if door == 2 && (dd.IsOpen(1, 3)) {
-				return true, ReasonInterlock
-			} else if door == 3 && (dd.IsOpen(1, 2)) {
-				return true, ReasonInterlock
-			}
-
-		case 4:
-			if door == 1 && dd.IsOpen(2, 3, 4) {
-				return true, ReasonInterlock
-			} else if door == 2 && dd.IsOpen(1, 3, 4) {
-				return true, ReasonInterlock
-			} else if door == 3 && dd.IsOpen(1, 2, 4) {
-				return true, ReasonInterlock
-			} else if door == 4 && dd.IsOpen(1, 2, 3) {
-				return true, ReasonInterlock
-			}
-		}
-
 		return d.PressButton(duration)
 	}
 
@@ -182,6 +143,50 @@ func (dd *Doors) IsProfileDisabled(door uint8) bool {
 func (dd *Doors) IsNormallyClosed(door uint8) bool {
 	if d, ok := dd.doors[door]; ok {
 		return d.IsNormallyClosed()
+	}
+
+	return false
+}
+
+func (dd *Doors) IsInterlocked(door uint8) bool {
+	switch dd.Interlock {
+	case 0:
+		return false
+
+	case 1:
+		if door == 1 && dd.IsOpen(2) || door == 2 && dd.IsOpen(1) {
+			return true
+		} else if door == 3 && dd.IsOpen(4) || door == 4 && dd.IsOpen(3) {
+			return true
+		}
+
+	case 2:
+		if door == 1 && dd.IsOpen(3) || door == 3 && dd.IsOpen(1) {
+			return true
+		} else if door == 2 && dd.IsOpen(4) || door == 4 && dd.IsOpen(2) {
+			return true
+		}
+
+	case 3:
+		if door == 1 && (dd.IsOpen(2, 3)) {
+			return true
+		} else if door == 2 && (dd.IsOpen(1, 3)) {
+			return true
+		} else if door == 3 && (dd.IsOpen(1, 2)) {
+			return true
+		}
+
+	case 4:
+		if door == 1 && dd.IsOpen(2, 3, 4) {
+			return true
+		} else if door == 2 && dd.IsOpen(1, 3, 4) {
+			return true
+		} else if door == 3 && dd.IsOpen(1, 2, 4) {
+			return true
+		} else if door == 4 && dd.IsOpen(1, 2, 3) {
+			return true
+		}
+
 	}
 
 	return false

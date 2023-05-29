@@ -8,16 +8,6 @@ import (
 	"github.com/uhppoted/uhppote-simulator/entities"
 )
 
-const (
-	swipePass       uint8 = 0x01
-	pcControl       uint8 = 0x05
-	noPrivilege     uint8 = 0x06
-	invalidPIN      uint8 = 0x07
-	normallyClosed  uint8 = 0x0b
-	invalidTimezone uint8 = 0x0f
-	noPass          uint8 = 0x12
-)
-
 // Implements the REST 'swipe' API.
 //
 // Checks the device and card permissions and unlocks the associated door
@@ -52,7 +42,7 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, PIN uint32) (bool, erro
 
 		if c.PIN != 0 && c.PIN < 1000000 {
 			if PIN != c.PIN {
-				swiped(0x01, false, invalidPIN)
+				swiped(0x01, false, entities.ReasonInvalidPIN)
 				return false, nil
 			}
 		}
@@ -60,7 +50,7 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, PIN uint32) (bool, erro
 		// PC control ?
 		lastTouched := time.Since(s.touched)
 		if s.PCControl && lastTouched < (30*time.Second) {
-			swiped(0x01, false, pcControl)
+			swiped(0x01, false, entities.ReasonPCControl)
 			return false, nil
 		}
 
@@ -68,31 +58,36 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, PIN uint32) (bool, erro
 		profileID := c.Doors[door]
 
 		if profileID < 1 || profileID > 254 {
-			swiped(0x01, false, noPrivilege)
+			swiped(0x01, false, entities.ReasonNoPrivilege)
 			return false, nil
 		}
 
 		// check against time profile
 		if profileID >= 2 && profileID <= 254 {
 			if s.Doors.IsProfileDisabled(door) {
-				swiped(0x01, false, invalidTimezone)
+				swiped(0x01, false, entities.ReasonInvalidTimezone)
 				return false, nil
 			}
 
 			if !s.checkTimeProfile(profileID) {
-				swiped(0x01, false, invalidTimezone)
+				swiped(0x01, false, entities.ReasonInvalidTimezone)
 				return false, nil
 			}
 		}
 
 		// unlock door
 		if s.Doors.IsNormallyClosed(door) {
-			swiped(0x01, false, normallyClosed)
+			swiped(0x01, false, entities.ReasonNormallyClosed)
+			return false, nil
+		}
+
+		if s.Doors.IsInterlocked(door) {
+			swiped(0x01, false, entities.ReasonInterlock)
 			return false, nil
 		}
 
 		if s.Doors.Unlock(door, 0*time.Second) {
-			swiped(0x02, true, swipePass)
+			swiped(0x02, true, entities.ReasonSwipePass)
 			return true, nil
 		}
 
@@ -100,7 +95,7 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, PIN uint32) (bool, erro
 	}
 
 	// Denied!
-	swiped(0x01, false, noPass)
+	swiped(0x01, false, entities.ReasonNoPass)
 
 	return false, nil
 }
@@ -240,10 +235,12 @@ func (s *UT0311L04) ButtonPressed(door uint8, duration time.Duration) (bool, err
 		}
 	}
 
+	if s.Doors.IsInterlocked(door) {
+		onNotUnlocked(entities.ReasonInterlock)
+		return false, nil
+	}
+
 	pressed, reason := s.Doors.PressButton(door, duration)
-
-	// fmt.Printf(">>>>> PB: door:%v interlock:%v  pressed:%v  reason:%v\n", door, s.Interlock, pressed, reason)
-
 	if pressed {
 		if reason == 0x00 {
 			onUnlocked()
