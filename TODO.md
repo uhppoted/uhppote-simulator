@@ -3,16 +3,14 @@
 - [ ] `set-interlock`
       - [x] request/reply
       - [x] save/restore
-      - [ ] interlock door open
+      - [x] interlock door open
             - [x] Remodel doors as type (not as an array)
             - [x] Unit test unmarshal invalid control state
             - [x] Pushbutton
             - [x] Interlock event
             - [x] Swipe
-            - [ ] Remote open
-            - [ ] Opened door should stay open until closed (i.e. seperate door from lock)
-            - [ ] Door should stay unlocked while button is pressed (i.e. delay is just a minimum time - check against controller)
-      - [ ] event reason
+            - [x] ~~Remote open~~
+      - [x] Event reason
       - [x] CHANGELOG
       - [x] README
 
