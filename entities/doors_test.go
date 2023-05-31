@@ -42,11 +42,11 @@ func TestDoorInterlock1(t *testing.T) {
 
 		{3, map[uint8]bool{1: true, 2: false, 3: false, 4: false}, false},
 		{3, map[uint8]bool{1: false, 2: true, 3: false, 4: false}, false},
-		{3, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, true},
+		{3, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, false},
 
 		{4, map[uint8]bool{1: true, 2: false, 3: false, 4: false}, false},
 		{4, map[uint8]bool{1: false, 2: true, 3: false, 4: false}, false},
-		{4, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, true},
+		{4, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, false},
 	}
 
 	for _, test := range tests {
@@ -78,20 +78,20 @@ func TestDoorPressButtonWithInterlock2(t *testing.T) {
 		{4, map[uint8]bool{1: false, 2: false, 3: false, 4: false}, false},
 
 		{1, map[uint8]bool{1: false, 2: true, 3: false, 4: false}, false},
-		{1, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, true},
+		{1, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, false},
 		{1, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, false},
 
 		{2, map[uint8]bool{1: true, 2: false, 3: false, 4: false}, false},
 		{2, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, false},
-		{2, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, true},
+		{2, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, false},
 
-		{3, map[uint8]bool{1: true, 2: false, 3: false, 4: false}, true},
+		{3, map[uint8]bool{1: true, 2: false, 3: false, 4: false}, false},
 		{3, map[uint8]bool{1: false, 2: true, 3: false, 4: false}, false},
-		{3, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, false},
+		{3, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, true},
 
 		{4, map[uint8]bool{1: true, 2: false, 3: false, 4: false}, false},
-		{4, map[uint8]bool{1: false, 2: true, 3: false, 4: false}, true},
-		{4, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, false},
+		{4, map[uint8]bool{1: false, 2: true, 3: false, 4: false}, false},
+		{4, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, true},
 	}
 
 	for _, test := range tests {
@@ -122,21 +122,25 @@ func TestDoorPressButtonWithInterlock3(t *testing.T) {
 		{3, map[uint8]bool{1: false, 2: false, 3: false, 4: false}, false},
 		{4, map[uint8]bool{1: false, 2: false, 3: false, 4: false}, false},
 
+		{1, map[uint8]bool{1: true, 2: false, 3: false, 4: false}, false},
 		{1, map[uint8]bool{1: false, 2: true, 3: false, 4: false}, true},
-		{1, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, true},
+		{1, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, false},
 		{1, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, false},
 
 		{2, map[uint8]bool{1: true, 2: false, 3: false, 4: false}, true},
-		{2, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, true},
+		{2, map[uint8]bool{1: false, 2: true, 3: false, 4: false}, false},
+		{2, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, false},
 		{2, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, false},
 
-		{3, map[uint8]bool{1: true, 2: false, 3: false, 4: false}, true},
-		{3, map[uint8]bool{1: false, 2: true, 3: false, 4: false}, true},
-		{3, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, false},
+		{3, map[uint8]bool{1: true, 2: false, 3: false, 4: false}, false},
+		{3, map[uint8]bool{1: false, 2: true, 3: false, 4: false}, false},
+		{3, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, false},
+		{3, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, true},
 
 		{4, map[uint8]bool{1: true, 2: false, 3: false, 4: false}, false},
 		{4, map[uint8]bool{1: false, 2: true, 3: false, 4: false}, false},
-		{4, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, false},
+		{4, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, true},
+		{4, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, false},
 	}
 
 	for _, test := range tests {
@@ -167,26 +171,79 @@ func TestDoorPressButtonWithInterlock4(t *testing.T) {
 		{3, map[uint8]bool{1: false, 2: false, 3: false, 4: false}, false},
 		{4, map[uint8]bool{1: false, 2: false, 3: false, 4: false}, false},
 
+		{1, map[uint8]bool{1: true, 2: false, 3: false, 4: false}, false},
 		{1, map[uint8]bool{1: false, 2: true, 3: false, 4: false}, true},
 		{1, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, true},
-		{1, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, true},
+		{1, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, false},
 
 		{2, map[uint8]bool{1: true, 2: false, 3: false, 4: false}, true},
+		{2, map[uint8]bool{1: false, 2: true, 3: false, 4: false}, false},
 		{2, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, true},
-		{2, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, true},
+		{2, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, false},
 
 		{3, map[uint8]bool{1: true, 2: false, 3: false, 4: false}, true},
 		{3, map[uint8]bool{1: false, 2: true, 3: false, 4: false}, true},
-		{3, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, true},
+		{3, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, false},
+		{3, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, false},
 
-		{4, map[uint8]bool{1: true, 2: false, 3: false, 4: false}, true},
-		{4, map[uint8]bool{1: false, 2: true, 3: false, 4: false}, true},
-		{4, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, true},
+		{4, map[uint8]bool{1: true, 2: false, 3: false, 4: false}, false},
+		{4, map[uint8]bool{1: false, 2: true, 3: false, 4: false}, false},
+		{4, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, false},
+		{4, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, false},
 	}
 
 	for _, test := range tests {
 		doors := MakeDoors()
 		doors.Interlock = 4
+
+		doors.doors[1].open = test.open[1]
+		doors.doors[2].open = test.open[2]
+		doors.doors[3].open = test.open[3]
+		doors.doors[4].open = test.open[4]
+
+		interlocked := doors.IsInterlocked(test.button)
+
+		if interlocked != test.interlocked {
+			t.Errorf("Unexpected 'IsInterlocked' -  expected:%v, got:%v", test.interlocked, interlocked)
+		}
+	}
+}
+
+func TestDoorPressButtonWithInterlock8(t *testing.T) {
+	tests := []struct {
+		button      uint8
+		open        map[uint8]bool
+		interlocked bool
+	}{
+		{1, map[uint8]bool{1: false, 2: false, 3: false, 4: false}, false},
+		{2, map[uint8]bool{1: false, 2: false, 3: false, 4: false}, false},
+		{3, map[uint8]bool{1: false, 2: false, 3: false, 4: false}, false},
+		{4, map[uint8]bool{1: false, 2: false, 3: false, 4: false}, false},
+
+		{1, map[uint8]bool{1: true, 2: false, 3: false, 4: false}, false},
+		{1, map[uint8]bool{1: false, 2: true, 3: false, 4: false}, true},
+		{1, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, true},
+		{1, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, true},
+
+		{2, map[uint8]bool{1: true, 2: false, 3: false, 4: false}, true},
+		{2, map[uint8]bool{1: false, 2: true, 3: false, 4: false}, false},
+		{2, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, true},
+		{2, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, true},
+
+		{3, map[uint8]bool{1: true, 2: false, 3: false, 4: false}, true},
+		{3, map[uint8]bool{1: false, 2: true, 3: false, 4: false}, true},
+		{3, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, false},
+		{3, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, true},
+
+		{4, map[uint8]bool{1: true, 2: false, 3: false, 4: false}, true},
+		{4, map[uint8]bool{1: false, 2: true, 3: false, 4: false}, true},
+		{4, map[uint8]bool{1: false, 2: false, 3: true, 4: false}, true},
+		{4, map[uint8]bool{1: false, 2: false, 3: false, 4: true}, false},
+	}
+
+	for _, test := range tests {
+		doors := MakeDoors()
+		doors.Interlock = 8
 
 		doors.doors[1].open = test.open[1]
 		doors.doors[2].open = test.open[2]

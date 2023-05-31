@@ -156,18 +156,23 @@ func (dd *Doors) IsInterlocked(door uint8) bool {
 	case 1:
 		if door == 1 && dd.IsOpen(2) || door == 2 && dd.IsOpen(1) {
 			return true
-		} else if door == 3 && dd.IsOpen(4) || door == 4 && dd.IsOpen(3) {
-			return true
+			// } else if door == 3 && dd.IsOpen(4) || door == 4 && dd.IsOpen(3) {
+			// 	return true
 		}
 
 	case 2:
-		if door == 1 && dd.IsOpen(3) || door == 3 && dd.IsOpen(1) {
-			return true
-		} else if door == 2 && dd.IsOpen(4) || door == 4 && dd.IsOpen(2) {
+		if door == 3 && dd.IsOpen(4) || door == 4 && dd.IsOpen(3) {
 			return true
 		}
 
 	case 3:
+		if door == 1 && dd.IsOpen(2) || door == 2 && dd.IsOpen(1) {
+			return true
+		} else if door == 3 && dd.IsOpen(4) || door == 4 && dd.IsOpen(3) {
+			return true
+		}
+
+	case 4:
 		if door == 1 && (dd.IsOpen(2, 3)) {
 			return true
 		} else if door == 2 && (dd.IsOpen(1, 3)) {
@@ -176,7 +181,7 @@ func (dd *Doors) IsInterlocked(door uint8) bool {
 			return true
 		}
 
-	case 4:
+	case 8:
 		if door == 1 && dd.IsOpen(2, 3, 4) {
 			return true
 		} else if door == 2 && dd.IsOpen(1, 3, 4) {
@@ -186,7 +191,6 @@ func (dd *Doors) IsInterlocked(door uint8) bool {
 		} else if door == 4 && dd.IsOpen(1, 2, 3) {
 			return true
 		}
-
 	}
 
 	return false

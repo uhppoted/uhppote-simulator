@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] `set-interlock`
+- [x] `set-interlock`
       - [x] request/reply
       - [x] save/restore
       - [x] interlock door open
@@ -13,6 +13,7 @@
       - [x] Event reason
       - [x] CHANGELOG
       - [x] README
+      - [x] Update to match real controller
 
 - [ ] Only allow valid Wiegand-26 cards
 ```
