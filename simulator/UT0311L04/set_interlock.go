@@ -11,7 +11,7 @@ func (s *UT0311L04) setInterlock(addr *net.UDPAddr, request *messages.SetInterlo
 	if request.SerialNumber == s.SerialNumber {
 		ok := false
 
-		if request.Interlock <= 4 {
+		if request.Interlock == 0 || request.Interlock == 1 || request.Interlock == 2 || request.Interlock == 3 || request.Interlock == 4 || request.Interlock == 8 {
 			s.Doors.Interlock = request.Interlock
 			ok = true
 		}
