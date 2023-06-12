@@ -14,6 +14,7 @@ Supported operating systems:
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.8.5    | Implemented door interlock emulation and `set-interlock` API                              |
 | v0.8.4    | Added `set-pc-control` emulation and support for card keypad PINs                         |
 | v0.8.3    | Bug for time profiles timezone handling and events list JSON marshalling                  |
 | v0.8.2    | Maintenance release for version compatibility with `uhppote-core` v0.8.2                  |
