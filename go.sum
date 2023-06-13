@@ -46,3 +46,5 @@ github.com/uhppoted/uhppote-core v0.8.5-0.20230529200857-f0bca4a3988b h1:GES1j7O
 github.com/uhppoted/uhppote-core v0.8.5-0.20230529200857-f0bca4a3988b/go.mod h1:q3xZZc7GMkCfpVnKNmdoZQDjvMHfPvH79VNai7HDH3s=
 github.com/uhppoted/uhppote-core v0.8.5-0.20230613164149-bdc6a7d957cf h1:ZzfHhK5K2kKW13SyIf7ReAdTn15tgJlsUtSBCTsL2QU=
 github.com/uhppoted/uhppote-core v0.8.5-0.20230613164149-bdc6a7d957cf/go.mod h1:q3xZZc7GMkCfpVnKNmdoZQDjvMHfPvH79VNai7HDH3s=
+github.com/uhppoted/uhppote-core v0.8.5 h1:vkMtJ1+B7LK2Acx6T8Htc9J0NBh9qLHWKuEDHmZNVNE=
+github.com/uhppoted/uhppote-core v0.8.5/go.mod h1:q3xZZc7GMkCfpVnKNmdoZQDjvMHfPvH79VNai7HDH3s=
