@@ -95,6 +95,7 @@ Supported `uhppote` functions:
 - OpenDoor
 - SetPCControl
 - SetInterlock
+- ActivateAccessKeypads
 - Listen
 
 Supported _actions_:

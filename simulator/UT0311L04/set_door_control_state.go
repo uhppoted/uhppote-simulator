@@ -2,9 +2,10 @@ package UT0311L04
 
 import (
 	"fmt"
+	"net"
+
 	"github.com/uhppoted/uhppote-core/messages"
 	"github.com/uhppoted/uhppote-simulator/entities"
-	"net"
 )
 
 func (s *UT0311L04) setDoorControlState(addr *net.UDPAddr, request *messages.SetDoorControlStateRequest) {

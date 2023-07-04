@@ -1,27 +1,11 @@
 # TODO
 
-- [x] `set-interlock`
-      - [x] request/reply
-      - [x] save/restore
-      - [x] interlock door open
-            - [x] Remodel doors as type (not as an array)
-            - [x] Unit test unmarshal invalid control state
-            - [x] Pushbutton
-            - [x] Interlock event
-            - [x] Swipe
-            - [x] ~~Remote open~~
-      - [x] Event reason
+- [x] activate-access-keypads (cf. https://github.com/uhppoted/uhppoted/issues/35)
+      - [x] Handle activate-access-keypads request
+      - [x] Add keypads to persisted state
+      - [x] Check keypad on swipe
       - [x] CHANGELOG
       - [x] README
-      - [x] Update to match real controller
-
-- [ ] Only allow valid Wiegand-26 cards
-```
-8165537  2021-01-01 2021-12-31 Y N N N
-8165539  2021-01-01 2021-12-31 N N N N
-8165538  2023-01-01 2023-12-31 Y N Y 29 7531
-192837465 2023-01-01 2023-12-31 Y N 55 Y 7531
-```
 
 ## TODO
 

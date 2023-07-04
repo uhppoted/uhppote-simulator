@@ -38,20 +38,19 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, PIN uint32) (bool, erro
 			continue
 		}
 
-		// PIN?
-
-		if c.PIN != 0 && c.PIN < 1000000 {
-			if PIN != c.PIN {
-				swiped(0x01, false, entities.ReasonInvalidPIN)
-				return false, nil
-			}
-		}
-
 		// PC control ?
 		lastTouched := time.Since(s.touched)
 		if s.PCControl && lastTouched < (30*time.Second) {
 			swiped(0x01, false, entities.ReasonPCControl)
 			return false, nil
+		}
+
+		// PIN?
+		if c.PIN != 0 && c.PIN < 1000000 {
+			if s.Keypads[door] && PIN != c.PIN {
+				swiped(0x01, false, entities.ReasonInvalidPIN)
+				return false, nil
+			}
 		}
 
 		// no access rights?

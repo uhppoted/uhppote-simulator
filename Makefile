@@ -1,7 +1,7 @@
 DIST      ?= development
 SERIALNO  ?= 405419896
 NEWDEVICE ?= 102030405
-CARD      ?= 8165538
+CARD      ?= 10058400
 PIN       ?= 7531
 DOOR      ?= 3
 DEBUG     ?= --debug

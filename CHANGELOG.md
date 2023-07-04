@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+1. `activate-keypads` command and emulation.
+
 
 ## [0.8.5](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.5) - 2023-06-13
 

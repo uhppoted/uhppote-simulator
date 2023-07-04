@@ -33,6 +33,7 @@ type UT0311L04 struct {
 	Released            *ReleaseDate          `json:"released"`
 	TimeOffset          entities.Offset       `json:"offset"`
 	Doors               entities.Doors        `json:"doors"`
+	Keypads             entities.Keypads      `json:"keypads"`
 	Listener            *net.UDPAddr          `json:"listener"`
 	RecordSpecialEvents bool                  `json:"record-special-events"`
 	PCControl           bool                  `json:"pc-control"`
@@ -70,6 +71,7 @@ func NewUT0311L04(deviceID uint32, dir string, compressed bool) *UT0311L04 {
 		Version:      0x0892,
 		Released:     DefaultReleaseDate(),
 		Doors:        entities.MakeDoors(),
+		Keypads:      entities.MakeKeypads(),
 		TimeProfiles: entities.TimeProfiles{},
 		TaskList:     entities.TaskList{},
 		Events:       entities.NewEventList(),
@@ -180,6 +182,9 @@ func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 	case *messages.SetInterlockRequest:
 		s.setInterlock(src, v)
 
+	case *messages.ActivateAccessKeypadsRequest:
+		s.activateKeypads(src, v)
+
 	default:
 		panic(fmt.Errorf("unsupported message type %T", v))
 	}
@@ -271,6 +276,7 @@ func load(filepath string) (*UT0311L04, error) {
 	simulator := UT0311L04{
 		Released:     DefaultReleaseDate(),
 		Doors:        entities.MakeDoors(),
+		Keypads:      entities.MakeKeypads(),
 		TimeProfiles: entities.TimeProfiles{},
 	}
 
