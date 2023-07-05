@@ -1,11 +1,6 @@
 # TODO
 
 - [x] activate-access-keypads (cf. https://github.com/uhppoted/uhppoted/issues/35)
-      - [x] Handle activate-access-keypads request
-      - [x] Add keypads to persisted state
-      - [x] Check keypad on swipe
-      - [x] CHANGELOG
-      - [x] README
 
 ## TODO
 
