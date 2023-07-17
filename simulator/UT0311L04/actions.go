@@ -13,7 +13,7 @@ import (
 // Checks the device and card permissions and unlocks the associated door
 // if appropriate, but does not simulate opening the door. A 'swiped' event
 // is generated and sent to the configured event listener (if any).
-func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, PIN uint32) (bool, error) {
+func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, direction entities.Direction, PIN uint32) (bool, error) {
 	if door < 1 || door > 4 {
 		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID(), door)
 	}
@@ -47,9 +47,21 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, PIN uint32) (bool, erro
 
 		// PIN?
 		if c.PIN != 0 && c.PIN < 1000000 {
-			if s.Keypads[door] && PIN != c.PIN {
-				swiped(0x01, false, entities.ReasonInvalidPIN)
-				return false, nil
+			if PIN != c.PIN {
+				if s.Keypads[door] == entities.KeypadIn && direction == entities.DirectionIn {
+					swiped(0x01, false, entities.ReasonInvalidPIN)
+					return false, nil
+				}
+
+				if s.Keypads[door] == entities.KeypadOut && direction == entities.DirectionIn {
+					swiped(0x01, false, entities.ReasonInvalidPIN)
+					return false, nil
+				}
+
+				if s.Keypads[door] == entities.KeypadBoth {
+					swiped(0x01, false, entities.ReasonInvalidPIN)
+					return false, nil
+				}
 			}
 		}
 

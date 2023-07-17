@@ -15,10 +15,10 @@ func TestActivateAccessKeypads(t *testing.T) {
 	s := UT0311L04{
 		SerialNumber: 405419896,
 		Keypads: entities.Keypads{
-			1: false,
-			2: false,
-			3: false,
-			4: false,
+			1: entities.KeypadNone,
+			2: entities.KeypadNone,
+			3: entities.KeypadNone,
+			4: entities.KeypadNone,
 		},
 
 		txq: txq,
@@ -50,9 +50,9 @@ func TestActivateAccessKeypads(t *testing.T) {
 		t.Errorf("'activate-keypads' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, response)
 	}
 
-	if s.Keypads[1] != true && s.Keypads[2] != true && s.Keypads[3] != false && s.Keypads[4] != true {
+	if s.Keypads[1] != entities.KeypadBoth && s.Keypads[2] != entities.KeypadBoth && s.Keypads[3] != entities.KeypadNone && s.Keypads[4] != entities.KeypadBoth {
 		t.Errorf("'activate-keypads' failed to update simulator keypads fields\n   expected: %+v\n   got:      %+v\n",
-			[]bool{true, true, false, true},
-			[]bool{s.Keypads[1], s.Keypads[2], s.Keypads[3], s.Keypads[4]})
+			[]entities.Keypad{entities.KeypadBoth, entities.KeypadBoth, entities.KeypadNone, entities.KeypadBoth},
+			[]entities.Keypad{s.Keypads[1], s.Keypads[2], s.Keypads[3], s.Keypads[4]})
 	}
 }

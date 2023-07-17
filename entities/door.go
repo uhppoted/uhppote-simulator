@@ -7,6 +7,7 @@ import (
 )
 
 type Delay time.Duration
+type Direction uint8
 
 type Door struct {
 	ControlState    uint8 `json:"control"`
@@ -26,6 +27,9 @@ const (
 	NormallyOpen   = uint8(1)
 	NormallyClosed = uint8(2)
 	Controlled     = uint8(3)
+
+	DirectionIn  Direction = 1
+	DirectionOut Direction = 2
 )
 
 func (delay Delay) MarshalJSON() ([]byte, error) {
@@ -56,6 +60,17 @@ func (delay Delay) Seconds() uint8 {
 
 func DelayFromSeconds(t uint8) Delay {
 	return Delay(time.Duration(int64(t) * 1000000000))
+}
+
+func (d Direction) String() string {
+	switch d {
+	case DirectionIn:
+		return "in"
+	case DirectionOut:
+		return "out"
+	default:
+		return "(unknown)"
+	}
 }
 
 func NewDoor(id uint8) *Door {

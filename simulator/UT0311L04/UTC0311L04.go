@@ -210,9 +210,18 @@ func (s *UT0311L04) RunTasks() {
 		case types.EnableTimeProfile:
 			s.Doors.EnableProfile(door, true)
 
-			//	case types.CardNoPassword:
-			//	case types.CardInPassword:
-			//	case types.CardInOutPassword:
+		case types.CardNoPassword:
+			fmt.Printf("   ... %-10v  enabled card + no password for door %v\n", s.SerialNumber, door)
+			s.Keypads[door] = entities.KeypadNone
+
+		case types.CardInPassword:
+			fmt.Printf("   ... %-10v  enabled card + IN password for door %v\n", s.SerialNumber, door)
+			s.Keypads[door] = entities.KeypadIn
+
+		case types.CardInOutPassword:
+			fmt.Printf("   ... %-10v  enabled card + IN/OUT password for door %v\n", s.SerialNumber, door)
+			s.Keypads[door] = entities.KeypadBoth
+
 			//	case types.EnableMoreCards:
 			//	case types.DisableMoreCards:
 

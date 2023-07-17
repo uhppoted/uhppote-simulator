@@ -1,6 +1,11 @@
 # TODO
 
 - [x] activate-access-keypads (cf. https://github.com/uhppoted/uhppoted/issues/35)
+      - [x] activate-access-keypads
+      - [x] task: card, no password
+      - [x] task: card, in password
+      - [x] task: card, in/out password
+      - [ ] Rework tasks - should only run once per day
 
 ## TODO
 

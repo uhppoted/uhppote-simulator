@@ -49,6 +49,7 @@ func (t *TaskList) Run(handler func(door uint8, task types.TaskType)) {
 	doors := map[uint8]types.TaskType{}
 	profiles := map[uint8]types.TaskType{}
 	buttons := map[uint8]types.TaskType{}
+	keypads := map[uint8]types.TaskType{}
 	other := map[uint8]types.TaskType{}
 
 	for _, task := range tasks {
@@ -68,9 +69,15 @@ func (t *TaskList) Run(handler func(door uint8, task types.TaskType)) {
 		case types.EnableTimeProfile:
 			profiles[task.Door] = types.EnableTimeProfile
 
-			//	case types.CardNoPassword:
-			//	case types.CardInPassword:
-			//	case types.CardInOutPassword:
+		case types.CardNoPassword:
+			keypads[task.Door] = types.CardNoPassword
+
+		case types.CardInPassword:
+			keypads[task.Door] = types.CardInPassword
+
+		case types.CardInOutPassword:
+			keypads[task.Door] = types.CardInOutPassword
+
 			//	case types.EnableMoreCards:
 			//	case types.DisableMoreCards:
 
@@ -101,6 +108,12 @@ func (t *TaskList) Run(handler func(door uint8, task types.TaskType)) {
 
 	for _, d := range []uint8{1, 2, 3, 4} {
 		if v, ok := buttons[d]; ok {
+			handler(d, v)
+		}
+	}
+
+	for _, d := range []uint8{1, 2, 3, 4} {
+		if v, ok := keypads[d]; ok {
 			handler(d, v)
 		}
 	}

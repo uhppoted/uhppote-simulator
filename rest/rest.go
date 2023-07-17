@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/uhppoted/uhppote-simulator/entities"
 	"github.com/uhppoted/uhppote-simulator/simulator"
 )
 
@@ -217,9 +218,10 @@ func swipe(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 	}
 
 	request := struct {
-		Door       uint8  `json:"door"`
-		CardNumber uint32 `json:"card-number"`
-		PIN        uint32 `json:"PIN,omitempty"`
+		Door       uint8              `json:"door"`
+		CardNumber uint32             `json:"card-number"`
+		Direction  entities.Direction `json:"direction"`
+		PIN        uint32             `json:"PIN,omitempty"`
 	}{}
 
 	err = json.Unmarshal(blob, &request)
@@ -234,7 +236,7 @@ func swipe(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	granted, err := s.Swipe(request.CardNumber, request.Door, request.PIN)
+	granted, err := s.Swipe(request.CardNumber, request.Door, request.Direction, request.PIN)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to emulate 'door open' (%v)", err), http.StatusInternalServerError)
 		return
