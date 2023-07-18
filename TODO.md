@@ -5,7 +5,9 @@
       - [x] task: card, no password
       - [x] task: card, in password
       - [x] task: card, in/out password
-      - [ ] Rework tasks - should only run once per day
+      - [x] Rework tasks - should only run once per day
+      - [ ] Ignore errors unmarshalling keypads from JSON
+      - [ ] Log task executions
 
 ## TODO
 

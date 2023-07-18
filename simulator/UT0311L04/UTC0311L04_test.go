@@ -56,8 +56,8 @@ func TestNewUT0311L04(t *testing.T) {
 		t.Errorf("incorrect time profiles list - expected:%v, got:%v", expected.TimeProfiles, controller.TimeProfiles)
 	}
 
-	if !reflect.DeepEqual(controller.TaskList, expected.TaskList) {
-		t.Errorf("incorrect task list - expected:%v, got:%v", expected.TaskList, controller.TaskList)
+	if !reflect.DeepEqual(controller.TaskList.Tasks, expected.TaskList.Tasks) {
+		t.Errorf("incorrect task list - expected:%v, got:%v", expected.TaskList.Tasks, controller.TaskList.Tasks)
 	}
 
 	if !reflect.DeepEqual(controller.Events, expected.Events) {
