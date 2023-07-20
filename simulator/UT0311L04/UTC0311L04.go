@@ -16,6 +16,7 @@ import (
 	"github.com/uhppoted/uhppote-core/messages"
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-simulator/entities"
+	"github.com/uhppoted/uhppote-simulator/log"
 )
 
 type UT0311L04 struct {
@@ -196,42 +197,50 @@ func (s *UT0311L04) RunTasks() {
 	handler := func(door uint8, task types.TaskType) {
 		switch task {
 		case types.DoorControlled:
+			log.Infof("%-10v  task:set door %v to controlled", s.SerialNumber, door)
 			s.Doors.OverrideState(door, entities.Controlled)
 
 		case types.DoorNormallyOpen:
+			log.Infof("%-10v  task:set door %v to normally open", s.SerialNumber, door)
 			s.Doors.OverrideState(door, entities.NormallyOpen)
 
 		case types.DoorNormallyClosed:
+			log.Infof("%-10v  task:set door %v to normally closed", s.SerialNumber, door)
 			s.Doors.OverrideState(door, entities.NormallyClosed)
 
 		case types.DisableTimeProfile:
+			log.Infof("%-10v  task:disabled time profile for door %v", s.SerialNumber, door)
 			s.Doors.EnableProfile(door, false)
 
 		case types.EnableTimeProfile:
+			log.Infof("%-10v  task:enabled time profile for door %v", s.SerialNumber, door)
 			s.Doors.EnableProfile(door, true)
 
 		case types.CardNoPassword:
-			fmt.Printf("   ... %-10v  enabled card + no password for door %v\n", s.SerialNumber, door)
+			log.Infof("%-10v  task:enabled card + no password for door %v", s.SerialNumber, door)
 			s.Keypads[door] = entities.KeypadNone
 
 		case types.CardInPassword:
-			fmt.Printf("   ... %-10v  enabled card + IN password for door %v\n", s.SerialNumber, door)
+			log.Infof("%-10v  task:enabled card + IN password for door %v", s.SerialNumber, door)
 			s.Keypads[door] = entities.KeypadIn
 
 		case types.CardInOutPassword:
-			fmt.Printf("   ... %-10v  enabled card + IN/OUT password for door %v\n", s.SerialNumber, door)
+			log.Infof("%-10v  task:enabled card + IN/OUT password for door %v", s.SerialNumber, door)
 			s.Keypads[door] = entities.KeypadBoth
 
 			//	case types.EnableMoreCards:
 			//	case types.DisableMoreCards:
 
 		case types.TriggerOnce:
+			log.Infof("%-10v  task:trigger once for door %v", s.SerialNumber, door)
 			s.Doors.Unlock(door, 0*time.Second)
 
 		case types.DisablePushButton:
+			log.Infof("%-10v  task:disabled push button for door %v", s.SerialNumber, door)
 			s.Doors.EnableButton(door, false)
 
 		case types.EnablePushButton:
+			log.Infof("%-10v  task:enabled push button for door %v", s.SerialNumber, door)
 			s.Doors.EnableButton(door, true)
 		}
 	}

@@ -3,11 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
+	"path/filepath"
+
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppote-simulator/commands"
+	"github.com/uhppoted/uhppote-simulator/log"
 	"github.com/uhppoted/uhppote-simulator/simulator"
 	"github.com/uhppoted/uhppote-simulator/simulator/UT0311L04"
-	"path/filepath"
 )
 
 var options = struct {
@@ -50,7 +52,7 @@ func main() {
 }
 
 func load(dir string) []simulator.Simulator {
-	fmt.Printf("   ... loading devices from '%s'\n", dir)
+	log.Infof("loading devices from '%s'", dir)
 
 	devices := map[uint32]simulator.Simulator{}
 
@@ -73,9 +75,9 @@ func load(dir string) []simulator.Simulator {
 					deviceID := s.DeviceID()
 					if devices[deviceID] == nil {
 						devices[deviceID] = s
-						fmt.Printf("   ... loaded device  from '%s'\n", f)
+						log.Infof("loaded  device  from '%s'\n", f)
 					} else {
-						fmt.Printf("   ... duplicate serial number %v in device file '%s' - using device loaded from '%s'\n", deviceID, f, devices[deviceID].FilePath())
+						log.Warnf("duplicate serial number %v in device file '%s' - using device loaded from '%s'\n", deviceID, f, devices[deviceID].FilePath())
 					}
 				}
 			}

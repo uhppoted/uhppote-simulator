@@ -11,6 +11,7 @@ import (
 
 	codec "github.com/uhppoted/uhppote-core/encoding/UTO311-L0x"
 	"github.com/uhppoted/uhppote-core/messages"
+	"github.com/uhppoted/uhppote-simulator/log"
 	"github.com/uhppoted/uhppote-simulator/rest"
 	"github.com/uhppoted/uhppote-simulator/simulator"
 )
@@ -21,19 +22,19 @@ func Simulate(ctx *simulator.Context, dbg bool) {
 	debug = dbg
 	bind, err := net.ResolveUDPAddr("udp4", ctx.BindAddress)
 	if err != nil {
-		fmt.Printf("Failed to resolve UDP bind address [%v]\n", err)
+		log.Errorf("failed to resolve UDP bind address [%v]", err)
 		return
 	}
 
 	connection, err := net.ListenUDP("udp", bind)
 	if err != nil {
-		fmt.Printf("Failed to bind to UDP socket [%v]", err)
+		log.Errorf("failed to bind to UDP socket [%v]", err)
 		return
 	}
 
 	defer connection.Close()
 
-	fmt.Printf("   ... bound to address '%s'\n", bind)
+	log.Infof("bound to address %s", bind)
 
 	wait := make(chan int, 1)
 	interrupt := make(chan os.Signal, 1)
@@ -49,9 +50,6 @@ func Simulate(ctx *simulator.Context, dbg bool) {
 }
 
 func run(ctx *simulator.Context, connection *net.UDPConn, wait chan int) {
-
-	fmt.Println()
-
 	go func() {
 		err := listenAndServe(ctx, connection)
 		if err != nil {
@@ -102,7 +100,7 @@ func listenAndServe(ctx *simulator.Context, c *net.UDPConn) error {
 func handle(ctx *simulator.Context, c *net.UDPConn, src *net.UDPAddr, bytes []byte) {
 	request, err := messages.UnmarshalRequest(bytes)
 	if err != nil {
-		fmt.Printf("ERROR: %v\n", err)
+		log.Errorf("%v", err)
 		return
 	}
 
@@ -127,10 +125,8 @@ func receive(c *net.UDPConn) ([]byte, *net.UDPAddr, error) {
 	N, remote, err := c.ReadFromUDP(request)
 	if err != nil {
 		return []byte{}, nil, fmt.Errorf("failed to read from UDP socket [%v]", err)
-	}
-
-	if debug {
-		fmt.Printf(" ... received %v bytes from %v\n%s\n", N, remote, dump(request[0:N], " ...          "))
+	} else if debug {
+		log.Debugf("received %v bytes from %v\n%s", N, remote, dump(request[0:N], " ...          "))
 	}
 
 	return request[:N], remote, nil
@@ -139,17 +135,15 @@ func receive(c *net.UDPConn) ([]byte, *net.UDPAddr, error) {
 func send(c *net.UDPConn, dest *net.UDPAddr, message interface{}) {
 	msg, err := codec.Marshal(message)
 	if err != nil {
-		fmt.Printf("ERROR: %v\n", err)
+		log.Errorf("%v", err)
 		return
 	}
 
 	N, err := c.WriteTo(msg, dest)
 	if err != nil {
-		fmt.Printf("ERROR: failed to write to UDP socket [%v]\n", err)
-	} else {
-		if debug {
-			fmt.Printf(" ... sent %v bytes to %v\n%s\n", N, dest, dump(msg[0:N], " ...          "))
-		}
+		log.Errorf("failed to write to UDP socket [%v]", err)
+	} else if debug {
+		log.Infof("sent %v bytes to %v\n%s", N, dest, dump(msg[0:N], " ...          "))
 	}
 }
 

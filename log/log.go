@@ -6,8 +6,6 @@ import (
 	"github.com/uhppoted/uhppoted-lib/log"
 )
 
-var queue = make(chan string, 8)
-
 func Default() *syslog.Logger {
 	return syslog.Default()
 }

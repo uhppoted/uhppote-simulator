@@ -7,7 +7,7 @@
       - [x] task: card, in/out password
       - [x] Rework tasks - should only run once per day
       - [x] Ignore errors unmarshalling keypads from JSON
-      - [ ] Log task executions
+      - [x] Log task executions
 
 ## TODO
 
