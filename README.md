@@ -14,6 +14,7 @@ Supported operating systems:
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.8.6    | Implemented reader keypas emulation and `activate-keypads` API                              |
 | v0.8.5    | Implemented door interlock emulation and `set-interlock` API                              |
 | v0.8.4    | Added `set-pc-control` emulation and support for card keypad PINs                         |
 | v0.8.3    | Bug for time profiles timezone handling and events list JSON marshalling                  |
