@@ -25,6 +25,7 @@ update:
 
 update-release:
 	go get -u github.com/uhppoted/uhppote-core
+	go get -u github.com/uhppoted/uhppoted-lib
 
 format: 
 	go fmt ./...
