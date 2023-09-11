@@ -111,6 +111,79 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, direction entities.Dire
 	return false, nil
 }
 
+// Implements the REST 'passcode' API.
+//
+// Checks the device and door passcodes and unlocks the associated door if appropriate, but does not
+// simulate opening the door. A 'swiped' event is generated and sent to the configured event listener (if any).
+func (s *UT0311L04) Passcode(door uint8, passcode uint32) (bool, error) {
+	if door < 1 || door > 4 {
+		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID(), door)
+	}
+
+	unlocked := func(eventType uint8, granted bool, reason uint8) {
+		datetime := types.DateTime(time.Now().UTC().Add(time.Duration(s.TimeOffset)))
+		event := entities.Event{
+			Type:      eventType,
+			Granted:   granted,
+			Door:      door,
+			Timestamp: &datetime,
+			Reason:    reason,
+		}
+
+		s.add(event)
+	}
+
+	// // PC control ?
+	// lastTouched := time.Since(s.touched)
+	// if s.PCControl && lastTouched < (30*time.Second) {
+	// 	swiped(0x01, false, entities.ReasonPCControl)
+	// 	return false, nil
+	// }
+
+	// // no access rights?
+	// profileID := c.Doors[door]
+	//
+	// if profileID < 1 || profileID > 254 {
+	// 	swiped(0x01, false, entities.ReasonNoPrivilege)
+	// 	return false, nil
+	// }
+
+	// // check against time profile
+	// if profileID >= 2 && profileID <= 254 {
+	// 	if s.Doors.IsProfileDisabled(door) {
+	// 		swiped(0x01, false, entities.ReasonInvalidTimezone)
+	// 		return false, nil
+	// 	}
+	//
+	// 	if !s.checkTimeProfile(profileID) {
+	// 		swiped(0x01, false, entities.ReasonInvalidTimezone)
+	// 		return false, nil
+	// 	}
+	// }
+
+	// // unlock door
+	// if s.Doors.IsNormallyClosed(door) {
+	// 	swiped(0x01, false, entities.ReasonNormallyClosed)
+	// 	return false, nil
+	// }
+
+	// if s.Doors.IsInterlocked(door) {
+	// 	swiped(0x01, false, entities.ReasonInterlock)
+	// 	return false, nil
+	// }
+
+	// Denied!
+	// swiped(0x01, false, entities.ReasonNoPass)
+
+	if s.Doors.UnlockWithPasscode(door, passcode, 0*time.Second) {
+		unlocked(0x02, true, entities.ReasonSuperPasswordOpenDoor)
+		return true, nil
+	}
+
+	// swiped(0x01, false, entities.ReasonInvalidPIN)
+	return false, nil
+}
+
 // Implements the REST 'open door' API.
 //
 // Checks the device and opens the door if has been unlocked by a simulated card

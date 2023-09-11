@@ -265,6 +265,7 @@ func TestDoorsMarshalJSON(t *testing.T) {
 			1: &Door{
 				ControlState: 1,
 				Delay:        Delay(5 * time.Second),
+				Passcodes:    []uint32{12345, 0, 999999, 654321},
 			},
 			2: &Door{
 				ControlState: 2,
@@ -281,7 +282,7 @@ func TestDoorsMarshalJSON(t *testing.T) {
 		},
 	}
 
-	expected := `{"interlock":3,"1":{"control":1,"delay":"5s"},"2":{"control":2,"delay":"7.5s"},"3":{"control":3,"delay":"7s"},"4":{"control":3,"delay":"5s"}}`
+	expected := `{"interlock":3,"1":{"control":1,"delay":"5s","passcodes":[12345,0,999999,654321]},"2":{"control":2,"delay":"7.5s"},"3":{"control":3,"delay":"7s"},"4":{"control":3,"delay":"5s"}}`
 
 	bytes, err := json.Marshal(doors)
 	if err != nil {
@@ -294,7 +295,7 @@ func TestDoorsMarshalJSON(t *testing.T) {
 }
 
 func TestDoorsUnmarshalJSON(t *testing.T) {
-	bytes := []byte(`{"interlock":3,"1":{"control":1,"delay":"5s"},"2":{"control":2,"delay":"7.5s"},"3":{"control":3,"delay":"7s"},"4":{"control":3,"delay":"5s"}}`)
+	bytes := []byte(`{"interlock":3,"1":{"control":1,"delay":"5s", "passcodes":[12345,0,999999,654321]},"2":{"control":2,"delay":"7.5s"},"3":{"control":3,"delay":"7s"},"4":{"control":3,"delay":"5s"}}`)
 
 	doors := Doors{
 		doors: map[uint8]*Door{},
@@ -306,6 +307,7 @@ func TestDoorsUnmarshalJSON(t *testing.T) {
 			1: &Door{
 				ControlState: 1,
 				Delay:        Delay(5 * time.Second),
+				Passcodes:    []uint32{12345, 0, 999999, 654321},
 			},
 			2: &Door{
 				ControlState: 2,

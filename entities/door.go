@@ -12,7 +12,7 @@ type Direction uint8
 type Door struct {
 	ControlState    uint8    `json:"control"`
 	Delay           Delay    `json:"delay"`
-	Passcodes       []uint32 `json:"passcodes"`
+	Passcodes       []uint32 `json:"passcodes,omitempty"`
 	overrideState   uint8
 	profileDisabled bool
 	buttonDisabled  bool
@@ -160,6 +160,35 @@ func (d *Door) Unlock(duration time.Duration) bool {
 	}
 
 	return true
+}
+
+func (d *Door) UnlockWithPasscode(passcode uint32, duration time.Duration) bool {
+	if d == nil {
+		return false
+	}
+
+	for _, v := range d.Passcodes {
+		if v == passcode {
+			d.guard.Lock()
+			defer d.guard.Unlock()
+
+			// if d.ControlState == NormallyClosed || d.overrideState == NormallyClosed {
+			// 	return false
+			// }
+
+			until := time.Now().UTC()
+			until = until.Add(duration)
+			until = until.Add(time.Duration(d.Delay))
+
+			if d.unlockedUntil == nil || d.unlockedUntil.Before(until) {
+				d.unlockedUntil = &until
+			}
+
+			return true
+		}
+	}
+
+	return false
 }
 
 func (d *Door) PressButton(duration time.Duration) (pressed bool, reason uint8) {

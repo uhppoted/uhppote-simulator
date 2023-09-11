@@ -20,6 +20,7 @@ type Simulator interface {
 	Delete() error
 
 	Swipe(cardNumber uint32, door uint8, direction entities.Direction, PIN uint32) (bool, error)
+	Passcode(door uint8, passcode uint32) (bool, error)
 	Open(door uint8, duration *time.Duration) (bool, error)
 	Close(door uint8) (bool, error)
 	ButtonPressed(door uint8, duration time.Duration) (bool, error)

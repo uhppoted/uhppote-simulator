@@ -206,7 +206,7 @@ func swipe(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 
 	url := r.URL.Path
 	matches := regexp.MustCompile("^/uhppote/simulator/([0-9]+)/swipe$").FindStringSubmatch(url)
-	deviceID, err := strconv.ParseUint(matches[1], 10, 32)
+	controller, err := strconv.ParseUint(matches[1], 10, 32)
 	if err != nil {
 		http.Error(w, "Error reading request", http.StatusInternalServerError)
 		return
@@ -231,9 +231,9 @@ func swipe(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s := ctx.DeviceList.Find(uint32(deviceID))
+	s := ctx.DeviceList.Find(uint32(controller))
 	if s == nil {
-		http.Error(w, fmt.Sprintf("No controller with ID %d", deviceID), http.StatusNotFound)
+		http.Error(w, fmt.Sprintf("No controller with ID %d", controller), http.StatusNotFound)
 		return
 	}
 
@@ -287,8 +287,8 @@ func code(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 	}
 
 	request := struct {
-		Door       uint8 `json:"door"`
-		Passcode uint32  `json:"passcode"`
+		Door     uint8  `json:"door"`
+		Passcode uint32 `json:"passcode"`
 	}{}
 
 	err = json.Unmarshal(blob, &request)
@@ -299,7 +299,7 @@ func code(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 
 	s := ctx.DeviceList.Find(uint32(controller))
 	if s == nil {
-		http.Error(w, fmt.Sprintf("No controller with ID %d", deviceID), http.StatusNotFound)
+		http.Error(w, fmt.Sprintf("No controller with ID %d", controller), http.StatusNotFound)
 		return
 	}
 
@@ -331,7 +331,6 @@ func code(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(b)
 }
-
 
 func door(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {

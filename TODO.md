@@ -3,8 +3,15 @@
 - [ ] `set-super-passwords` (cf. https://github.com/uhppoted/uhppoted/issues/40)
       - [x] set-super-passwords
       - [x] Persist to JSON
-      - [ ] REST client + emulation
+      - [x] REST client action
+      - [ ] emulation
+            - [x] validate passcode
+            - (?) door control state
+            - (?) time profile
+            - (?) PC control
       - [ ] events
+            - [x] accesss granted::SuperPasswordOpenDoor
+            - (?) access denied
 
 ## TODO
 

@@ -2,7 +2,6 @@ package entities
 
 import (
 	"encoding/json"
-	"fmt"
 	"time"
 )
 
@@ -81,6 +80,14 @@ func (dd *Doors) Unlock(door uint8, duration time.Duration) bool {
 	return false
 }
 
+func (dd *Doors) UnlockWithPasscode(door uint8, passcode uint32, duration time.Duration) bool {
+	if d, ok := dd.doors[door]; ok {
+		return d.UnlockWithPasscode(passcode, duration)
+	}
+
+	return false
+}
+
 func (dd *Doors) Open(door uint8, duration *time.Duration, opened func(uint8), closed func()) bool {
 	if d, ok := dd.doors[door]; ok {
 		return d.Open(duration, opened, closed)
@@ -111,6 +118,14 @@ func (dd *Doors) Delay(door uint8) Delay {
 	}
 
 	return 0
+}
+
+func (dd *Doors) Passcodes(door uint8) []uint32 {
+	if d, ok := dd.doors[door]; ok {
+		return d.Passcodes
+	}
+
+	return []uint32{}
 }
 
 func (dd *Doors) EnableButton(door uint8, enabled bool) bool {
