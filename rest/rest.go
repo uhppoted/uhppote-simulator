@@ -50,6 +50,7 @@ func Run(ctx *simulator.Context) {
 	d.Add("^/uhppote/simulator$", devices)
 	d.Add("^/uhppote/simulator/[0-9]+$", device)
 	d.Add("^/uhppote/simulator/[0-9]+/swipe$", swipe)
+	d.Add("^/uhppote/simulator/[0-9]+/code$", code)
 	d.Add("^/uhppote/simulator/[0-9]+/door/[1-4]$", door)
 
 	log.Fatal(http.ListenAndServe(ctx.RestAddress, &d))
@@ -232,7 +233,7 @@ func swipe(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 
 	s := ctx.DeviceList.Find(uint32(deviceID))
 	if s == nil {
-		http.Error(w, fmt.Sprintf("No device with ID %d", deviceID), http.StatusNotFound)
+		http.Error(w, fmt.Sprintf("No controller with ID %d", deviceID), http.StatusNotFound)
 		return
 	}
 
@@ -264,6 +265,73 @@ func swipe(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(b)
 }
+
+func code(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, fmt.Sprintf("Invalid method:%s - expected POST", r.Method), http.StatusMethodNotAllowed)
+		return
+	}
+
+	url := r.URL.Path
+	matches := regexp.MustCompile("^/uhppote/simulator/([0-9]+)/code$").FindStringSubmatch(url)
+	controller, err := strconv.ParseUint(matches[1], 10, 32)
+	if err != nil {
+		http.Error(w, "Error reading request", http.StatusInternalServerError)
+		return
+	}
+
+	blob, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Error reading request", http.StatusInternalServerError)
+		return
+	}
+
+	request := struct {
+		Door       uint8 `json:"door"`
+		Passcode uint32  `json:"passcode"`
+	}{}
+
+	err = json.Unmarshal(blob, &request)
+	if err != nil {
+		http.Error(w, "Invalid request format", http.StatusBadRequest)
+		return
+	}
+
+	s := ctx.DeviceList.Find(uint32(controller))
+	if s == nil {
+		http.Error(w, fmt.Sprintf("No controller with ID %d", deviceID), http.StatusNotFound)
+		return
+	}
+
+	granted, err := s.Passcode(request.Door, request.Passcode)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Failed to emulate 'door open' (%v)", err), http.StatusInternalServerError)
+		return
+	}
+
+	message := "Access denied"
+	if granted {
+		message = "Access granted"
+	}
+
+	response := struct {
+		Granted bool   `json:"access-granted"`
+		Message string `json:"message"`
+	}{
+		Granted: granted,
+		Message: message,
+	}
+
+	b, err := json.Marshal(response)
+	if err != nil {
+		http.Error(w, "Error generating response", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(b)
+}
+
 
 func door(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {

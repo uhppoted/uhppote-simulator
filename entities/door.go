@@ -10,8 +10,9 @@ type Delay time.Duration
 type Direction uint8
 
 type Door struct {
-	ControlState    uint8 `json:"control"`
-	Delay           Delay `json:"delay"`
+	ControlState    uint8    `json:"control"`
+	Delay           Delay    `json:"delay"`
+	Passcodes       []uint32 `json:"passcodes"`
 	overrideState   uint8
 	profileDisabled bool
 	buttonDisabled  bool
@@ -78,6 +79,7 @@ func NewDoor(id uint8) *Door {
 
 	door.ControlState = 3
 	door.Delay = Delay(5 * 1000000000)
+	door.Passcodes = []uint32{0, 0, 0, 0}
 	door.open = false
 	door.button = false
 	door.unlockedUntil = nil

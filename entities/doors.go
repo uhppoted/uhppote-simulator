@@ -2,6 +2,7 @@ package entities
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -31,6 +32,20 @@ func (dd *Doors) SetControlState(door uint8, state uint8) {
 func (dd *Doors) SetDelay(door uint8, delay Delay) {
 	if d, ok := dd.doors[door]; ok {
 		d.Delay = delay
+	}
+}
+
+func (dd *Doors) SetPasscodes(door uint8, passcodes ...uint32) {
+	if d, ok := dd.doors[door]; ok {
+		p := []uint32{0, 0, 0, 0}
+
+		for i := 0; i < 4; i++ {
+			if i < len(passcodes) && passcodes[i] < 1000000 {
+				p[i] = passcodes[i]
+			}
+		}
+
+		d.Passcodes = p
 	}
 }
 
