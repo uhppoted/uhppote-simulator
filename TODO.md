@@ -6,12 +6,20 @@
       - [x] REST client action
       - [ ] emulation
             - [x] validate passcode
-            - (?) door control state
-            - (?) time profile
-            - (?) PC control
+            - [x] door control state
+            - [x] PC control
+            - [ ] time profile
+            - [ ] task
+            - [ ] interlock
       - [ ] events
             - [x] accesss granted::SuperPasswordOpenDoor
-            - (?) access denied
+            - [x] no event on access denied
+      - [ ] validate against controller
+            - [x] no event on bad passcode
+            - [x] event fields on valid passcode
+            - [x] door controlled
+            - [x] door normally open
+            - [x] door normally closed
 
 ## TODO
 

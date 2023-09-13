@@ -8,6 +8,10 @@ import (
 	"github.com/uhppoted/uhppote-simulator/entities"
 )
 
+const (
+	SupervisorAccessCode uint32 = 10
+)
+
 // Implements the REST 'swipe' API.
 //
 // Checks the device and card permissions and unlocks the associated door
@@ -126,19 +130,14 @@ func (s *UT0311L04) Passcode(door uint8, passcode uint32) (bool, error) {
 			Type:      eventType,
 			Granted:   granted,
 			Door:      door,
+			Direction: 1,
 			Timestamp: &datetime,
+			Card:      SupervisorAccessCode,
 			Reason:    reason,
 		}
 
 		s.add(event)
 	}
-
-	// // PC control ?
-	// lastTouched := time.Since(s.touched)
-	// if s.PCControl && lastTouched < (30*time.Second) {
-	// 	swiped(0x01, false, entities.ReasonPCControl)
-	// 	return false, nil
-	// }
 
 	// // no access rights?
 	// profileID := c.Doors[door]
@@ -162,25 +161,16 @@ func (s *UT0311L04) Passcode(door uint8, passcode uint32) (bool, error) {
 	// }
 
 	// // unlock door
-	// if s.Doors.IsNormallyClosed(door) {
-	// 	swiped(0x01, false, entities.ReasonNormallyClosed)
-	// 	return false, nil
-	// }
-
 	// if s.Doors.IsInterlocked(door) {
 	// 	swiped(0x01, false, entities.ReasonInterlock)
 	// 	return false, nil
 	// }
-
-	// Denied!
-	// swiped(0x01, false, entities.ReasonNoPass)
 
 	if s.Doors.UnlockWithPasscode(door, passcode, 0*time.Second) {
 		unlocked(0x02, true, entities.ReasonSuperPasswordOpenDoor)
 		return true, nil
 	}
 
-	// swiped(0x01, false, entities.ReasonInvalidPIN)
 	return false, nil
 }
 

@@ -138,6 +138,12 @@ e.g:
 Note that by design, the simulator does not emulate this behaviour, on the grounds that it is probably a 
 version specific bug.
 
+### `passcode`
+
+1. If a supervisor passcode is entered for a door that is _normally closed_, the UHPPOTE controller will
+   unlock the door and then immediately relock it. This seems anomalous and in this case the simulator 
+   unlocks the door on the assumption that the supervisor code is intended to be an override.
+
 ### Events
 
 _tl;dr; The UHPPOTE controller does not 'rollover' when the onboard event store is filled._
