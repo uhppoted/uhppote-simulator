@@ -135,6 +135,9 @@ func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 	case *messages.GetDoorControlStateRequest:
 		s.getDoorControlState(src, v)
 
+	case *messages.SetDoorPasscodesRequest:
+		s.setDoorPasscodes(src, v)
+
 	case *messages.SetListenerRequest:
 		s.setListener(src, v)
 
@@ -185,9 +188,6 @@ func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 
 	case *messages.ActivateAccessKeypadsRequest:
 		s.activateKeypads(src, v)
-
-	case *messages.SetSuperPasswordsRequest:
-		s.setSuperPasswords(src, v)
 
 	default:
 		panic(fmt.Errorf("unsupported message type %T", v))

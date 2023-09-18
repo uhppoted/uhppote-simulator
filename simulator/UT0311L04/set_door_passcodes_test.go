@@ -9,7 +9,7 @@ import (
 	"github.com/uhppoted/uhppote-simulator/entities"
 )
 
-func TestSetSuperPasswords(t *testing.T) {
+func TestSetDoorPasscodes(t *testing.T) {
 	txq := make(chan entities.Message, 8)
 
 	s := UT0311L04{
@@ -27,7 +27,7 @@ func TestSetSuperPasswords(t *testing.T) {
 	}{
 		response: entities.Message{
 			Destination: &src,
-			Message: &messages.SetSuperPasswordsResponse{
+			Message: &messages.SetDoorPasscodesResponse{
 				SerialNumber: 405419896,
 				Succeeded:    true,
 			},
@@ -36,24 +36,24 @@ func TestSetSuperPasswords(t *testing.T) {
 		passcodes: []uint32{12345, 0, 999999, 54321},
 	}
 
-	request := messages.SetSuperPasswordsRequest{
+	request := messages.SetDoorPasscodesRequest{
 		SerialNumber: 405419896,
 		Door:         3,
-		Password1:    12345,
-		Password2:    0,
-		Password3:    999999,
-		Password4:    54321,
+		Passcode1:    12345,
+		Passcode2:    0,
+		Passcode3:    999999,
+		Passcode4:    54321,
 	}
 
-	s.setSuperPasswords(&src, &request)
+	s.setDoorPasscodes(&src, &request)
 
 	response := <-txq
 
 	if !reflect.DeepEqual(response, expected.response) {
-		t.Errorf("'set-super-passwords' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected.response, response)
+		t.Errorf("'set-door-passcodes' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected.response, response)
 	}
 
 	if !reflect.DeepEqual(s.Doors.Passcodes(3), expected.passcodes) {
-		t.Errorf("'set-super-passwords' failed to update simulator\n   expected: %+v\n   got:      %+v\n", expected.passcodes, s.Doors.Passcodes(3))
+		t.Errorf("'set-door-passcodes' failed to update simulator\n   expected: %+v\n   got:      %+v\n", expected.passcodes, s.Doors.Passcodes(3))
 	}
 }

@@ -8,6 +8,10 @@ github.com/uhppoted/uhppote-core v0.8.6 h1:uYtfCKPptYOxXYp8ckW2yIPjN6UWiF1uqQqvr
 github.com/uhppoted/uhppote-core v0.8.6/go.mod h1:q3xZZc7GMkCfpVnKNmdoZQDjvMHfPvH79VNai7HDH3s=
 github.com/uhppoted/uhppote-core v0.8.7-0.20230907181433-dd6f9fc71cb4 h1:idQAAHPkFluzSD0Swau1Fjj4/LQkI69frwQ+xgWNL2E=
 github.com/uhppoted/uhppote-core v0.8.7-0.20230907181433-dd6f9fc71cb4/go.mod h1:q3xZZc7GMkCfpVnKNmdoZQDjvMHfPvH79VNai7HDH3s=
+github.com/uhppoted/uhppote-core v0.8.7-0.20230918163500-b1bb10dd7f33 h1:nc4Q5Mk67hCxCvVjcY8QPNaFjqyClslUIaariz1VgyM=
+github.com/uhppoted/uhppote-core v0.8.7-0.20230918163500-b1bb10dd7f33/go.mod h1:q3xZZc7GMkCfpVnKNmdoZQDjvMHfPvH79VNai7HDH3s=
+github.com/uhppoted/uhppote-core v0.8.7-0.20230918164143-32da3c8f0d91 h1:uSDn4ZMxLH4Qq4Bd+xkUDQgyIyRB2up0pgx2fC6WPJM=
+github.com/uhppoted/uhppote-core v0.8.7-0.20230918164143-32da3c8f0d91/go.mod h1:q3xZZc7GMkCfpVnKNmdoZQDjvMHfPvH79VNai7HDH3s=
 github.com/uhppoted/uhppoted-lib v0.8.5 h1:X5RarX5QMRGJvOwPk8ceowrH8k6Ow3t+TraWmhYO950=
 github.com/uhppoted/uhppoted-lib v0.8.5/go.mod h1:euK2cLO934w0GDgvvnWMjYNtZ29K1xSMrMse6THOzDQ=
 github.com/uhppoted/uhppoted-lib v0.8.6-0.20230714155133-57e68f2d1360 h1:XaVqmMmjwskTrX6iCdUl2I4ezrvuoA/yhLzf/455E10=
@@ -22,3 +26,7 @@ github.com/uhppoted/uhppoted-lib v0.8.6 h1:6eVAkVeg5PYyrAo7Bu5w+sTBdpY2PziCH319D
 github.com/uhppoted/uhppoted-lib v0.8.6/go.mod h1:bqCKRPIG+nvKZqAtt47trUq3tVtmM2945ISNXJW2QZk=
 github.com/uhppoted/uhppoted-lib v0.8.7-0.20230830205318-6c396109f883 h1:XfapIzP+bZCJvn2gk1lA8pciyDv6btJLhqEzvJqW5BQ=
 github.com/uhppoted/uhppoted-lib v0.8.7-0.20230830205318-6c396109f883/go.mod h1:ZPUXoOYbe5dqQDBVnv4maGidcN3tiK6lU3dMeOnHBe0=
+github.com/uhppoted/uhppoted-lib v0.8.7-0.20230914181004-f434ae0f01b1 h1:mxvXOkymss632ELhdvLVVj2MthCi2+l+YkbZ5Qffu88=
+github.com/uhppoted/uhppoted-lib v0.8.7-0.20230914181004-f434ae0f01b1/go.mod h1:/dSQtLva0vteYrIId5yg8i7ckoKrWadteipBKhLscBw=
+github.com/uhppoted/uhppoted-lib v0.8.7-0.20230918183309-95af6f0742d1 h1:VjZP8WbI14d48cLGWlaNS0huR48He3Ycx/0IvIneVso=
+github.com/uhppoted/uhppoted-lib v0.8.7-0.20230918183309-95af6f0742d1/go.mod h1:H/r/Uq7SP3whI+kZfGHsvrnnK+9NNv+vyQP4zDVzJjU=

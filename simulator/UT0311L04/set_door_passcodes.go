@@ -7,9 +7,9 @@ import (
 	"github.com/uhppoted/uhppote-core/messages"
 )
 
-func (s *UT0311L04) setSuperPasswords(addr *net.UDPAddr, request *messages.SetSuperPasswordsRequest) {
+func (s *UT0311L04) setDoorPasscodes(addr *net.UDPAddr, request *messages.SetDoorPasscodesRequest) {
 	if request.SerialNumber == s.SerialNumber {
-		response := messages.SetSuperPasswordsResponse{
+		response := messages.SetDoorPasscodesResponse{
 			SerialNumber: s.SerialNumber,
 			Succeeded:    false,
 		}
@@ -17,7 +17,7 @@ func (s *UT0311L04) setSuperPasswords(addr *net.UDPAddr, request *messages.SetSu
 		door := request.Door
 
 		if !(door < 1 || door > 4) {
-			s.Doors.SetPasscodes(door, request.Password1, request.Password2, request.Password3, request.Password4)
+			s.Doors.SetPasscodes(door, request.Passcode1, request.Passcode2, request.Passcode3, request.Passcode4)
 			response.Succeeded = true
 		}
 
