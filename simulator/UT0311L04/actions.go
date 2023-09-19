@@ -118,7 +118,11 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, direction entities.Dire
 // Implements the REST 'passcode' API.
 //
 // Checks the device and door passcodes and unlocks the associated door if appropriate, but does not
-// simulate opening the door. A 'swiped' event is generated and sent to the configured event listener (if any).
+// simulate opening the door. A 'door open/supervisor password' event is generated and sent to the 
+// configured event listener (if any).
+//
+// Note: the supervisor passcode overrides all access restrictions, including the door interlocks and
+//       time/task profiles.
 func (s *UT0311L04) Passcode(door uint8, passcode uint32) (bool, error) {
 	if door < 1 || door > 4 {
 		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID(), door)
@@ -139,33 +143,7 @@ func (s *UT0311L04) Passcode(door uint8, passcode uint32) (bool, error) {
 		s.add(event)
 	}
 
-	// // no access rights?
-	// profileID := c.Doors[door]
-	//
-	// if profileID < 1 || profileID > 254 {
-	// 	swiped(0x01, false, entities.ReasonNoPrivilege)
-	// 	return false, nil
-	// }
-
-	// // check against time profile
-	// if profileID >= 2 && profileID <= 254 {
-	// 	if s.Doors.IsProfileDisabled(door) {
-	// 		swiped(0x01, false, entities.ReasonInvalidTimezone)
-	// 		return false, nil
-	// 	}
-	//
-	// 	if !s.checkTimeProfile(profileID) {
-	// 		swiped(0x01, false, entities.ReasonInvalidTimezone)
-	// 		return false, nil
-	// 	}
-	// }
-
-	// // unlock door
-	// if s.Doors.IsInterlocked(door) {
-	// 	swiped(0x01, false, entities.ReasonInterlock)
-	// 	return false, nil
-	// }
-
+	// unlock door
 	if s.Doors.UnlockWithPasscode(door, passcode, 0*time.Second) {
 		unlocked(0x02, true, entities.ReasonSuperPasswordOpenDoor)
 		return true, nil
