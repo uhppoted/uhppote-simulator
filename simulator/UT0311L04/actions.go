@@ -118,11 +118,12 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, direction entities.Dire
 // Implements the REST 'passcode' API.
 //
 // Checks the device and door passcodes and unlocks the associated door if appropriate, but does not
-// simulate opening the door. A 'door open/supervisor password' event is generated and sent to the 
+// simulate opening the door. A 'door open/supervisor password' event is generated and sent to the
 // configured event listener (if any).
 //
 // Note: the supervisor passcode overrides all access restrictions, including the door interlocks and
-//       time/task profiles.
+//
+//	time/task profiles.
 func (s *UT0311L04) Passcode(door uint8, passcode uint32) (bool, error) {
 	if door < 1 || door > 4 {
 		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID(), door)
