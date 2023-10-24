@@ -17,10 +17,10 @@ func (s *UT0311L04) getEvent(addr *net.UDPAddr, request *messages.GetEventReques
 
 	var timestamp types.DateTime
 
-	if event.Timestamp != nil {
-		timestamp = *event.Timestamp
-	} else {
+	if event.Timestamp.IsZero() {
 		timestamp = types.DateTime{}
+	} else {
+		timestamp = event.Timestamp
 	}
 
 	response := messages.GetEventResponse{

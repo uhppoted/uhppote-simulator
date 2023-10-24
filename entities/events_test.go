@@ -10,8 +10,6 @@ import (
 )
 
 func TestMarshalEvent(t *testing.T) {
-	timestamp := types.DateTime(time.Date(2021, time.December, 27, 13, 14, 15, 9, time.Local))
-
 	e := Event{
 		Index:     7,
 		Type:      13,
@@ -19,7 +17,7 @@ func TestMarshalEvent(t *testing.T) {
 		Door:      3,
 		Direction: 1,
 		Card:      8165535,
-		Timestamp: &timestamp,
+		Timestamp: types.DateTime(time.Date(2021, time.December, 27, 13, 14, 15, 9, time.Local)),
 		Reason:    6,
 	}
 
@@ -45,8 +43,6 @@ func TestMarshalEvent(t *testing.T) {
 }
 
 func TestUnmarshalEvent(t *testing.T) {
-	timestamp := types.DateTime(time.Date(2021, time.December, 27, 13, 14, 15, 0, time.Local))
-
 	expected := Event{
 		Index:     7,
 		Type:      13,
@@ -54,7 +50,7 @@ func TestUnmarshalEvent(t *testing.T) {
 		Door:      3,
 		Direction: 1,
 		Card:      8165535,
-		Timestamp: &timestamp,
+		Timestamp: types.DateTime(time.Date(2021, time.December, 27, 13, 14, 15, 0, time.Local)),
 		Reason:    6,
 	}
 

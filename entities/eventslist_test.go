@@ -32,9 +32,9 @@ func TestMarshalEventList(t *testing.T) {
 		chunk: 8,
 		index: 19,
 		events: []Event{
-			Event{Index: 1, Timestamp: &timestamp},
-			Event{Index: 2, Timestamp: &timestamp},
-			Event{Index: 3, Timestamp: &timestamp},
+			Event{Index: 1, Timestamp: timestamp},
+			Event{Index: 2, Timestamp: timestamp},
+			Event{Index: 3, Timestamp: timestamp},
 		},
 	}
 
@@ -105,9 +105,9 @@ func TestUnmarshalEventList(t *testing.T) {
 		chunk: 8,
 		index: 19,
 		events: []Event{
-			Event{Index: 1, Timestamp: &timestamp},
-			Event{Index: 2, Timestamp: &timestamp},
-			Event{Index: 3, Timestamp: &timestamp},
+			Event{Index: 1, Timestamp: timestamp},
+			Event{Index: 2, Timestamp: timestamp},
+			Event{Index: 3, Timestamp: timestamp},
 		},
 	}
 
@@ -140,9 +140,9 @@ func TestUnmarshalEventListWithUnOrderedEvents(t *testing.T) {
 		chunk: 8,
 		index: 19,
 		events: []Event{
-			Event{Index: 1, Timestamp: &timestamp},
-			Event{Index: 2, Timestamp: &timestamp},
-			Event{Index: 3, Timestamp: &timestamp},
+			Event{Index: 1, Timestamp: timestamp},
+			Event{Index: 2, Timestamp: timestamp},
+			Event{Index: 3, Timestamp: timestamp},
 		},
 	}
 
@@ -185,13 +185,13 @@ func TestUnmarshalEventListWithTooManyEvents(t *testing.T) {
 		chunk: 2,
 		index: 19,
 		events: []Event{
-			Event{Index: 7, Type: 107, Timestamp: &timestamp},
-			Event{Index: 8, Type: 108, Timestamp: &timestamp},
-			Event{Index: 9, Type: 109, Timestamp: &timestamp},
-			Event{Index: 10, Type: 110, Timestamp: &timestamp},
-			Event{Index: 11, Type: 111, Timestamp: &timestamp},
-			Event{Index: 12, Type: 112, Timestamp: &timestamp},
-			Event{Index: 13, Type: 113, Timestamp: &timestamp},
+			Event{Index: 7, Type: 107, Timestamp: timestamp},
+			Event{Index: 8, Type: 108, Timestamp: timestamp},
+			Event{Index: 9, Type: 109, Timestamp: timestamp},
+			Event{Index: 10, Type: 110, Timestamp: timestamp},
+			Event{Index: 11, Type: 111, Timestamp: timestamp},
+			Event{Index: 12, Type: 112, Timestamp: timestamp},
+			Event{Index: 13, Type: 113, Timestamp: timestamp},
 		},
 	}
 
@@ -222,9 +222,9 @@ func TestUnmarshalEventListWithDefaultSizeAndChunk(t *testing.T) {
 		chunk: 8,
 		index: 19,
 		events: []Event{
-			Event{Index: 1, Timestamp: &timestamp},
-			Event{Index: 2, Timestamp: &timestamp},
-			Event{Index: 3, Timestamp: &timestamp},
+			Event{Index: 1, Timestamp: timestamp},
+			Event{Index: 2, Timestamp: timestamp},
+			Event{Index: 3, Timestamp: timestamp},
 		},
 	}
 
@@ -257,9 +257,9 @@ func TestUnmarshalEventListWithZeroSizeAndChunk(t *testing.T) {
 		chunk: 8,
 		index: 19,
 		events: []Event{
-			Event{Index: 1, Timestamp: &timestamp},
-			Event{Index: 2, Timestamp: &timestamp},
-			Event{Index: 3, Timestamp: &timestamp},
+			Event{Index: 1, Timestamp: timestamp},
+			Event{Index: 2, Timestamp: timestamp},
+			Event{Index: 3, Timestamp: timestamp},
 		},
 	}
 
@@ -281,10 +281,10 @@ func TestAddEvent(t *testing.T) {
 		chunk: 8,
 		index: 19,
 		events: []Event{
-			Event{Index: 1, Timestamp: &timestamp, Type: 101},
-			Event{Index: 2, Timestamp: &timestamp, Type: 102},
-			Event{Index: 3, Timestamp: &timestamp, Type: 103},
-			Event{Index: 4, Timestamp: &timestamp, Type: 104},
+			Event{Index: 1, Timestamp: timestamp, Type: 101},
+			Event{Index: 2, Timestamp: timestamp, Type: 102},
+			Event{Index: 3, Timestamp: timestamp, Type: 103},
+			Event{Index: 4, Timestamp: timestamp, Type: 104},
 		},
 	}
 
@@ -293,13 +293,13 @@ func TestAddEvent(t *testing.T) {
 		chunk: 8,
 		index: 19,
 		events: []Event{
-			Event{Index: 1, Timestamp: &timestamp, Type: 101},
-			Event{Index: 2, Timestamp: &timestamp, Type: 102},
-			Event{Index: 3, Timestamp: &timestamp, Type: 103},
+			Event{Index: 1, Timestamp: timestamp, Type: 101},
+			Event{Index: 2, Timestamp: timestamp, Type: 102},
+			Event{Index: 3, Timestamp: timestamp, Type: 103},
 		},
 	}
 
-	event := Event{Timestamp: &timestamp, Type: 104}
+	event := Event{Timestamp: timestamp, Type: 104}
 
 	index := events.Add(event)
 
@@ -320,7 +320,7 @@ func TestAddEventWithEmptyList(t *testing.T) {
 		chunk: 8,
 		index: 19,
 		events: []Event{
-			Event{Index: 1, Timestamp: &timestamp, Type: 105},
+			Event{Index: 1, Timestamp: timestamp, Type: 105},
 		},
 	}
 
@@ -331,7 +331,7 @@ func TestAddEventWithEmptyList(t *testing.T) {
 		events: []Event{},
 	}
 
-	event := Event{Timestamp: &timestamp, Type: 105}
+	event := Event{Timestamp: timestamp, Type: 105}
 
 	index := events.Add(event)
 
@@ -352,13 +352,13 @@ func TestAddEventWithFullList(t *testing.T) {
 		chunk: 2,
 		index: 19,
 		events: []Event{
-			Event{Index: 3, Timestamp: &timestamp, Type: 103},
-			Event{Index: 4, Timestamp: &timestamp, Type: 104},
-			Event{Index: 5, Timestamp: &timestamp, Type: 105},
-			Event{Index: 6, Timestamp: &timestamp, Type: 106},
-			Event{Index: 7, Timestamp: &timestamp, Type: 107},
-			Event{Index: 8, Timestamp: &timestamp, Type: 108},
-			Event{Index: 9, Timestamp: &timestamp, Type: 109},
+			Event{Index: 3, Timestamp: timestamp, Type: 103},
+			Event{Index: 4, Timestamp: timestamp, Type: 104},
+			Event{Index: 5, Timestamp: timestamp, Type: 105},
+			Event{Index: 6, Timestamp: timestamp, Type: 106},
+			Event{Index: 7, Timestamp: timestamp, Type: 107},
+			Event{Index: 8, Timestamp: timestamp, Type: 108},
+			Event{Index: 9, Timestamp: timestamp, Type: 109},
 		},
 	}
 
@@ -367,18 +367,18 @@ func TestAddEventWithFullList(t *testing.T) {
 		chunk: 2,
 		index: 19,
 		events: []Event{
-			Event{Index: 1, Timestamp: &timestamp, Type: 101},
-			Event{Index: 2, Timestamp: &timestamp, Type: 102},
-			Event{Index: 3, Timestamp: &timestamp, Type: 103},
-			Event{Index: 4, Timestamp: &timestamp, Type: 104},
-			Event{Index: 5, Timestamp: &timestamp, Type: 105},
-			Event{Index: 6, Timestamp: &timestamp, Type: 106},
-			Event{Index: 7, Timestamp: &timestamp, Type: 107},
-			Event{Index: 8, Timestamp: &timestamp, Type: 108},
+			Event{Index: 1, Timestamp: timestamp, Type: 101},
+			Event{Index: 2, Timestamp: timestamp, Type: 102},
+			Event{Index: 3, Timestamp: timestamp, Type: 103},
+			Event{Index: 4, Timestamp: timestamp, Type: 104},
+			Event{Index: 5, Timestamp: timestamp, Type: 105},
+			Event{Index: 6, Timestamp: timestamp, Type: 106},
+			Event{Index: 7, Timestamp: timestamp, Type: 107},
+			Event{Index: 8, Timestamp: timestamp, Type: 108},
 		},
 	}
 
-	event := Event{Timestamp: &timestamp, Type: 109}
+	event := Event{Timestamp: timestamp, Type: 109}
 
 	index := events.Add(event)
 
@@ -414,18 +414,18 @@ func TestGetFirstEvent(t *testing.T) {
 		size:  8,
 		index: 0,
 		events: []Event{
-			Event{Index: 1001, Timestamp: &timestamp, Type: 11},
-			Event{Index: 1002, Timestamp: &timestamp, Type: 12},
-			Event{Index: 1003, Timestamp: &timestamp, Type: 13},
-			Event{Index: 1004, Timestamp: &timestamp, Type: 14},
-			Event{Index: 1005, Timestamp: &timestamp, Type: 15},
-			Event{Index: 1006, Timestamp: &timestamp, Type: 16},
-			Event{Index: 1007, Timestamp: &timestamp, Type: 17},
-			Event{Index: 1008, Timestamp: &timestamp, Type: 18},
+			Event{Index: 1001, Timestamp: timestamp, Type: 11},
+			Event{Index: 1002, Timestamp: timestamp, Type: 12},
+			Event{Index: 1003, Timestamp: timestamp, Type: 13},
+			Event{Index: 1004, Timestamp: timestamp, Type: 14},
+			Event{Index: 1005, Timestamp: timestamp, Type: 15},
+			Event{Index: 1006, Timestamp: timestamp, Type: 16},
+			Event{Index: 1007, Timestamp: timestamp, Type: 17},
+			Event{Index: 1008, Timestamp: timestamp, Type: 18},
 		},
 	}
 
-	expected := Event{Index: 1001, Timestamp: &timestamp, Type: 11}
+	expected := Event{Index: 1001, Timestamp: timestamp, Type: 11}
 
 	e := events.Get(0)
 
@@ -441,18 +441,18 @@ func TestGetLastEvent(t *testing.T) {
 		size:  8,
 		index: 0,
 		events: []Event{
-			Event{Index: 1001, Timestamp: &timestamp, Type: 11},
-			Event{Index: 1002, Timestamp: &timestamp, Type: 12},
-			Event{Index: 1003, Timestamp: &timestamp, Type: 13},
-			Event{Index: 1004, Timestamp: &timestamp, Type: 14},
-			Event{Index: 1005, Timestamp: &timestamp, Type: 15},
-			Event{Index: 1006, Timestamp: &timestamp, Type: 16},
-			Event{Index: 1007, Timestamp: &timestamp, Type: 17},
-			Event{Index: 1008, Timestamp: &timestamp, Type: 18},
+			Event{Index: 1001, Timestamp: timestamp, Type: 11},
+			Event{Index: 1002, Timestamp: timestamp, Type: 12},
+			Event{Index: 1003, Timestamp: timestamp, Type: 13},
+			Event{Index: 1004, Timestamp: timestamp, Type: 14},
+			Event{Index: 1005, Timestamp: timestamp, Type: 15},
+			Event{Index: 1006, Timestamp: timestamp, Type: 16},
+			Event{Index: 1007, Timestamp: timestamp, Type: 17},
+			Event{Index: 1008, Timestamp: timestamp, Type: 18},
 		},
 	}
 
-	expected := Event{Index: 1008, Timestamp: &timestamp, Type: 18}
+	expected := Event{Index: 1008, Timestamp: timestamp, Type: 18}
 
 	e := events.Get(0xffffffff)
 
@@ -468,18 +468,18 @@ func TestGetEventAtIndex(t *testing.T) {
 		size:  8,
 		index: 0,
 		events: []Event{
-			Event{Index: 1001, Timestamp: &timestamp, Type: 11},
-			Event{Index: 1002, Timestamp: &timestamp, Type: 12},
-			Event{Index: 1003, Timestamp: &timestamp, Type: 13},
-			Event{Index: 1004, Timestamp: &timestamp, Type: 14},
-			Event{Index: 1005, Timestamp: &timestamp, Type: 15},
-			Event{Index: 1006, Timestamp: &timestamp, Type: 16},
-			Event{Index: 1007, Timestamp: &timestamp, Type: 17},
-			Event{Index: 1008, Timestamp: &timestamp, Type: 18},
+			Event{Index: 1001, Timestamp: timestamp, Type: 11},
+			Event{Index: 1002, Timestamp: timestamp, Type: 12},
+			Event{Index: 1003, Timestamp: timestamp, Type: 13},
+			Event{Index: 1004, Timestamp: timestamp, Type: 14},
+			Event{Index: 1005, Timestamp: timestamp, Type: 15},
+			Event{Index: 1006, Timestamp: timestamp, Type: 16},
+			Event{Index: 1007, Timestamp: timestamp, Type: 17},
+			Event{Index: 1008, Timestamp: timestamp, Type: 18},
 		},
 	}
 
-	expected := Event{Index: 1003, Timestamp: &timestamp, Type: 13}
+	expected := Event{Index: 1003, Timestamp: timestamp, Type: 13}
 
 	e := events.Get(1003)
 
@@ -495,14 +495,14 @@ func TestGetOverwrittenEvent(t *testing.T) {
 		size:  8,
 		index: 0,
 		events: []Event{
-			Event{Index: 1001, Timestamp: &timestamp, Type: 11},
-			Event{Index: 1002, Timestamp: &timestamp, Type: 12},
-			Event{Index: 1003, Timestamp: &timestamp, Type: 13},
-			Event{Index: 1004, Timestamp: &timestamp, Type: 14},
-			Event{Index: 1005, Timestamp: &timestamp, Type: 15},
-			Event{Index: 1006, Timestamp: &timestamp, Type: 16},
-			Event{Index: 1007, Timestamp: &timestamp, Type: 17},
-			Event{Index: 1008, Timestamp: &timestamp, Type: 18},
+			Event{Index: 1001, Timestamp: timestamp, Type: 11},
+			Event{Index: 1002, Timestamp: timestamp, Type: 12},
+			Event{Index: 1003, Timestamp: timestamp, Type: 13},
+			Event{Index: 1004, Timestamp: timestamp, Type: 14},
+			Event{Index: 1005, Timestamp: timestamp, Type: 15},
+			Event{Index: 1006, Timestamp: timestamp, Type: 16},
+			Event{Index: 1007, Timestamp: timestamp, Type: 17},
+			Event{Index: 1008, Timestamp: timestamp, Type: 18},
 		},
 	}
 
@@ -522,14 +522,14 @@ func TestGetOutOfRangeEvent(t *testing.T) {
 		size:  8,
 		index: 0,
 		events: []Event{
-			Event{Index: 1001, Timestamp: &timestamp, Type: 11},
-			Event{Index: 1002, Timestamp: &timestamp, Type: 12},
-			Event{Index: 1003, Timestamp: &timestamp, Type: 13},
-			Event{Index: 1004, Timestamp: &timestamp, Type: 14},
-			Event{Index: 1005, Timestamp: &timestamp, Type: 15},
-			Event{Index: 1006, Timestamp: &timestamp, Type: 16},
-			Event{Index: 1007, Timestamp: &timestamp, Type: 17},
-			Event{Index: 1008, Timestamp: &timestamp, Type: 18},
+			Event{Index: 1001, Timestamp: timestamp, Type: 11},
+			Event{Index: 1002, Timestamp: timestamp, Type: 12},
+			Event{Index: 1003, Timestamp: timestamp, Type: 13},
+			Event{Index: 1004, Timestamp: timestamp, Type: 14},
+			Event{Index: 1005, Timestamp: timestamp, Type: 15},
+			Event{Index: 1006, Timestamp: timestamp, Type: 16},
+			Event{Index: 1007, Timestamp: timestamp, Type: 17},
+			Event{Index: 1008, Timestamp: timestamp, Type: 18},
 		},
 	}
 

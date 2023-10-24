@@ -8,6 +8,9 @@
 ### Added
 1. `activate-keypads` command and emulation.
 
+### Updated
+1. Replaced `nil` event pointer with zero value in `get-status`.)
+
 
 ## [0.8.5](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.5) - 2023-06-13
 

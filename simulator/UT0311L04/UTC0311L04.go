@@ -413,7 +413,7 @@ func (s *UT0311L04) add(event entities.Event) {
 
 		EventType:  event.Type,
 		Reason:     event.Reason,
-		Timestamp:  *event.Timestamp,
+		Timestamp:  event.Timestamp,
 		CardNumber: event.Card,
 		Granted:    event.Granted,
 		Door:       event.Door,

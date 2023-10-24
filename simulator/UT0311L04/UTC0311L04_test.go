@@ -423,7 +423,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 				Door:      3,
 				Direction: 0x01,
 				Card:      1234567890,
-				Timestamp: &timestamp,
+				Timestamp: timestamp,
 				Reason:    1,
 			},
 			entities.Event{
@@ -433,7 +433,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 				Door:      4,
 				Direction: 0x01,
 				Card:      555444321,
-				Timestamp: &timestamp,
+				Timestamp: timestamp,
 				Reason:    9,
 			},
 			entities.Event{
@@ -443,7 +443,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 				Door:      3,
 				Direction: 0x01,
 				Card:      1234567890,
-				Timestamp: &timestamp,
+				Timestamp: timestamp,
 				Reason:    1,
 			},
 			entities.Event{
@@ -453,7 +453,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 				Door:      3,
 				Direction: 0x01,
 				Card:      1234567891,
-				Timestamp: &timestamp,
+				Timestamp: timestamp,
 				Reason:    1,
 			},
 			entities.Event{
@@ -463,7 +463,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 				Door:      4,
 				Direction: 0x01,
 				Card:      1234567892,
-				Timestamp: &timestamp,
+				Timestamp: timestamp,
 				Reason:    1,
 			},
 			entities.Event{
@@ -473,7 +473,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 				Door:      1,
 				Direction: 0x01,
 				Card:      1234567892,
-				Timestamp: &timestamp,
+				Timestamp: timestamp,
 				Reason:    1,
 			},
 			entities.Event{
@@ -483,7 +483,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 				Door:      2,
 				Direction: 0x02,
 				Card:      1234567893,
-				Timestamp: &timestamp,
+				Timestamp: timestamp,
 				Reason:    1,
 			},
 			entities.Event{
@@ -493,7 +493,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 				Door:      3,
 				Direction: 0x02,
 				Card:      1234567894,
-				Timestamp: &timestamp,
+				Timestamp: timestamp,
 				Reason:    1,
 			},
 		})

@@ -31,7 +31,7 @@ func (s *UT0311L04) unlockDoor(addr *net.UDPAddr, request *messages.OpenDoorRequ
 				Door:      door,
 				Direction: 0x01,
 				Card:      3922570474,
-				Timestamp: &datetime,
+				Timestamp: datetime,
 				Reason:    0x2c,
 			}
 

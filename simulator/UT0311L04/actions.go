@@ -30,7 +30,7 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, direction entities.Dire
 			Door:      door,
 			Direction: 1,
 			Card:      cardNumber,
-			Timestamp: &datetime,
+			Timestamp: datetime,
 			Reason:    reason,
 		}
 
@@ -136,7 +136,7 @@ func (s *UT0311L04) Passcode(door uint8, passcode uint32) (bool, error) {
 			Granted:   granted,
 			Door:      door,
 			Direction: 1,
-			Timestamp: &datetime,
+			Timestamp: datetime,
 			Card:      SupervisorAccessCode,
 			Reason:    reason,
 		}
@@ -176,7 +176,7 @@ func (s *UT0311L04) Open(door uint8, duration *time.Duration) (bool, error) {
 				Door:      door,
 				Direction: 1,
 				Card:      8,
-				Timestamp: &datetime,
+				Timestamp: datetime,
 				Reason:    reason,
 			}
 
@@ -193,7 +193,7 @@ func (s *UT0311L04) Open(door uint8, duration *time.Duration) (bool, error) {
 				Door:      door,
 				Direction: 1,
 				Card:      9,
-				Timestamp: &datetime,
+				Timestamp: datetime,
 				Reason:    0x18,
 			}
 
@@ -227,7 +227,7 @@ func (s *UT0311L04) Close(door uint8) (bool, error) {
 				Door:      door,
 				Direction: 1,
 				Card:      9,
-				Timestamp: &datetime,
+				Timestamp: datetime,
 				Reason:    0x18,
 			}
 
@@ -263,7 +263,7 @@ func (s *UT0311L04) ButtonPressed(door uint8, duration time.Duration) (bool, err
 				Door:      door,
 				Direction: 1,
 				Card:      1,
-				Timestamp: &datetime,
+				Timestamp: datetime,
 				Reason:    0x14,
 			}
 
@@ -280,7 +280,7 @@ func (s *UT0311L04) ButtonPressed(door uint8, duration time.Duration) (bool, err
 				Door:      door,
 				Direction: 1,
 				Card:      6,
-				Timestamp: &datetime,
+				Timestamp: datetime,
 				Reason:    reason,
 			}
 

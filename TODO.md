@@ -4,22 +4,13 @@
       - [x] set-super-passwords
       - [x] Persist to JSON
       - [x] REST client action
-      - [ ] emulation
-            - [x] validate passcode
-            - [x] door control state
-            - [x] PC control
-            - [ ] time profile
-            - [ ] task
-            - [ ] interlock
-      - [ ] events
-            - [x] accesss granted::SuperPasswordOpenDoor
-            - [x] no event on access denied
-      - [ ] validate against controller
-            - [x] no event on bad passcode
-            - [x] event fields on valid passcode
-            - [x] door controlled
-            - [x] door normally open
-            - [x] door normally closed
+      - [x] emulation
+      - [x] events
+      - [x] validate against controller
+
+- [x] Replace Event pointer in GetStatusResponse with zero value (cf. https://github.com/uhppoted/uhppote-core/issues/18)
+      - [x] `GetStatus`
+      - [x] CHANGELOG
 
 ## TODO
 
