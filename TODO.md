@@ -12,6 +12,11 @@
       - [x] `GetStatus`
       - [x] CHANGELOG
 
+- [ ] Figure out Docker weirdness with events
+      - Stops forwarding UDP event messages
+      - https://stackoverflow.com/questions/54360408/docker-container-udp-communication-with-other-hosts
+      - https://serverfault.com/questions/866830/udp-traffic-not-forwarded-from-docker-containers-docker-host
+
 ## TODO
 
 - [ ] Verify fields in listen events/status replies against SDK
