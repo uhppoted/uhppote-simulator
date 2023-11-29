@@ -1,6 +1,9 @@
 # CHANGELOG
 
-## Unreleased
+## [0.8.7](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.7) - 2023-12-01
+
+### Added
+1. ``set-super-passwords` command and emulation.
 
 
 ## [0.8.6](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.6) - 2023-08-30
@@ -87,3 +90,20 @@
 2. Added handler for  `add-task`
 3. Added handler for  `refresh-task-list`
 4. Implemented task list emulation
+
+## Older
+
+| *Version* | *Description*                                                                             |
+| --------- | ----------------------------------------------------------------------------------------- |
+| v0.7.0    | Added support for time profiles from the extended API                                     |
+| v0.6.12   | Added simulation support for encoding `nil` events for response to `get-status`           |
+| v0.6.10   | Maintenance release for version compatibility with `uhppoted-app-wild-apricot`            |
+| v0.6.8    | Implements firmware _UHPPOTE_ v6.62 event message format                                  |
+| v0.6.7    | Implements `record-special-events` and door open, close and button actions and events     |
+| v0.6.5    | Maintenance release for version compatibility with `node-red-contrib-uhppoted`            |
+| v0.6.4    | Maintenance release for version compatibility with `uhppoted-app-sheets`                  |
+| v0.6.3    | Reworked card list as fixed length array and emulated deleted records                     |
+| v0.6.2    | Updated simulation response for 'no events'                                               |
+| v0.6.1    | Maintenance release to update module dependencies                                         |
+| v0.6.0    | Maintenance release to update module dependencies                                         |
+| v0.5.1    | Initial release following restructuring into standalone Go *modules* and *git submodules* |

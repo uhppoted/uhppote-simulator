@@ -1,16 +1,12 @@
 # TODO
 
-- [ ] `set-super-passwords` (cf. https://github.com/uhppoted/uhppoted/issues/40)
+- [x] `set-super-passwords` (cf. https://github.com/uhppoted/uhppoted/issues/40)
       - [x] set-super-passwords
       - [x] Persist to JSON
       - [x] REST client action
       - [x] emulation
       - [x] events
       - [x] validate against controller
-
-- [x] Replace Event pointer in GetStatusResponse with zero value (cf. https://github.com/uhppoted/uhppote-core/issues/18)
-      - [x] `GetStatus`
-      - [x] CHANGELOG
 
 - [ ] Figure out Docker weirdness with events
       - Stops forwarding UDP event messages

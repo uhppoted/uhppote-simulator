@@ -10,32 +10,13 @@ Supported operating systems:
 - Windows
 - ARM7 (RaspberryPi)
 
-## Releases
+## Release Notes
 
-| *Version* | *Description*                                                                             |
-| --------- | ----------------------------------------------------------------------------------------- |
-| v0.8.6    | Implemented reader keypas emulation and `activate-keypads` API                              |
-| v0.8.5    | Implemented door interlock emulation and `set-interlock` API                              |
-| v0.8.4    | Added `set-pc-control` emulation and support for card keypad PINs                         |
-| v0.8.3    | Bug for time profiles timezone handling and events list JSON marshalling                  |
-| v0.8.2    | Maintenance release for version compatibility with `uhppote-core` v0.8.2                  |
-| v0.8.1    | Maintenance release for version compatibility with `uhppote-core` v0.8.1                  |
-| v0.8.0    | Maintenance release for version compatibility with `uhppote-core` v0.8.0                  |
-| v0.7.3    | Maintenance release for version compatibility with `uhppote-core` v0.7.3                  |
-| v0.7.2    | Replaced event list rollover to discard a 'chunk' of events when the list is full         |
-| v0.7.1    | Added support for task list functionality from the extended API                           |
-| v0.7.0    | Added support for time profiles from the extended API                                     |
-| v0.6.12   | Added simulation support for encoding `nil` events for response to `get-status`           |
-| v0.6.10   | Maintenance release for version compatibility with `uhppoted-app-wild-apricot`            |
-| v0.6.8    | Implements firmware _UHPPOTE_ v6.62 event message format                                  |
-| v0.6.7    | Implements `record-special-events` and door open, close and button actions and events     |
-| v0.6.5    | Maintenance release for version compatibility with `node-red-contrib-uhppoted`            |
-| v0.6.4    | Maintenance release for version compatibility with `uhppoted-app-sheets`                  |
-| v0.6.3    | Reworked card list as fixed length array and emulated deleted records                     |
-| v0.6.2    | Updated simulation response for 'no events'                                               |
-| v0.6.1    | Maintenance release to update module dependencies                                         |
-| v0.6.0    | Maintenance release to update module dependencies                                         |
-| v0.5.1    | Initial release following restructuring into standalone Go *modules* and *git submodules* |
+### Current release
+
+**[v0.8.7](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.7) - 2023-12-01**
+
+1. ``set-super-passwords` command and emulation.
 
 ## Installation
 
