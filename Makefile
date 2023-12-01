@@ -74,7 +74,7 @@ release: update-release build-all
 
 publish: release
 	echo "Releasing version $(VERSION)"
-	rm dist/development.tar.gz
+	rm -f dist/development.tar.gz
 	gh release create "$(VERSION)" "./dist/uhppote-simulator_$(VERSION).tar.gz"  "./dist/uhppote-simulator_$(VERSION).zip" --draft --prerelease --title "$(VERSION)-beta" --notes-file release-notes.md
 
 debug: build
