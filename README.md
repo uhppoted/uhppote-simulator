@@ -78,6 +78,7 @@ Supported `uhppote` functions:
 - SetPCControl
 - SetInterlock
 - ActivateAccessKeypads
+- RestoreDefaultParameters
 - Listen
 
 Supported _actions_:
@@ -118,6 +119,17 @@ e.g:
 
 Note that by design, the simulator does not emulate this behaviour, on the grounds that it is probably a 
 version specific bug.
+
+### `restore-default-parameters`
+
+`restore-default-parameters` has (for practical reasons) NOT been validated against an actual controller. Resetting
+the simulator:
+- clears the internal controller IPv4 address, netmask and gateway
+- clears the event listener address
+- clears all events
+- deletes all cards
+- sets all doors to `controlled` mode and 5 seconds delay
+- clears all door passcodes
 
 ### `passcode`
 

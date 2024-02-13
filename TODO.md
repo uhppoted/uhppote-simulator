@@ -1,14 +1,18 @@
 # TODO
 
-- [x] `set-super-passwords` (cf. https://github.com/uhppoted/uhppoted/issues/40)
-      - [x] set-super-passwords
-      - [x] Persist to JSON
-      - [x] REST client action
-      - [x] emulation
-      - [x] events
-      - [x] validate against controller
+- [x] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)
+      - [x]`restore-default-parameters` message handling
+      - [x] reset addresses
+      - [x] reset event listener
+      - [x] clear events
+      - [x] clear cards
+      - [x] reset door config
+      - [x] clear door passcodes
+      - [x] CHANGELOG
+      - [x] README
 
-- [ ] Figure out Docker weirdness with events
+- [ ] https://github.com/uhppoted/uhppote-simulator/issues/9
+      - Docker weirdness with events
       - Stops forwarding UDP event messages
       - https://stackoverflow.com/questions/54360408/docker-container-udp-communication-with-other-hosts
       - https://serverfault.com/questions/866830/udp-traffic-not-forwarded-from-docker-containers-docker-host

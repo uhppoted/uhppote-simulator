@@ -161,6 +161,17 @@ func (l *EventList) SetIndex(index uint32) bool {
 	return false
 }
 
+func (l EventList) Size() int {
+	return len(l.events)
+}
+
+func (l *EventList) Clear() bool {
+	l.index = 0
+	l.events = []Event{}
+
+	return true
+}
+
 // NOTE: no validation - for unit tests only
 func MakeEventList(index uint32, events []Event) EventList {
 	return EventList{

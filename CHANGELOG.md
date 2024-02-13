@@ -2,11 +2,17 @@
 
 ## Unreleased
 
+### Added
+1. `restore-default-parameters` command emulation.
+
+### Updated
+1. Bumped Go version to 1.22
+
 
 ## [0.8.7](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.7) - 2023-12-01
 
 ### Added
-1. ``set-super-passwords` command and emulation.
+1. `set-super-passwords` command and emulation.
 
 
 ## [0.8.6](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.6) - 2023-08-30
