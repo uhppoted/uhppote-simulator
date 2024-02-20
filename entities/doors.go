@@ -2,6 +2,8 @@ package entities
 
 import (
 	"encoding/json"
+	"fmt"
+	"strings"
 	"time"
 )
 
@@ -224,6 +226,16 @@ func (dd *Doors) IsInterlocked(door uint8) bool {
 	}
 
 	return false
+}
+
+func (d Doors) String() string {
+	var b strings.Builder
+
+	for _, door := range []uint8{1, 2, 3, 4} {
+		fmt.Fprintf(&b, "door:%v mode:%v, delay:%vs\n", door, d.doors[door].ControlState, d.doors[door].Delay)
+	}
+
+	return b.String()
 }
 
 func (d Doors) MarshalJSON() ([]byte, error) {

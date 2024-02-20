@@ -21,7 +21,7 @@ func (s *UT0311L04) restoreDefaultParameters(addr *net.UDPAddr, request *message
 
 			for _, door := range []uint8{1, 2, 3, 4} {
 				s.Doors.SetControlState(door, entities.Controlled)
-				s.Doors.SetDelay(door, 5)
+				s.Doors.SetDelay(door, entities.DelayFromSeconds(5))
 				s.Doors.SetPasscodes(door)
 			}
 
