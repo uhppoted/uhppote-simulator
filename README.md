@@ -13,21 +13,20 @@ Supported operating systems:
 ---
 ### Contents
 
-1. [Release Notes](#release-notes)
-2. [Installation](#installation)
+- [Release Notes](#release-notes)
+- [Installation](#installation)
    - [Building from source](#building-from-source)
-3. [Supported functions](#uhppote-simulator)
-4. [REST API](#rest-api)
-   - [swipe-card](#swipe-card)
-   - [supervisor-passcode](#supervisor-passcode)
-   - [open-door](#open)
-   - [close-door](#close)
-   - [press-button](#button)
-   - [list-controllers](#list-controllers)
-   - [create-controllers](#create-controller)
-   - [delete-controllers](#delete-controller)
-
-5. [Notes](#notes)
+- [Supported functions](#uhppote-simulator)
+- [REST API](#rest-api)
+   - [_swipe-card_](#swipe-card)
+   - [_supervisor-passcode_](#supervisor-passcode)
+   - [_open-door_](#open-door)
+   - [_close-door_](#close-door)
+   - [_press-button_](#press-button)
+   - [_list-controllers_](#list-controllers)
+   - [_create-controllers_](#create-controller)
+   - [_delete-controllers_](#delete-controller)
+- [Notes](#notes)
    - [`put-card`](#put-card)
    - [`restore-default-parameters`](#restore-default-parameters)
    - [`passcode`](#passcode)
@@ -40,7 +39,7 @@ Supported operating systems:
 
 **[v0.8.7](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.7) - 2023-12-01**
 
-1. ``set-super-passwords` command and emulation.
+1. `set-super-passwords` command and emulation.
 
 ## Installation
 
@@ -123,13 +122,12 @@ The simulator provides a REST API to simulate user actions and manage controller
 - create controller
 - delete controller
 
-The default port is 8000.
-
 The actions may be invoked:
 - from the command line using _curl_ 
 - using one of the many [Postman-like](https://www.postman.com/) tools available
 - using the [Swagger Editor](https://editor.swagger.io) with the [OpenAPI](https://github.com/uhppoted/uhppote-simulator/blob/main/documentation/simulator-api.yaml) YAML file.
 
+The default port is 8000.
 
 ### `swipe-card`
 
@@ -151,8 +149,6 @@ Request:
 `door`         door number [1..4] e.g. 3
 `direction`    1: IN, 2: OUT
 `PIN`          (optional) PIN code for keypad reader
-
-_curl_:
 
 swipe:
 ```
@@ -184,7 +180,6 @@ Request:
 `controller`   controller serial number e.g. 405419896
 `door`         door number [1..4] e.g. 3
 `passcode`     supervisor passcode
-
 
 ```
 curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/code" -H "accept: application/json" -H "Content-Type: application/json" -d '{"door":1,"passcode":1357}'
