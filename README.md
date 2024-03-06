@@ -176,11 +176,11 @@ Request:
     "PIN": <passcode>
 }
 ```
-
-`controller`   controller serial number e.g. 405419896
-`door`         door number [1..4] e.g. 3
-`passcode`     supervisor passcode
-
+```
+controller   controller serial number e.g. 405419896
+door         door number [1..4] e.g. 3
+passcode     supervisor passcode
+```
 ```
 curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/code" -H "accept: application/json" -H "Content-Type: application/json" -d '{"door":1,"passcode":1357}'
 ```
@@ -198,11 +198,11 @@ Request:
     "action": "open",
 }
 ```
-
-`controller`   controller serial number e.g. 405419896
-`door`         door number [1..4] e.g. 3
-`action`       open
-
+```
+controller   controller serial number e.g. 405419896
+door         door number [1..4] e.g. 3
+action       open
+```
 ```
 curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/door/1" -H "accept: application/json" -H "Content-Type: application/json" -d '{"action":"open"}'
 ```
@@ -219,11 +219,11 @@ Request:
     "action": "close",
 }
 ```
-
-`controller`   controller serial number e.g. 405419896
-`door`         door number [1..4] e.g. 3
-`action`       close
-
+```
+controller   controller serial number e.g. 405419896
+door         door number [1..4] e.g. 3
+action       close
+```
 ```
 curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/door/1" -H "accept: application/json" -H "Content-Type: application/json" -d '{"action":"close"}'
 ```
@@ -241,12 +241,12 @@ Request:
     "duration": 10
 }
 ```
-
-`controller`   controller serial number e.g. 405419896
-`door`         door number [1..4] e.g. 3
-`action`       button
-`duration`     seconds to press the button e.g. 10
-
+```
+controller   controller serial number e.g. 405419896
+door         door number [1..4] e.g. 3
+action       button
+duration     seconds to press the button e.g. 10
+```
 ```
 curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/door/1" -H "accept: application/json" -H "Content-Type: application/json" -d '{"action":"button", "duration":10}'
 ```
@@ -276,11 +276,11 @@ Request:
     "compressed": [true|false]
 }
 ```
-
-`controller`          controller serial number e.g. 405419896
-`manufacturer-code`   UT0311-L02 for a 2 door controller, UT0311-L04 for a 4 door controller
-`compressed`          store controller in compressed (true) or human-readable form (false)
-
+```
+controller          controller serial number e.g. 405419896
+manufacturer-code   UT0311-L02 for a 2 door controller, UT0311-L04 for a 4 door controller
+compressed          store controller in compressed (true) or human-readable form (false)
+```
 ```
 curl -X POST "http://127.0.0.1:8000/uhppote/simulator" -H "accept: */*" -H "Content-Type: application/json" -d '{"device-id":405419896,"device-type":"UT0311-L04","compressed":false}'
 ```
@@ -291,9 +291,9 @@ Delets a controller from the simulator.
 
 URL: `http://localhost:8000/uhppote/simulator/<controller>`
 Method: DELETE
-
-`controller`          controller serial number e.g. 405419896
-
+```
+controller   controller serial number e.g. 405419896
+```
 ```
 curl -X DELETE "http://127.0.0.1:8000/uhppote/simulator/405419896" -H "accept: */*"
 ```
