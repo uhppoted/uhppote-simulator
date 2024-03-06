@@ -10,6 +10,30 @@ Supported operating systems:
 - Windows
 - ARM7 (RaspberryPi)
 
+---
+### Contents
+
+1. [Release Notes](#release-notes)
+2. [Installation](#installation)
+   - [Building from source](#building-from-source)
+3. [Supported functions](#uhppote-simulator)
+4. [REST API](#rest-api)
+   - [swipe-card](#swipe-card)
+   - [supervisor-passcode](#supervisor-passcode)
+   - [open-door](#open)
+   - [close-door](#close)
+   - [press-button](#button)
+   - [list-controllers](#list-controllers)
+   - [create-controllers](#create-controller)
+   - [delete-controllers](#delete-controller)
+
+5. [Notes](#notes)
+   - [`put-card`](#put-card)
+   - [`restore-default-parameters`](#restore-default-parameters)
+   - [`passcode`](#passcode)
+
+---
+
 ## Release Notes
 
 ### Current release
@@ -37,13 +61,6 @@ cd uhppote-simulator
 mkdir bin
 go build -trimpath -o bin ./...
 ```
-
-#### Dependencies
-
-| *Dependency*                                             | *Description*                                          |
-| -------------------------------------------------------- | ------------------------------------------------------ |
-| [uhppote-core](https://github.com/uhppoted/uhppote-core) | Device level API implementation                        |
-
 
 ## uhppote-simulator
 
@@ -98,7 +115,7 @@ Supported options:
 The simulator provides a REST API to simulate user actions and manage controllers:
 
 - swipe card
-- enter passcode
+- supervisor passcode
 - open door
 - close door
 - press button
@@ -106,68 +123,187 @@ The simulator provides a REST API to simulate user actions and manage controller
 - create controller
 - delete controller
 
+The default port is 8000.
+
 The actions may be invoked:
 - from the command line using _curl_ 
 - using one of the many [Postman-like](https://www.postman.com/) tools available
 - using the [Swagger Editor](https://editor.swagger.io) with the [OpenAPI](https://github.com/uhppoted/uhppote-simulator/blob/main/documentation/simulator-api.yaml) YAML file.
 
 
-### _curl_
+### `swipe-card`
+
+Simulates a card swipe with optional keypad code.
+
+URL: `http://localhost:8000/uhppote/simulator/{controller}/swipe`
+Method: POST
+Request:
+```
+{
+    "door": <door>,
+    "card-number: <card>,
+    "direction": [1|2],
+    "PIN": <passcode>
+}
+```
+
+`controller`   controller serial number e.g. 405419896
+`door`         door number [1..4] e.g. 3
+`direction`    1: IN, 2: OUT
+`PIN`          (optional) PIN code for keypad reader
+
+_curl_:
 
 swipe:
 ```
 curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d '{"door":1,"card-number":10058400,"direction":1,"PIN":1357}'
 ```
-
 swipe-in:
 ```
 curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d '{"door":1,"card-number":10058400,"direction":1,"PIN":1357}'
 ```
-
 swipe-out:
 ```
 curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d '{"door":1,"card-number":10058400,"direction":2,"PIN":1357}'
 ```
 
-passcode:
+### `supervisor-passcode`
+
+Simulates a supervisor passcode entry on a keypad.
+
+URL: `http://localhost:8000/uhppote/simulator/{controller}/code`
+Method: POST
+Request:
+```
+{
+    "door": <door>,
+    "PIN": <passcode>
+}
+```
+
+`controller`   controller serial number e.g. 405419896
+`door`         door number [1..4] e.g. 3
+`passcode`     supervisor passcode
+
+
 ```
 curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/code" -H "accept: application/json" -H "Content-Type: application/json" -d '{"door":1,"passcode":1357}'
 ```
 
-open:
+### `open-door`
+
+Simulates opening a door - the door must be unlocked (e.g. by a card swipe or button press or supervisor passcode) to open. A `door open` event will generated if the
+door was closed.
+
+URL: `http://localhost:8000/uhppote/simulator/{controller}/door/{door}`
+Method: POST
+Request:
+```
+{
+    "action": "open",
+}
+```
+
+`controller`   controller serial number e.g. 405419896
+`door`         door number [1..4] e.g. 3
+`action`       open
+
 ```
 curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/door/1" -H "accept: application/json" -H "Content-Type: application/json" -d '{"action":"open"}'
 ```
 
-close:
+### `close-door`
+
+Simulates closing a door - a door closed event will be generated if the door was open.
+
+URL: `http://localhost:8000/uhppote/simulator/{controller}/door/{door}`
+Method: POST
+Request:
+```
+{
+    "action": "close",
+}
+```
+
+`controller`   controller serial number e.g. 405419896
+`door`         door number [1..4] e.g. 3
+`action`       close
+
 ```
 curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/door/1" -H "accept: application/json" -H "Content-Type: application/json" -d '{"action":"close"}'
 ```
 
-button:
+### `press-button`
+
+Simulates pressing the 'door open' button - a `button pressed` event will be generated if the button was not already pressed.
+
+URL: `http://localhost:8000/uhppote/simulator/{controller}/door/{door}`
+Method: POST
+Request:
+```
+{
+    "action": "button",
+    "duration": 10
+}
+```
+
+`controller`   controller serial number e.g. 405419896
+`door`         door number [1..4] e.g. 3
+`action`       button
+`duration`     seconds to press the button e.g. 10
+
 ```
 curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/door/1" -H "accept: application/json" -H "Content-Type: application/json" -d '{"action":"button", "duration":10}'
 ```
 
-list-controllers:
+### `list-controllers`
+
+Lists the configured controllers.
+
+URL: `http://localhost:8000/uhppote/simulator`
+Method: GET
+
 ```
 curl -X GET "http://127.0.0.1:8000/uhppote/simulator" -H "accept: application/json"
 ```
 
-create-controller:
+### `create-controller`
+
+Adds a new controller to the simulator.
+
+URL: `http://localhost:8000/uhppote/simulator`
+Method: POST
+Request:
+```
+{
+    "device-id": <controller>,
+    "device-type": <manufacturer-code>,
+    "compressed": [true|false]
+}
+```
+
+`controller`          controller serial number e.g. 405419896
+`manufacturer-code`   UT0311-L02 for a 2 door controller, UT0311-L04 for a 4 door controller
+`compressed`          store controller in compressed (true) or human-readable form (false)
+
 ```
 curl -X POST "http://127.0.0.1:8000/uhppote/simulator" -H "accept: */*" -H "Content-Type: application/json" -d '{"device-id":405419896,"device-type":"UT0311-L04","compressed":false}'
 ```
 
-delete-controller:
+### `delete-controller`
+
+Delets a controller from the simulator.
+
+URL: `http://localhost:8000/uhppote/simulator/<controller>`
+Method: DELETE
+
+`controller`          controller serial number e.g. 405419896
+
 ```
 curl -X DELETE "http://127.0.0.1:8000/uhppote/simulator/405419896" -H "accept: */*"
 ```
 
-
 ### Postman
-
-### OpenAPI
 
 ### Python
 

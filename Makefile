@@ -97,31 +97,31 @@ list-devices:
 	curl -X GET "http://127.0.0.1:8000/uhppote/simulator" -H "accept: application/json"
 
 create-device:
-	curl -X POST "http://127.0.0.1:8000/uhppote/simulator" -H "accept: */*" -H "Content-Type: application/json" -d "{\"device-id\":$(NEWDEVICE),\"device-type\":\"UT0311-L04\",\"compressed\":false}"
+	curl -X POST "http://127.0.0.1:8000/uhppote/simulator" -H "accept: */*" -H "Content-Type: application/json" -d '{"device-id":$(NEWDEVICE),"device-type":"UT0311-L04","compressed":false}'
 
 delete-device:
 	curl -X DELETE "http://127.0.0.1:8000/uhppote/simulator/$(NEWDEVICE)" -H "accept: */*"
 
 swipe:
-	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"door\":$(DOOR),\"card-number\":$(CARD),\"direction\":1,\"PIN\":$(PIN)}"
+	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d '{"door":$(DOOR),"card-number":$(CARD),"direction":1,"PIN":$(PIN)}'
 
 swipe-in:
-	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"door\":$(DOOR),\"card-number\":$(CARD),\"direction\":1,\"PIN\":1234}"
+	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d '{"door":$(DOOR),"card-number":$(CARD),"direction":1,"PIN":1234}'
 
 swipe-out:
-	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"door\":$(DOOR),\"card-number\":$(CARD),\"direction\":2,\"PIN\":1234}"
+	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d '{"door":$(DOOR),"card-number":$(CARD),"direction":2,"PIN":1234}'
 
 passcode:
-	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/code" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"door\":$(DOOR),\"passcode\":$(PASSCODE)}"
+	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/code" -H "accept: application/json" -H "Content-Type: application/json" -d '{"door":$(DOOR),"passcode":$(PASSCODE)}'
 
 open:
-	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/door/$(DOOR)" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"action\":\"open\"}"
+	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/door/$(DOOR)" -H "accept: application/json" -H "Content-Type: application/json" -d '{"action":"open"}'
 
 close:
-	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/door/$(DOOR)" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"action\":\"close\"}"
+	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/door/$(DOOR)" -H "accept: application/json" -H "Content-Type: application/json" -d '{"action":"close"}'
 
 button:
-	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/door/$(DOOR)" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"action\":\"button\", \"duration\":10}"
+	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/door/$(DOOR)" -H "accept: application/json" -H "Content-Type: application/json" -d '{"action":"button", "duration":10}'
 
 # v06.62 events
 v6.62-swipe:

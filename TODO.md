@@ -2,14 +2,14 @@
 
 - [x] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)
 - [ ] [Document the HTTP requests](https://github.com/uhppoted/uhppote-simulator/issues/11)
-      - [ ] `swipe`
-      - [ ] `passcode`
-      - [ ] `open`
-      - [ ] `close`
-      - [ ] `button`
-      - [ ] `list-devices`
-      - [ ] `create-device`
-      - [ ] `delete-device`
+      - [x] `swipe`
+      - [x] `passcode`
+      - [x] `open`
+      - [x] `close`
+      - [x] `button`
+      - [x] `list-devices`
+      - [x] `create-device`
+      - [x] `delete-device`
       - [x] Remove `new-device`
       - [x] Remove duration from `open`
       - [x] Update OpenAPI yaml file
