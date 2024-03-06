@@ -93,9 +93,6 @@ run: build
 	# ./bin/uhppote-simulator --debug --bind 0.0.0.0:60000 --rest 0.0.0.0:8000 --devices "../runtime/simulation/devices"
 	./bin/uhppote-simulator --bind 0.0.0.0:60000 --rest 0.0.0.0:8000 --devices "../runtime/simulation/devices"
 
-new-device: build
-	./bin/uhppote-simulator --debug --devices "../runtime/simulation/devices" new-device $(NEWDEVICE)
-
 list-devices:
 	curl -X GET "http://127.0.0.1:8000/uhppote/simulator" -H "accept: application/json"
 

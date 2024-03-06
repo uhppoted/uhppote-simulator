@@ -81,11 +81,6 @@ Supported `uhppote` functions:
 - RestoreDefaultParameters
 - Listen
 
-Supported _actions_:
-- swipe card
-- press button
-- open door
-
 Usage: *uhppote-simulator \<command\> --devices=\<dir\>*
 
 Defaults to 'run' unless one of the commands below is specified: 
@@ -97,6 +92,86 @@ Supported options:
 - --bind <IP address to bind to>
 - --devices <directory path for device files>
 - --debug
+
+## REST API
+
+The simulator provides a REST API to simulate user actions and manage controllers:
+
+- swipe card
+- enter passcode
+- open door
+- close door
+- press button
+- list controllers
+- create controller
+- delete controller
+
+The actions may be invoked:
+- from the command line using _curl_ 
+- using one of the many [Postman-like](https://www.postman.com/) tools available
+- using the [Swagger Editor](https://editor.swagger.io) with the [OpenAPI](https://github.com/uhppoted/uhppote-simulator/blob/main/documentation/simulator-api.yaml) YAML file.
+
+
+### _curl_
+
+swipe:
+```
+curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d '{"door":1,"card-number":10058400,"direction":1,"PIN":1357}'
+```
+
+swipe-in:
+```
+curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d '{"door":1,"card-number":10058400,"direction":1,"PIN":1357}'
+```
+
+swipe-out:
+```
+curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d '{"door":1,"card-number":10058400,"direction":2,"PIN":1357}'
+```
+
+passcode:
+```
+curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/code" -H "accept: application/json" -H "Content-Type: application/json" -d '{"door":1,"passcode":1357}'
+```
+
+open:
+```
+curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/door/1" -H "accept: application/json" -H "Content-Type: application/json" -d '{"action":"open"}'
+```
+
+close:
+```
+curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/door/1" -H "accept: application/json" -H "Content-Type: application/json" -d '{"action":"close"}'
+```
+
+button:
+```
+curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/door/1" -H "accept: application/json" -H "Content-Type: application/json" -d '{"action":"button", "duration":10}'
+```
+
+list-controllers:
+```
+curl -X GET "http://127.0.0.1:8000/uhppote/simulator" -H "accept: application/json"
+```
+
+create-controller:
+```
+curl -X POST "http://127.0.0.1:8000/uhppote/simulator" -H "accept: */*" -H "Content-Type: application/json" -d '{"device-id":405419896,"device-type":"UT0311-L04","compressed":false}'
+```
+
+delete-controller:
+```
+curl -X DELETE "http://127.0.0.1:8000/uhppote/simulator/405419896" -H "accept: */*"
+```
+
+
+### Postman
+
+### OpenAPI
+
+### Python
+
+
 
 ## NOTES
 

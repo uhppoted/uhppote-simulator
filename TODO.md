@@ -1,15 +1,20 @@
 # TODO
 
 - [x] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)
-      - [x]`restore-default-parameters` message handling
-      - [x] reset addresses
-      - [x] reset event listener
-      - [x] clear events
-      - [x] clear cards
-      - [x] reset door config
-      - [x] clear door passcodes
-      - [x] CHANGELOG
-      - [x] README
+- [ ] [Document the HTTP requests](https://github.com/uhppoted/uhppote-simulator/issues/11)
+      - [ ] `swipe`
+      - [ ] `passcode`
+      - [ ] `open`
+      - [ ] `close`
+      - [ ] `button`
+      - [ ] `list-devices`
+      - [ ] `create-device`
+      - [ ] `delete-device`
+      - [x] Remove `new-device`
+      - [ ] Remove duration from `open`
+      - [ ] Update OpenAPI yaml file
+      - [ ] Postman scripts
+      - [ ] Python CLI
 
 - [ ] https://github.com/uhppoted/uhppote-simulator/issues/9
       - Docker weirdness with events
