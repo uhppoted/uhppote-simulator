@@ -136,4 +136,7 @@ v6.62-close:
 v6.62-button:
 	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/201020304/door/1" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"action\":\"button\", \"duration\":10}"
 
+swagger: 
+	docker run --detach --publish 80:8080 --rm swaggerapi/swagger-editor 
+	open http://127.0.0.1:80
 

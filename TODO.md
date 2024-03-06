@@ -12,7 +12,7 @@
       - [ ] `delete-device`
       - [x] Remove `new-device`
       - [x] Remove duration from `open`
-      - [ ] Update OpenAPI yaml file
+      - [x] Update OpenAPI yaml file
       - [ ] Postman scripts
       - [ ] Python CLI
 
