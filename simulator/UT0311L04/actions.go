@@ -157,12 +157,11 @@ func (s *UT0311L04) Passcode(door uint8, passcode uint32) (bool, error) {
 //
 // Checks the device and opens the door if has been unlocked by a simulated card
 // swipe, associated button press or is configurated as normally open. The door
-// is closed again after the open duration. A 'nil' duration will keep the door
-// open until a 'door close' action closes it.
+// remains open until closed.
 //
 // A 'door open' event is generated and sent to the event listener (if any) if
 // the door was opened and 'record special events' is enabled.
-func (s *UT0311L04) Open(door uint8, duration *time.Duration) (bool, error) {
+func (s *UT0311L04) Open(door uint8) (bool, error) {
 	if door < 1 || door > 4 {
 		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID(), door)
 	}
@@ -201,7 +200,7 @@ func (s *UT0311L04) Open(door uint8, duration *time.Duration) (bool, error) {
 		}
 	}
 
-	opened := s.Doors.Open(door, duration, onOpen, onClose)
+	opened := s.Doors.Open(door, nil, onOpen, onClose)
 
 	return opened, nil
 }

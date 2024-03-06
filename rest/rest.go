@@ -385,18 +385,11 @@ func door(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
 
 func open(ctx *simulator.Context, w http.ResponseWriter, deviceID uint32, door uint8, blob []byte) {
 	request := struct {
-		Duration uint `json:"duration"`
 	}{}
 
 	if err := json.Unmarshal(blob, &request); err != nil {
 		http.Error(w, "Invalid request format", http.StatusBadRequest)
 		return
-	}
-
-	var duration *time.Duration
-	if request.Duration > 0 {
-		d := time.Duration(request.Duration) * time.Second
-		duration = &d
 	}
 
 	s := ctx.DeviceList.Find(uint32(deviceID))
@@ -405,7 +398,7 @@ func open(ctx *simulator.Context, w http.ResponseWriter, deviceID uint32, door u
 		return
 	}
 
-	opened, err := s.Open(door, duration)
+	opened, err := s.Open(door)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to emulate 'door open' (%v)", err), http.StatusInternalServerError)
 		return

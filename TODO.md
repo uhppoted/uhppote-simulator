@@ -11,7 +11,7 @@
       - [ ] `create-device`
       - [ ] `delete-device`
       - [x] Remove `new-device`
-      - [ ] Remove duration from `open`
+      - [x] Remove duration from `open`
       - [ ] Update OpenAPI yaml file
       - [ ] Postman scripts
       - [ ] Python CLI
