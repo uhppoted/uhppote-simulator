@@ -77,8 +77,8 @@ publish: release
 	rm -f dist/development.tar.gz
 	gh release create "$(VERSION)" "./dist/uhppote-simulator_$(VERSION).tar.gz"  "./dist/uhppote-simulator_$(VERSION).zip" --draft --prerelease --title "$(VERSION)-beta" --notes-file release-notes.md
 
-debug: build
-	go test -v ./simulator/UT0311L04/... -run TestCheckTimeProfile
+debug:
+	python3 CLI.py swipe --controller 405419896 --door 1 --card 10058400
 
 delve: build
 	dlv test github.com/uhppoted/uhppote-simulator/simulator/UT0311L04 -- run TestCheckTimeProfileInTimeSegmentWithOffset
