@@ -4,9 +4,12 @@
 
 ### Added
 1. `restore-default-parameters` command emulation.
+2. Python REST API CLI client implementation.
 
 ### Updated
 1. Bumped Go version to 1.22
+2. Updated README with REST API.
+3. Updated REST API OpenAPI specification.
 
 
 ## [0.8.7](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.7) - 2023-12-01

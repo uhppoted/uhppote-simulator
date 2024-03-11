@@ -1,6 +1,7 @@
 # TODO
 
 - [x] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)
+
 - [ ] [Document the HTTP requests](https://github.com/uhppoted/uhppote-simulator/issues/11)
       - [x] `swipe`
       - [x] `passcode`
@@ -13,8 +14,9 @@
       - [x] Remove `new-device`
       - [x] Remove duration from `open`
       - [x] Update OpenAPI yaml file
+            - https://github.com/zaghaghi/openapi-tui
+      - [x] Python CLI
       - [ ] Postman scripts
-      - [ ] Python CLI
 
 - [ ] https://github.com/uhppoted/uhppote-simulator/issues/9
       - Docker weirdness with events

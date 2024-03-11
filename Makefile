@@ -78,7 +78,7 @@ publish: release
 	gh release create "$(VERSION)" "./dist/uhppote-simulator_$(VERSION).tar.gz"  "./dist/uhppote-simulator_$(VERSION).zip" --draft --prerelease --title "$(VERSION)-beta" --notes-file release-notes.md
 
 debug:
-	python3 cli.py swipe --controller 405419896 --door 1 --card 10058400
+	python3 cli.py list-controllers
 
 delve: build
 #	dlv test github.com/uhppoted/uhppote-simulator/simulator/UT0311L04 -- run TestCheckTimeProfileInTimeSegmentWithOffset
@@ -140,3 +140,34 @@ swagger:
 	docker run --detach --publish 80:8080 --rm swaggerapi/swagger-editor 
 	open http://127.0.0.1:80
 
+cli-swipe:
+	python3 cli.py swipe     --controller 405419896 --door 1 --card 10058400
+
+cli-swipe-in:
+	python3 cli.py swipe-in  --controller 405419896 --door 1 --card 10058400
+
+cli-swipe-out:
+	python3 cli.py swipe-out --controller 405419896 --door 1 --card 10058400
+
+cli-passcode:
+	python3 cli.py passcode  --controller 405419896 --door 1 --code 13571
+
+cli-button:
+	python3 cli.py button    --controller 405419896 --door 1 --duration 30
+
+cli-open:
+	python3 cli.py open      --controller 405419896 --door 1
+
+cli-close:
+	python3 cli.py close     --controller 405419896 --door 1
+
+cli-create-controller:
+	python3 cli.py create-controller --controller 123456789 --type UT0311-L04 --compressed false
+	python3 cli.py list-controllers
+
+cli-delete-controller:
+	python3 cli.py delete-controller --controller 123456789
+	python3 cli.py list-controllers
+
+cli-list-controllers:
+	python3 cli.py list-controllers
