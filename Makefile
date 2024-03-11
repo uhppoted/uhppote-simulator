@@ -78,10 +78,11 @@ publish: release
 	gh release create "$(VERSION)" "./dist/uhppote-simulator_$(VERSION).tar.gz"  "./dist/uhppote-simulator_$(VERSION).zip" --draft --prerelease --title "$(VERSION)-beta" --notes-file release-notes.md
 
 debug:
-	python3 CLI.py swipe --controller 405419896 --door 1 --card 10058400
+	python3 cli.py swipe --controller 405419896 --door 1 --card 10058400
 
 delve: build
-	dlv test github.com/uhppoted/uhppote-simulator/simulator/UT0311L04 -- run TestCheckTimeProfileInTimeSegmentWithOffset
+#	dlv test github.com/uhppoted/uhppote-simulator/simulator/UT0311L04 -- run TestCheckTimeProfileInTimeSegmentWithOffset
+	dlv debug github.com/uhppoted/uhppote-simulator/cmd/uhppote-simulator -- --bind 0.0.0.0:60000 --rest 0.0.0.0:8000 --devices "../runtime/simulation/devices"
 
 godoc:
 	godoc -http=:80	-index_interval=60s
@@ -90,7 +91,6 @@ version: build
 	./bin/uhppote-simulator version
 
 run: build
-	# ./bin/uhppote-simulator --debug --bind 0.0.0.0:60000 --rest 0.0.0.0:8000 --devices "../runtime/simulation/devices"
 	./bin/uhppote-simulator --bind 0.0.0.0:60000 --rest 0.0.0.0:8000 --devices "../runtime/simulation/devices"
 
 list-devices:
