@@ -1,0 +1,268 @@
+{
+	"info": {
+		"_postman_id": "828ae309-8d7d-4170-8886-225d8e4f4c04",
+		"name": "REST API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33592517"
+	},
+	"item": [
+		{
+			"name": "list-controllers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base-url}}",
+					"host": [
+						"{{base-url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create-controller",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"device-id\": {{test-controller}},\n    \"device-type\": \"UT0311-L04\",\n    \"compressed\": false\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base-url}}",
+					"host": [
+						"{{base-url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete-controller",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base-url}}/{{test-controller}}",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"{{test-controller}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "swipe",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"door\": {{door}},\n    \"card\": {{card}},\n    \"direction\": 1,\n    \"PIN\": {{PIN}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base-url}}/{{controller}}/swipe",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"{{controller}}",
+						"swipe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "passcode",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"door\": {{door}},\n    \"passcode\": {{passcode}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base-url}}/{{controller}}/code",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"{{controller}}",
+						"code"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "press-button",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"action\": \"button\",\n    \"duration\": 10\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base-url}}/{{controller}}/door/{{door}}",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"{{controller}}",
+						"door",
+						"{{door}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "open-door",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"action\": \"open\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base-url}}/{{controller}}/door/{{door}}",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"{{controller}}",
+						"door",
+						"{{door}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "close-door",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"action\": \"close\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base-url}}/{{controller}}/door/{{door}}",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"{{controller}}",
+						"door",
+						"{{door}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "swipe-in",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"door\": {{door}},\n    \"card\": {{card}},\n    \"direction\": 1,\n    \"PIN\": {{PIN}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base-url}}/{{controller}}/swipe",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"{{controller}}",
+						"swipe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "swipe-out",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"door\": {{door}},\n    \"card\": {{card}},\n    \"direction\": 2,\n    \"PIN\": {{PIN}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base-url}}/{{controller}}/swipe",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"{{controller}}",
+						"swipe"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "test-controller",
+			"value": "22223333"
+		}
+	]
+}
