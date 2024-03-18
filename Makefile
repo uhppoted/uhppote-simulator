@@ -7,10 +7,13 @@ PASSCODE  ?= 654321
 DOOR      ?= 3
 DEBUG     ?= --debug
 
+WORKDIR=/Users/tonyseebregts/Development/uhppote/uhppoted/uhppote-simulator/workdir
+
 .DEFAULT_GOAL := test
 .PHONY: clean
 .PHONY: update
 .PHONY: update-release
+.PHONY: docker-run
 
 all: test      \
 	 benchmark \
@@ -171,3 +174,36 @@ rest-delete-controller:
 
 rest-list-controllers:
 	python3 scripts/REST.py list-controllers
+
+docker-dev: build
+	rm -rf dist/docker/dev/*
+	mkdir -p dist/docker/dev
+	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o dist/docker/dev ./...
+	cp documentation/docker/dev/Dockerfile     dist/docker/dev
+	cp documentation/docker/dev/405419896.json dist/docker/dev
+	cp documentation/docker/dev/303986753.json dist/docker/dev
+	cp documentation/docker/dev/201020304.json dist/docker/dev
+	cd dist/docker/dev && docker build --no-cache -f Dockerfile -t uhppoted/simulator-dev .
+
+docker-ghcr: build
+	rm -rf dist/docker/ghcr/*
+	mkdir -p dist/docker/ghcr
+	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o dist/docker/ghcr ./...
+	cp documentation/docker/ghcr/Dockerfile    dist/docker/ghcr
+	cp documentation/docker/ghcr/405419896.json dist/docker/ghcr
+	cd dist/docker/ghcr && docker build --no-cache -f Dockerfile -t uhppoted/simulator-ghcr .
+
+docker-run-dev:
+	docker run --detach --publish 8000:8000 --publish 60000:60000/udp --name simulator --rm uhppoted/simulator-dev
+	sleep 1
+
+docker-run-ghcr:
+	docker run --detach --publish 8000:8000 --publish 60000:60000/udp --name simulator \
+	           --mount source=uhppoted,target=/var/uhppoted \
+	           --rm uhppoted/simulator-ghcr
+	sleep 1
+	../uhppote-cli/bin/uhppote-cli get-devices
+
+docker-clean:
+	docker image     prune -f
+	docker container prune -f

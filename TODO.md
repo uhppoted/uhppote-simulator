@@ -1,22 +1,16 @@
 # TODO
 
-- [x] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)
+- [ ] [Prebuilt Docker containers](https://github.com/uhppoted/uhppoted/issues/47)
+       - [x] Dockerfile
+       - [ ] compose.yml
+       - [ ] DOCKER.md
+       - [ ] README
+       - [ ] CHANGELOG
 
+- [ ] [Startup fails with compressed controller](https://github.com/uhppoted/uhppote-simulator/issues/12)
+
+- [x] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)
 - [x] [Document the HTTP requests](https://github.com/uhppoted/uhppote-simulator/issues/11)
-      - [x] `swipe`
-      - [x] `passcode`
-      - [x] `open`
-      - [x] `close`
-      - [x] `button`
-      - [x] `list-devices`
-      - [x] `create-device`
-      - [x] `delete-device`
-      - [x] Remove `new-device`
-      - [x] Remove duration from `open`
-      - [x] Update OpenAPI yaml file
-            - https://github.com/zaghaghi/openapi-tui
-      - [x] Python CLI
-      - [x] Postman scripts
 
 - [ ] https://github.com/uhppoted/uhppote-simulator/issues/9
       - Docker weirdness with events

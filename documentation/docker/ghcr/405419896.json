@@ -1,0 +1,60 @@
+{
+  "serial-number": 405419896,
+  "address": "192.168.1.100",
+  "subnet": "255.255.255.0",
+  "gateway": "192.168.1.1",
+  "MAC": "00:12:23:34:45:56",
+  "version": "0892",
+  "released": "2018-11-05",
+  "offset": "-8h0m0.06912s",
+  "doors": {
+    "1": {
+      "delay": "5s"
+    },
+    "2": {
+      "delay": "5s"
+    },
+    "3": {
+      "delay": "5s"
+    },
+    "4": {
+      "delay": "5s"
+    }
+  },
+  "system-error": 0,
+  "sequence-id": 0,
+  "special-info": 0,
+  "input-state": 0,
+  "cards": [
+    {
+      "card": 10058400,
+      "from": "2024-01-01",
+      "to": "2024-12-31",
+      "doors": {
+        "1": 1,
+        "2": 1,
+        "3": 1,
+        "4": 1
+      }
+    }
+  ],
+  "time-profiles": {
+  },
+  "events": {
+    "size": 256,
+    "chunk": 8,
+    "index": 1,
+    "events": [
+      {
+        "index": 1,
+        "type": 2,
+        "granted": true,
+        "door": 1,
+        "direction": 1,
+        "card": 10058400,
+        "timestamp": "2024-01-02 15:45:56",
+        "reason": 0
+      }
+    ]
+  }
+}

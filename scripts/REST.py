@@ -247,7 +247,7 @@ def create_controller(args):
     body = {
         'device-id': controller,
         'device-type': device_type,
-        'compressed': compressed,
+        'compressed': False,  # pending https://github.com/uhppoted/uhppote-simulator/issues/12
     }
 
     response = requests.post(url, headers=headers, json=body)
