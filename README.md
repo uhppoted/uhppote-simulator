@@ -44,6 +44,25 @@ Supported operating systems:
 
 ## Installation
 
+### Docker
+
+A public _Docker_ image (including a sample controller) is published to [ghcr.io](https://github.com/uhppoted?tab=packages&repo_name=uhppote-simulator). 
+
+- To start a simulator using Docker compose:
+1. Download the example [`compose.yml`](documentation/docker/compose.yml) file.
+2. In the same folder as the `compose.yml` file, execute `docker compose up`
+3. The simulator will start and the emulated controllers can be managed using the REST API [Python script](scripts/REST.py).
+
+- To pull the Docker image from ghcr.io:
+```
+docker pull ghcr.io/uhppoted/simulator:0.00
+```
+
+- For inclusion in a Dockerfile:
+```
+FROM ghcr.io/uhppoted/simulator:0.00
+```
+
 ### Building from source
 
 Assuming you have `Go` and `make` installed:

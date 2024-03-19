@@ -5,6 +5,7 @@
 ### Added
 1. `restore-default-parameters` command emulation.
 2. Python REST API CLI client implementation.
+3. Added public Docker image to ghcr.io.
 
 ### Updated
 1. Bumped Go version to 1.22

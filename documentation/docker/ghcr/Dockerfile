@@ -1,5 +1,7 @@
 FROM alpine
 
+LABEL org.opencontainers.image.description Simulator for UHPPOTE access controllers
+
 EXPOSE 8000
 EXPOSE 60000/udp
 
