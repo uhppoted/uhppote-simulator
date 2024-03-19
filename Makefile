@@ -191,7 +191,7 @@ docker-ghcr: build
 	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o dist/docker/ghcr ./...
 	cp documentation/docker/ghcr/Dockerfile    dist/docker/ghcr
 	cp documentation/docker/ghcr/405419896.json dist/docker/ghcr
-	cd dist/docker/ghcr && docker build --no-cache -f Dockerfile -t ghcr.io/uhppoted/simulator:0.00 .
+	cd dist/docker/ghcr && docker build --no-cache -f Dockerfile -t ghcr.io/uhppoted/simulator:latest .
 
 docker-run-dev:
 	docker run --detach --publish 8000:8000 --publish 60000:60000/udp --name simulator --rm uhppoted/simulator-dev

@@ -33,4 +33,4 @@ jobs:
     - name: Push Docker image to ghcr.io
       run: |
         echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
-        docker push ghcr.io/uhppoted/simulator:0.00
+        docker push ghcr.io/uhppoted/simulator:latest

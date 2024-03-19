@@ -1,0 +1,15 @@
+version: "0.0"
+
+services:
+  uhppoted-simulator:
+    container_name: uhppoted-simulator
+    restart: unless-stopped
+    image: ghcr.io/uhppoted/simulator:latest
+    volumes:
+      - uhppoted:/var/uhppoted
+    ports:
+      - "60000:60000/udp"
+      - "8000:8000"
+
+volumes:
+  uhppoted:

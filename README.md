@@ -55,12 +55,12 @@ A public _Docker_ image (including a sample controller) is published to [ghcr.io
 
 - To pull the Docker image from ghcr.io:
 ```
-docker pull ghcr.io/uhppoted/simulator:0.00
+docker pull ghcr.io/uhppoted/simulator:latest
 ```
 
 - For inclusion in a Dockerfile:
 ```
-FROM ghcr.io/uhppoted/simulator:0.00
+FROM ghcr.io/uhppoted/simulator:latest
 ```
 
 ### Building from source
