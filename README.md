@@ -1,4 +1,5 @@
- ![build](https://github.com/uhppoted/uhppote-simulator/workflows/build/badge.svg)
+![build](https://github.com/uhppoted/uhppote-simulator/workflows/build/badge.svg)
+![ghcr](https://github.com/uhppoted/uhppote-simulator/workflows/ghcr/badge.svg)
 
 # uhppote-simulator
 
