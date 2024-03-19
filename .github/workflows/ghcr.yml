@@ -25,5 +25,7 @@ jobs:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v4
 
-    - name: Build
-      run: make build-all
+    - name: Build Docker image
+      run: |
+        make docker-ghcr
+        ls -la dist/docker/ghcr
