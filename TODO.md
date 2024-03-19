@@ -2,13 +2,13 @@
 
 - [ ] [Prebuilt Docker containers](https://github.com/uhppoted/uhppoted/issues/47)
        - [x] Dockerfile
+       - [ ] ghcr.io
        - [ ] compose.yml
        - [ ] DOCKER.md
        - [ ] README
        - [ ] CHANGELOG
 
-- [ ] [Startup fails with compressed controller](https://github.com/uhppoted/uhppote-simulator/issues/12)
-
+- [x] [Startup fails with compressed controller](https://github.com/uhppoted/uhppote-simulator/issues/12)
 - [x] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)
 - [x] [Document the HTTP requests](https://github.com/uhppoted/uhppote-simulator/issues/11)
 

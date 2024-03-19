@@ -32,10 +32,10 @@ def exec(f, args):
 
 
 def swipe(args):
-    controller = int(f'{args.controller}')
-    door = int(f'{args.door}')
-    card = int(f'{args.card}')
-    PIN = int(f'{args.PIN}') if args.PIN else None
+    controller = args.controller
+    door = args.door
+    card = args.card
+    PIN = args.PIN
 
     url = f'{BASEURL}/{controller}/swipe'
 
@@ -62,10 +62,10 @@ def swipe(args):
 
 
 def swipe_in(args):
-    controller = int(f'{args.controller}')
-    door = int(f'{args.door}')
-    card = int(f'{args.card}')
-    PIN = int(f'{args.PIN}') if args.PIN else None
+    controller = args.controller
+    door = args.door
+    card = args.card
+    PIN = args.PIN
 
     url = f'{BASEURL}/{controller}/swipe'
 
@@ -92,10 +92,10 @@ def swipe_in(args):
 
 
 def swipe_out(args):
-    controller = int(f'{args.controller}')
-    door = int(f'{args.door}')
-    card = int(f'{args.card}')
-    PIN = int(f'{args.PIN}') if args.PIN else None
+    controller = args.controller
+    door = args.door
+    card = args.card
+    PIN = args.PIN
 
     url = f'{BASEURL}/{controller}/swipe'
 
@@ -122,9 +122,9 @@ def swipe_out(args):
 
 
 def passcode(args):
-    controller = int(f'{args.controller}')
-    door = int(f'{args.door}')
-    code = int(f'{args.code}')
+    controller = args.controller
+    door = args.door
+    code = args.code
 
     url = f'{BASEURL}/{controller}/code'
 
@@ -147,8 +147,8 @@ def passcode(args):
 
 
 def open_door(args):
-    controller = int(f'{args.controller}')
-    door = int(f'{args.door}')
+    controller = args.controller
+    door = args.door
 
     url = f'{BASEURL}/{controller}/door/{door}'
 
@@ -170,8 +170,8 @@ def open_door(args):
 
 
 def close_door(args):
-    controller = int(f'{args.controller}')
-    door = int(f'{args.door}')
+    controller = args.controller
+    door = args.door
 
     url = f'{BASEURL}/{controller}/door/{door}'
 
@@ -193,9 +193,9 @@ def close_door(args):
 
 
 def press_button(args):
-    controller = int(f'{args.controller}')
-    door = int(f'{args.door}')
-    duration = int(f'{args.duration}')
+    controller = args.controller
+    door = args.door
+    duration = args.duration
 
     url = f'{BASEURL}/{controller}/door/{door}'
 
@@ -234,9 +234,9 @@ def list_controllers(args):
 
 
 def create_controller(args):
-    controller = int(f'{args.controller}')
-    device_type = f'{args.type}'
-    compressed = bool(f'{args.compressed}')
+    controller = args.controller
+    device_type = args.type
+    compressed = args.compressed if args.compressed else False
 
     url = f'{BASEURL}'
 
@@ -247,7 +247,7 @@ def create_controller(args):
     body = {
         'device-id': controller,
         'device-type': device_type,
-        'compressed': False,  # pending https://github.com/uhppoted/uhppote-simulator/issues/12
+        'compressed': compressed,
     }
 
     response = requests.post(url, headers=headers, json=body)
@@ -259,7 +259,7 @@ def create_controller(args):
 
 
 def delete_controller(args):
-    controller = int(f'{args.controller}')
+    controller = args.controller
 
     url = f'{BASEURL}/{controller}'
 

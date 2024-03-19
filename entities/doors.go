@@ -270,6 +270,12 @@ func (d *Doors) UnmarshalJSON(bytes []byte) error {
 	}
 
 	d.Interlock = serializable.Interlock
+	d.doors = map[uint8]*Door{
+		1: NewDoor(1),
+		2: NewDoor(2),
+		3: NewDoor(3),
+		4: NewDoor(4),
+	}
 
 	if serializable.Door1 != nil {
 		d.doors[1] = serializable.Door1

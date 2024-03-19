@@ -10,6 +10,7 @@
 1. Bumped Go version to 1.22
 2. Updated README with REST API.
 3. Updated REST API OpenAPI specification.
+4. Fixed uninitialised map in controller doors deserialization.
 
 
 ## [0.8.7](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.7) - 2023-12-01
