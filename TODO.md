@@ -1,13 +1,13 @@
 # TODO
 
-- [ ] [Prebuilt Docker containers](https://github.com/uhppoted/uhppoted/issues/47)
+- [x] [Prebuilt Docker containers](https://github.com/uhppoted/uhppoted/issues/47)
        - [x] Dockerfile
        - [x] ghcr.io
        - [x] compose.yml
        - [x] README
        - [x] CHANGELOG
        - [x] _latest_
-       - [ ] Update uhppote to use simulator docker
+       - [x] Update uhppote to use simulator docker
 
 - [x] [Startup fails with compressed controller](https://github.com/uhppoted/uhppote-simulator/issues/12)
 - [x] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)
