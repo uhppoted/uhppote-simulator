@@ -179,18 +179,18 @@ docker-dev: build
 	rm -rf dist/docker/dev/*
 	mkdir -p dist/docker/dev
 	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o dist/docker/dev ./...
-	cp documentation/docker/dev/Dockerfile     dist/docker/dev
-	cp documentation/docker/dev/405419896.json dist/docker/dev
-	cp documentation/docker/dev/303986753.json dist/docker/dev
-	cp documentation/docker/dev/201020304.json dist/docker/dev
+	cp scripts/docker/dev/Dockerfile     dist/docker/dev
+	cp scripts/docker/dev/405419896.json dist/docker/dev
+	cp scripts/docker/dev/303986753.json dist/docker/dev
+	cp scripts/docker/dev/201020304.json dist/docker/dev
 	cd dist/docker/dev && docker build --no-cache -f Dockerfile -t uhppoted/simulator-dev .
 
 docker-ghcr: build
 	rm -rf dist/docker/ghcr/*
 	mkdir -p dist/docker/ghcr
 	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o dist/docker/ghcr ./...
-	cp documentation/docker/ghcr/Dockerfile    dist/docker/ghcr
-	cp documentation/docker/ghcr/405419896.json dist/docker/ghcr
+	cp docker/docker/ghcr/Dockerfile    dist/docker/ghcr
+	cp docker/docker/ghcr/405419896.json dist/docker/ghcr
 	cd dist/docker/ghcr && docker build --no-cache -f Dockerfile -t ghcr.io/uhppoted/simulator:latest .
 
 docker-run-dev:

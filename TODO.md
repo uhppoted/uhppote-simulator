@@ -7,7 +7,7 @@
        - [x] README
        - [x] CHANGELOG
        - [x] _latest_
-       - [ ] Versioning
+       - [ ] Update uhppote to use simulator docker
 
 - [x] [Startup fails with compressed controller](https://github.com/uhppoted/uhppote-simulator/issues/12)
 - [x] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)

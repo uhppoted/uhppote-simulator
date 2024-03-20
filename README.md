@@ -16,6 +16,7 @@ Supported operating systems:
 
 - [Release Notes](#release-notes)
 - [Installation](#installation)
+   - [Docker](#docker)
    - [Building from source](#building-from-source)
 - [Supported functions](#uhppote-simulator)
 - [REST API](#rest-api)
