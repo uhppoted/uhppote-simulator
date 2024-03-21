@@ -189,8 +189,8 @@ docker-ghcr: build
 	rm -rf dist/docker/ghcr/*
 	mkdir -p dist/docker/ghcr
 	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o dist/docker/ghcr ./...
-	cp docker/docker/ghcr/Dockerfile    dist/docker/ghcr
-	cp docker/docker/ghcr/405419896.json dist/docker/ghcr
+	cp scripts/docker/ghcr/Dockerfile     dist/docker/ghcr
+	cp scripts/docker/ghcr/405419896.json dist/docker/ghcr
 	cd dist/docker/ghcr && docker build --no-cache -f Dockerfile -t ghcr.io/uhppoted/simulator:latest .
 
 docker-run-dev:
@@ -200,7 +200,7 @@ docker-run-dev:
 docker-run-ghcr:
 	docker run --detach --publish 8000:8000 --publish 60000:60000/udp --name simulator \
 	           --mount source=uhppoted,target=/var/uhppoted \
-	           --rm uhppoted/simulator-ghcr
+	           --rm ghcr.io/uhppoted/simulator
 	sleep 1
 	../uhppote-cli/bin/uhppote-cli get-devices
 

@@ -49,17 +49,34 @@ Supported operating systems:
 
 A public _Docker_ image (including a sample controller) is published to [ghcr.io](https://github.com/uhppoted?tab=packages&repo_name=uhppote-simulator). 
 
-- To start a simulator using Docker compose:
-1. Download the example [`compose.yml`](documentation/docker/compose.yml) file.
-2. In the same folder as the `compose.yml` file, execute `docker compose up`
-3. The simulator will start and the emulated controllers can be managed using the REST API [Python script](scripts/REST.py).
+#### `docker compose`
 
-- To pull the Docker image from ghcr.io:
+A sample Docker `compose` configuration is provided in the [`scripts/docker/compose`](scripts/docker/compose) folder. 
+
+To run the example, download and extract the [zipped](script/docker/compose.zip) scripts and supporting files into folder
+of your choice and then:
+```
+cd <compose folder>
+docker compose up
+```
+
+The emulated controllers can be managed using the REST API [Python script](scripts/REST.py).
+
+#### `docker run`
+
+To start a simulator using Docker `run`:
 ```
 docker pull ghcr.io/uhppoted/simulator:latest
+docker run --detach --publish 8000:8000 --publish 60000:60000/udp --name simulator \
+           --mount source=uhppoted,target=/var/uhppoted \
+           --rm ghcr.io/uhppoted/simulator
 ```
 
-- For inclusion in a Dockerfile:
+The emulated controllers can be managed using the REST API [Python script](scripts/REST.py).
+
+#### `docker build`
+
+For inclusion in a Dockerfile:
 ```
 FROM ghcr.io/uhppoted/simulator:latest
 ```
