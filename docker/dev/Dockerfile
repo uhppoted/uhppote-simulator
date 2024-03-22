@@ -5,6 +5,7 @@ EXPOSE 60000/udp
 
 RUN mkdir -p /opt/uhppote
 RUN mkdir -p /etc/uhppote/devices
+
 COPY 201020304.json /etc/uhppote/devices
 COPY 303986753.json /etc/uhppote/devices
 COPY 405419896.json /etc/uhppote/devices
