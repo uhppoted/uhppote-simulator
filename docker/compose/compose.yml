@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
     image: ghcr.io/uhppoted/simulator:latest
     volumes:
-      - uhppoted:/var/uhppoted
+      - uhppoted:/usr/local/etc/uhppoted
     ports:
       - "60000:60000/udp"
       - "8000:8000"

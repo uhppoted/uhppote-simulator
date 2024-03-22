@@ -6,11 +6,11 @@ EXPOSE 8000
 EXPOSE 60000/udp
 
 RUN mkdir -p /opt/uhppoted
-RUN mkdir -p /var/uhppoted/simulator
+RUN mkdir -p /usr/local/etc/uhppoted/simulator
 
-COPY 405419896.json /var/uhppoted/simulator
+COPY 405419896.json /usr/local/etc/uhppoted/simulator
 
 WORKDIR /opt/uhppote
 COPY uhppote-simulator .
 
-ENTRYPOINT /opt/uhppote/uhppote-simulator --debug --devices /var/uhppoted/simulator
+ENTRYPOINT /opt/uhppote/uhppote-simulator --debug --devices /usr/local/etc/uhppoted/simulator

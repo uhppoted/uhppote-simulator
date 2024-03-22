@@ -195,15 +195,15 @@ docker-ghcr: build
 	cd dist/docker/ghcr && docker build --no-cache -f Dockerfile -t $(DOCKER) .
 
 docker-run-dev:
-	docker run --detach --publish 8000:8000 --publish 60000:60000/udp --name simulator --rm uhppoted/simulator-dev
-	sleep 1
+	docker run --publish 8000:8000 --publish 60000:60000/udp --name simulator --rm uhppoted/simulator-dev
 
 docker-run-ghcr:
-	docker run --detach --publish 8000:8000 --publish 60000:60000/udp --name simulator \
-	           --mount source=uhppoted,target=/var/uhppoted \
+	docker run --publish 8000:8000 --publish 60000:60000/udp --name simulator \
+	           --mount source=uhppoted,target=/usr/local/etc/uhppoted \
 	           --rm ghcr.io/uhppoted/simulator
-	sleep 1
-	../uhppote-cli/bin/uhppote-cli get-devices
+
+docker-compose:
+	cd docker/compose && docker compose up
 
 docker-clean:
 	docker image     prune -f
