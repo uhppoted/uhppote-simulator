@@ -199,7 +199,7 @@ docker-run-dev:
 
 docker-run-ghcr:
 	docker run --publish 8000:8000 --publish 60000:60000/udp --name simulator \
-	           --mount source=uhppoted,target=/usr/local/etc/uhppoted \
+	           --mount source=uhppoted-simulator,target=/usr/local/etc/uhppoted \
 	           --rm ghcr.io/uhppoted/simulator
 
 docker-compose:
