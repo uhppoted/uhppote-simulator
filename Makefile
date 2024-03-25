@@ -176,6 +176,9 @@ rest-delete-controller:
 rest-list-controllers:
 	python3 scripts/REST.py list-controllers
 
+docker: docker-dev docker-ghcr
+	cd docker && find . -name .DS_Store -delete && rm -f compose.zip && zip --recurse-paths compose.zip compose
+
 docker-dev: build
 	rm -rf dist/docker/dev/*
 	mkdir -p dist/docker/dev

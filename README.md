@@ -39,9 +39,15 @@ Supported operating systems:
 
 ### Current release
 
-**[v0.8.7](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.7) - 2023-12-01**
+**[v0.8.8](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.8) - 2024-03-27**
 
-1. `set-super-passwords` command and emulation.
+1. `restore-default-parameters` command emulation.
+2. Python REST API CLI client implementation.
+3. Added public Docker image to ghcr.io.
+4. Bumped Go version to 1.22
+5. Updated README with REST API.
+6. Updated REST API OpenAPI specification.
+7. Fixed uninitialised map in controller doors deserialization.
 
 ## Installation
 
@@ -53,9 +59,9 @@ A public _Docker_ image is published to [ghcr.io](https://github.com/uhppoted?ta
 
 #### `docker compose`
 
-A sample Docker `compose` configuration is provided in the [`scripts/docker/compose`](scripts/docker/compose) folder. 
+A sample Docker `compose` configuration is provided in the [`docker/compose`](docker/compose) folder. 
 
-To run the example, download and extract the [zipped](script/docker/compose.zip) scripts and supporting files into folder
+To run the example, download and extract the [zipped](docker/compose.zip) scripts and supporting files into folder
 of your choice and then:
 ```
 cd <compose folder>
