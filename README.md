@@ -68,7 +68,7 @@ cd <compose folder>
 docker compose up
 ```
 
-The emulated controllers can be managed using the REST API [Python script](scripts/REST.py).
+The emulated controllers can be managed using the [REST API](#rest-api).
 
 #### `docker run`
 
@@ -80,7 +80,7 @@ docker run --detach --publish 8000:8000 --publish 60000:60000/udp --name simulat
            --rm ghcr.io/uhppoted/simulator
 ```
 
-The emulated controllers can be managed using the REST API [Python script](scripts/REST.py).
+The emulated controllers can be managed using the REST API [REST API](#rest-api).
 
 #### `docker build`
 
@@ -170,7 +170,9 @@ The simulator provides a REST API to simulate user actions and manage controller
 
 The actions may be invoked:
 - from the command line using _curl_ 
-- using one of the many [Postman-like](https://www.postman.com/) tools available
+- using the [REST.py](scripts) script
+- using one of the many [Postman-like](https://www.postman.com/) tools available. Postman scripts can be found in
+  the [scripts](scripts) folder
 - using the [Swagger Editor](https://editor.swagger.io) with the [OpenAPI](https://github.com/uhppoted/uhppote-simulator/blob/main/documentation/simulator-api.yaml) YAML file.
 
 The default port is 8000.
