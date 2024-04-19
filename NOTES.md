@@ -11,3 +11,6 @@
    - 1999999 => 0x1E847F (stored as 0x0E847F)
    - probably just short-circuited byte-by-byte (nibble-by-nibble ?) equals
    - or maybe just masks out the most significant nibble ?
+
+2. https://blog.cloudflare.com/everything-you-ever-wanted-to-know-about-udp-sockets-but-were-afraid-to-ask-part-1/
+

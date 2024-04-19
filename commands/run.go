@@ -50,6 +50,12 @@ func Simulate(ctx *simulator.Context, dbg bool) {
 }
 
 func run(ctx *simulator.Context, connection *net.UDPConn, wait chan int) {
+	bind, err := net.ResolveUDPAddr("udp4", ctx.BindAddress)
+	if err != nil {
+		log.Errorf("failed to resolve UDP bind address [%v]", err)
+		return
+	}
+
 	go func() {
 		err := listenAndServe(ctx, connection)
 		if err != nil {
@@ -61,7 +67,12 @@ func run(ctx *simulator.Context, connection *net.UDPConn, wait chan int) {
 	go func() {
 		for {
 			msg := ctx.DeviceList.GetMessage()
-			send(connection, msg.Destination, msg.Message)
+
+			if msg.Event {
+				sendto(bind, msg.Destination, msg.Message)
+			} else {
+				send(connection, msg.Destination, msg.Message)
+			}
 		}
 	}()
 
@@ -132,18 +143,49 @@ func receive(c *net.UDPConn) ([]byte, *net.UDPAddr, error) {
 	return request[:N], remote, nil
 }
 
-func send(c *net.UDPConn, dest *net.UDPAddr, message interface{}) {
+func send(c *net.UDPConn, dest *net.UDPAddr, message any) {
 	msg, err := codec.Marshal(message)
 	if err != nil {
 		log.Errorf("%v", err)
 		return
 	}
 
-	N, err := c.WriteTo(msg, dest)
+	N, err := c.WriteToUDP(msg, dest)
 	if err != nil {
 		log.Errorf("failed to write to UDP socket [%v]", err)
 	} else if debug {
 		log.Infof("sent %v bytes to %v\n%s", N, dest, dump(msg[0:N], " ...          "))
+	}
+}
+
+func sendto(bind *net.UDPAddr, dest *net.UDPAddr, message any) {
+	var addr *net.UDPAddr
+
+	if bind != nil && bind.IP != nil {
+		addr = &net.UDPAddr{
+			IP:   bind.IP.To4(),
+			Port: 0,
+			Zone: bind.Zone,
+		}
+	}
+
+	msg, err := codec.Marshal(message)
+	if err != nil {
+		log.Errorf("%v", err)
+		return
+	}
+
+	if c, err := net.DialUDP("udp4", addr, dest); err != nil {
+		log.Errorf("failed to create UDP event socket [%v]", err)
+	} else {
+		defer c.Close()
+
+		N, err := c.Write(msg)
+		if err != nil {
+			log.Errorf("failed to write to UDP socket [%v]", err)
+		} else if debug {
+			log.Infof("sent %v bytes to %v\n%s", N, dest, dump(msg[0:N], " ...          "))
+		}
 	}
 }
 

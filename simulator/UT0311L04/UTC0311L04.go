@@ -344,7 +344,7 @@ func (s *UT0311L04) Delete() error {
 	return nil
 }
 
-func (s *UT0311L04) send(dest *net.UDPAddr, message interface{}) {
+func (s *UT0311L04) send(dest *net.UDPAddr, message any) {
 	if s.txq == nil {
 		panic(fmt.Sprintf("Device %d: missing TXQ", s.SerialNumber))
 	}
@@ -353,6 +353,21 @@ func (s *UT0311L04) send(dest *net.UDPAddr, message interface{}) {
 		s.txq <- entities.Message{
 			Destination: dest,
 			Message:     message,
+			Event:       false,
+		}
+	}
+}
+
+func (s *UT0311L04) sendto(dest *net.UDPAddr, message any) {
+	if s.txq == nil {
+		panic(fmt.Sprintf("Device %d: missing TXQ", s.SerialNumber))
+	}
+
+	if s.txq != nil && dest != nil && message != nil && !reflect.ValueOf(message).IsNil() {
+		s.txq <- entities.Message{
+			Destination: dest,
+			Message:     message,
+			Event:       true,
 		}
 	}
 }
@@ -423,14 +438,15 @@ func (s *UT0311L04) add(event entities.Event) {
 		Direction:  event.Direction,
 	}
 
+	// ... firmware 6.62 had a slightly different format
 	if fmt.Sprintf("%v", s.Version) == "6.62" {
 		e662 := messages.EventV6_62{
 			Event: e,
 		}
 
-		s.send(s.Listener, &e662)
+		s.sendto(s.Listener, &e662)
 	} else {
-		s.send(s.Listener, &e)
+		s.sendto(s.Listener, &e)
 	}
 }
 

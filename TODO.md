@@ -1,23 +1,10 @@
 # TODO
 
-- [x] [Prebuilt Docker containers](https://github.com/uhppoted/uhppoted/issues/47)
-       - [x] Dockerfile
-       - [x] ghcr.io
-       - [x] compose.yml
-       - [x] README
-       - [x] CHANGELOG
-       - [x] _latest_
-       - [x] Update uhppote to use simulator docker
-
-- [x] [Startup fails with compressed controller](https://github.com/uhppoted/uhppote-simulator/issues/12)
-- [x] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)
-- [x] [Document the HTTP requests](https://github.com/uhppoted/uhppote-simulator/issues/11)
-
 - [ ] https://github.com/uhppoted/uhppote-simulator/issues/9
       - Docker weirdness with events
       - Stops forwarding UDP event messages
       - https://stackoverflow.com/questions/54360408/docker-container-udp-communication-with-other-hosts
-      - https://serverfault.com/questions/866830/udp-traffic-not-forwarded-from-docker-containers-docker-host
+      - https://blog.cloudflare.com/everything-you-ever-wanted-to-know-about-udp-sockets-but-were-afraid-to-ask-part-1/
 
 ## TODO
 
