@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] https://github.com/uhppoted/uhppote-simulator/issues/9
+- [x] https://github.com/uhppoted/uhppote-simulator/issues/9
       - Docker weirdness with events
       - Stops forwarding UDP event messages
       - https://stackoverflow.com/questions/54360408/docker-container-udp-communication-with-other-hosts
