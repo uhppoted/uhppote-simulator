@@ -24,6 +24,8 @@ github.com/uhppoted/uhppote-core v0.8.8-0.20240323043459-64c58600a163 h1:9xI4/Cz
 github.com/uhppoted/uhppote-core v0.8.8-0.20240323043459-64c58600a163/go.mod h1:Q+DHtT8s74efLs2b0eF20DRBUL9yBkySwaTQ+0lsEVM=
 github.com/uhppoted/uhppote-core v0.8.8 h1:vMNGJPXJkVQe5IUPSf7BQPaynm1eK/4S5cLY8LKCIbw=
 github.com/uhppoted/uhppote-core v0.8.8/go.mod h1:Q+DHtT8s74efLs2b0eF20DRBUL9yBkySwaTQ+0lsEVM=
+github.com/uhppoted/uhppote-core v0.8.9-0.20240501181407-35fa048a77a6 h1:Y3L6FBy2cmp80t+XMWHdAAMXMjEf8izG7znTp2vi73U=
+github.com/uhppoted/uhppote-core v0.8.9-0.20240501181407-35fa048a77a6/go.mod h1:Q+DHtT8s74efLs2b0eF20DRBUL9yBkySwaTQ+0lsEVM=
 github.com/uhppoted/uhppoted-lib v0.8.5 h1:X5RarX5QMRGJvOwPk8ceowrH8k6Ow3t+TraWmhYO950=
 github.com/uhppoted/uhppoted-lib v0.8.5/go.mod h1:euK2cLO934w0GDgvvnWMjYNtZ29K1xSMrMse6THOzDQ=
 github.com/uhppoted/uhppoted-lib v0.8.6-0.20230714155133-57e68f2d1360 h1:XaVqmMmjwskTrX6iCdUl2I4ezrvuoA/yhLzf/455E10=
@@ -52,3 +54,5 @@ github.com/uhppoted/uhppoted-lib v0.8.8-0.20240323043606-2a706fbf3256 h1:5ir0S5E
 github.com/uhppoted/uhppoted-lib v0.8.8-0.20240323043606-2a706fbf3256/go.mod h1:CGZb/vz7qpkAo6tW37ONFDGFoKUjd2hC/yytf/eAOlU=
 github.com/uhppoted/uhppoted-lib v0.8.8 h1:xA7NDdnFbD97nv5aWHFWK3W4X1cj8H5kwwMfjY/+CQY=
 github.com/uhppoted/uhppoted-lib v0.8.8/go.mod h1:wQklz7nrnmkPii6E8VLolI/7PF48oE4YrEMk3MjbHFI=
+github.com/uhppoted/uhppoted-lib v0.8.9-0.20240501183920-a13199152c83 h1:O8G57MHCjucHePBCMmAdNVR8Mc2uErGHuS1hP798mtE=
+github.com/uhppoted/uhppoted-lib v0.8.9-0.20240501183920-a13199152c83/go.mod h1:2XZB/h7ovfSjBdCZMG7hJMAo7VPvJVsatNaefas30ZI=
