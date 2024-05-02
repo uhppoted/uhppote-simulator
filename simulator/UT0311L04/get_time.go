@@ -7,17 +7,18 @@ import (
 	"time"
 )
 
-func (s *UT0311L04) getTime(addr *net.UDPAddr, request *messages.GetTimeRequest) {
-	if s.SerialNumber == request.SerialNumber {
-
-		utc := time.Now().UTC()
-		datetime := utc.Add(time.Duration(s.TimeOffset))
-
-		response := messages.GetTimeResponse{
-			SerialNumber: s.SerialNumber,
-			DateTime:     types.DateTime(datetime),
-		}
-
-		s.send(addr, &response)
+func (s *UT0311L04) getTime(addr *net.UDPAddr, request *messages.GetTimeRequest) (*messages.GetTimeResponse, error) {
+	if s.SerialNumber != request.SerialNumber {
+		return nil, nil
 	}
+
+	utc := time.Now().UTC()
+	datetime := utc.Add(time.Duration(s.TimeOffset))
+
+	response := messages.GetTimeResponse{
+		SerialNumber: s.SerialNumber,
+		DateTime:     types.DateTime(datetime),
+	}
+
+	return &response, nil
 }

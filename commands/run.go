@@ -20,36 +20,31 @@ var debug bool = false
 
 func Simulate(ctx *simulator.Context, dbg bool) {
 	debug = dbg
-	bind, err := net.ResolveUDPAddr("udp4", ctx.BindAddress)
-	if err != nil {
+
+	if bind, err := net.ResolveUDPAddr("udp4", ctx.BindAddress); err != nil {
 		log.Errorf("failed to resolve UDP bind address [%v]", err)
-		return
-	}
-
-	connection, err := net.ListenUDP("udp", bind)
-	if err != nil {
+	} else if udp, err := net.ListenUDP("udp", bind); err != nil {
 		log.Errorf("failed to bind to UDP socket [%v]", err)
-		return
+	} else {
+		defer udp.Close()
+
+		log.Infof("bound to address %s", bind)
+
+		wait := make(chan int, 1)
+		interrupt := make(chan os.Signal, 1)
+		signal.Notify(interrupt, os.Interrupt)
+
+		go run(ctx, udp, wait)
+
+		<-interrupt
+		udp.Close()
+		<-wait
+
+		os.Exit(1)
 	}
-
-	defer connection.Close()
-
-	log.Infof("bound to address %s", bind)
-
-	wait := make(chan int, 1)
-	interrupt := make(chan os.Signal, 1)
-	signal.Notify(interrupt, os.Interrupt)
-
-	go run(ctx, connection, wait)
-
-	<-interrupt
-	connection.Close()
-	<-wait
-
-	os.Exit(1)
 }
 
-func run(ctx *simulator.Context, connection *net.UDPConn, wait chan int) {
+func run(ctx *simulator.Context, udp *net.UDPConn, wait chan int) {
 	bind, err := net.ResolveUDPAddr("udp4", ctx.BindAddress)
 	if err != nil {
 		log.Errorf("failed to resolve UDP bind address [%v]", err)
@@ -57,8 +52,7 @@ func run(ctx *simulator.Context, connection *net.UDPConn, wait chan int) {
 	}
 
 	go func() {
-		err := listenAndServe(ctx, connection)
-		if err != nil {
+		if err := udpListenAndServe(ctx, udp); err != nil {
 			fmt.Printf("%v\n", err)
 		}
 		wait <- 0
@@ -71,7 +65,7 @@ func run(ctx *simulator.Context, connection *net.UDPConn, wait chan int) {
 			if msg.Event {
 				sendto(bind, msg.Destination, msg.Message)
 			} else {
-				send(connection, msg.Destination, msg.Message)
+				send(udp, msg.Destination, msg.Message)
 			}
 		}
 	}()
@@ -97,29 +91,26 @@ func run(ctx *simulator.Context, connection *net.UDPConn, wait chan int) {
 
 }
 
-func listenAndServe(ctx *simulator.Context, c *net.UDPConn) error {
+func udpListenAndServe(ctx *simulator.Context, c *net.UDPConn) error {
 	for {
-		request, remote, err := receive(c)
-		if err != nil {
+		if request, remote, err := receive(c); err != nil {
 			return err
+		} else {
+			handle(ctx, c, remote, request)
 		}
-
-		handle(ctx, c, remote, request)
 	}
 }
 
 func handle(ctx *simulator.Context, c *net.UDPConn, src *net.UDPAddr, bytes []byte) {
-	request, err := messages.UnmarshalRequest(bytes)
-	if err != nil {
+	if request, err := messages.UnmarshalRequest(bytes); err != nil {
 		log.Errorf("%v", err)
-		return
-	}
+	} else {
+		f := func(s simulator.Simulator) {
+			s.Handle(src, request)
+		}
 
-	f := func(s simulator.Simulator) {
-		s.Handle(src, request)
+		ctx.DeviceList.Apply(f)
 	}
-
-	ctx.DeviceList.Apply(f)
 }
 
 func tasks(ctx *simulator.Context) {

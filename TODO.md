@@ -1,8 +1,11 @@
 # TODO
 
+- [ ] TCP/IP protocol (cf. https://github.com/uhppoted/uhppote-core/issues/17)
+      - [ ] TCP accept socket
+      - [ ] CHANGELOG
+      - [ ] README
+
 - [x] https://github.com/uhppoted/uhppote-simulator/issues/9
-      - Docker weirdness with events
-      - Stops forwarding UDP event messages
       - https://stackoverflow.com/questions/54360408/docker-container-udp-communication-with-other-hosts
       - https://blog.cloudflare.com/everything-you-ever-wanted-to-know-about-udp-sockets-but-were-afraid-to-ask-part-1/
 

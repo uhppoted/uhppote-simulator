@@ -6,6 +6,6 @@ import (
 
 type Message struct {
 	Destination *net.UDPAddr
-	Message     interface{}
+	Message     any
 	Event       bool
 }

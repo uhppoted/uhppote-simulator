@@ -99,14 +99,33 @@ func (s *UT0311L04) SetTxQ(txq chan entities.Message) {
 
 func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 	switch v := rq.(type) {
-	case *messages.GetStatusRequest:
-		s.getStatus(src, v)
+	case *messages.ActivateAccessKeypadsRequest:
+		if response, err := s.activateKeypads(src, v); err != nil {
+			warnf("get-status", "%v", err)
+		} else if response != nil {
+			s.send(src, response)
+		}
 
-	case *messages.SetTimeRequest:
-		s.setTime(src, v)
+	case *messages.GetStatusRequest:
+		if response, err := s.getStatus(src, v); err != nil {
+			warnf("get-status", "%v", err)
+		} else if response != nil {
+			s.send(src, response)
+		}
 
 	case *messages.GetTimeRequest:
-		s.getTime(src, v)
+		if response, err := s.getTime(src, v); err != nil {
+			warnf("set-time", "%v", err)
+		} else if response != nil {
+			s.send(src, response)
+		}
+
+	case *messages.SetTimeRequest:
+		if response, err := s.setTime(src, v); err != nil {
+			warnf("set-time", "%v", err)
+		} else if response != nil {
+			s.send(src, response)
+		}
 
 	case *messages.OpenDoorRequest:
 		s.unlockDoor(src, v)
@@ -185,9 +204,6 @@ func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 
 	case *messages.SetInterlockRequest:
 		s.setInterlock(src, v)
-
-	case *messages.ActivateAccessKeypadsRequest:
-		s.activateKeypads(src, v)
 
 	case *messages.RestoreDefaultParametersRequest:
 		s.restoreDefaultParameters(src, v)
@@ -278,9 +294,14 @@ func loadGZ(filepath string) (*UT0311L04, error) {
 		return nil, err
 	}
 
-	simulator := new(UT0311L04)
-	err = json.Unmarshal(buffer, simulator)
-	if err != nil {
+	simulator := UT0311L04{
+		Released:     DefaultReleaseDate(),
+		Doors:        entities.MakeDoors(),
+		Keypads:      entities.MakeKeypads(),
+		TimeProfiles: entities.TimeProfiles{},
+	}
+
+	if err = json.Unmarshal(buffer, &simulator); err != nil {
 		return nil, err
 	}
 
@@ -288,7 +309,7 @@ func loadGZ(filepath string) (*UT0311L04, error) {
 	simulator.compressed = true
 	simulator.touched = time.Now()
 
-	return simulator, nil
+	return &simulator, nil
 }
 
 func load(filepath string) (*UT0311L04, error) {
@@ -466,4 +487,10 @@ func (s *UT0311L04) relays() uint8 {
 	}
 
 	return state
+}
+
+func warnf(tag any, format string, args ...any) {
+	f := fmt.Sprintf("%-10v  %v", tag, format)
+
+	log.Warnf(f, args...)
 }
