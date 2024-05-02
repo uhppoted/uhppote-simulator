@@ -2,13 +2,12 @@ package UT0311L04
 
 import (
 	"fmt"
-	"net"
 
 	"github.com/uhppoted/uhppote-core/messages"
 	"github.com/uhppoted/uhppote-simulator/entities"
 )
 
-func (s *UT0311L04) activateKeypads(addr *net.UDPAddr, request *messages.ActivateAccessKeypadsRequest) (*messages.ActivateAccessKeypadsResponse, error) {
+func (s *UT0311L04) activateKeypads(request *messages.ActivateAccessKeypadsRequest) (*messages.ActivateAccessKeypadsResponse, error) {
 	if request.SerialNumber != s.SerialNumber {
 		return nil, nil
 	}

@@ -1,14 +1,13 @@
 package UT0311L04
 
 import (
-	"net"
 	"time"
 
 	"github.com/uhppoted/uhppote-core/messages"
 	"github.com/uhppoted/uhppote-core/types"
 )
 
-func (s *UT0311L04) getStatus(addr *net.UDPAddr, request *messages.GetStatusRequest) (*messages.GetStatusResponse, error) {
+func (s *UT0311L04) getStatus(request *messages.GetStatusRequest) (*messages.GetStatusResponse, error) {
 	if s.SerialNumber != request.SerialNumber {
 		return nil, nil
 	}

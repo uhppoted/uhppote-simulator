@@ -1,13 +1,13 @@
 package UT0311L04
 
 import (
+	"time"
+
 	"github.com/uhppoted/uhppote-core/messages"
 	"github.com/uhppoted/uhppote-core/types"
-	"net"
-	"time"
 )
 
-func (s *UT0311L04) getTime(addr *net.UDPAddr, request *messages.GetTimeRequest) (*messages.GetTimeResponse, error) {
+func (s *UT0311L04) getTime(request *messages.GetTimeRequest) (*messages.GetTimeResponse, error) {
 	if s.SerialNumber != request.SerialNumber {
 		return nil, nil
 	}

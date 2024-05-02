@@ -2,14 +2,14 @@ package UT0311L04
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/uhppoted/uhppote-core/messages"
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-simulator/entities"
-	"net"
-	"time"
 )
 
-func (s *UT0311L04) setTime(addr *net.UDPAddr, request *messages.SetTimeRequest) (*messages.SetTimeResponse, error) {
+func (s *UT0311L04) setTime(request *messages.SetTimeRequest) (*messages.SetTimeResponse, error) {
 	if s.SerialNumber != request.SerialNumber {
 		return nil, nil
 	}

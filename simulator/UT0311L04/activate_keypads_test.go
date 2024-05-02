@@ -1,7 +1,6 @@
 package UT0311L04
 
 import (
-	"net"
 	"reflect"
 	"testing"
 
@@ -24,14 +23,9 @@ func TestActivateAccessKeypads(t *testing.T) {
 		txq: txq,
 	}
 
-	src := net.UDPAddr{IP: net.IPv4(10, 0, 0, 1), Port: 12345}
-
-	expected := entities.Message{
-		Destination: &src,
-		Message: &messages.ActivateAccessKeypadsResponse{
-			SerialNumber: 405419896,
-			Succeeded:    true,
-		},
+	expected := &messages.ActivateAccessKeypadsResponse{
+		SerialNumber: 405419896,
+		Succeeded:    true,
 	}
 
 	request := messages.ActivateAccessKeypadsRequest{
@@ -42,17 +36,19 @@ func TestActivateAccessKeypads(t *testing.T) {
 		Reader4:      true,
 	}
 
-	s.activateKeypads(&src, &request)
+	if response, err := s.activateKeypads(&request); err != nil {
+		t.Fatalf("%v", err)
+	} else if response == nil {
+		t.Errorf("Incorrect activate-keypads response (%v)", response)
+	} else {
+		if !reflect.DeepEqual(response, expected) {
+			t.Errorf("'activate-keypads' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, response)
+		}
 
-	response := <-txq
-
-	if !reflect.DeepEqual(response, expected) {
-		t.Errorf("'activate-keypads' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, response)
-	}
-
-	if s.Keypads[1] != entities.KeypadBoth && s.Keypads[2] != entities.KeypadBoth && s.Keypads[3] != entities.KeypadNone && s.Keypads[4] != entities.KeypadBoth {
-		t.Errorf("'activate-keypads' failed to update simulator keypads fields\n   expected: %+v\n   got:      %+v\n",
-			[]entities.Keypad{entities.KeypadBoth, entities.KeypadBoth, entities.KeypadNone, entities.KeypadBoth},
-			[]entities.Keypad{s.Keypads[1], s.Keypads[2], s.Keypads[3], s.Keypads[4]})
+		if s.Keypads[1] != entities.KeypadBoth && s.Keypads[2] != entities.KeypadBoth && s.Keypads[3] != entities.KeypadNone && s.Keypads[4] != entities.KeypadBoth {
+			t.Errorf("'activate-keypads' failed to update simulator keypads fields\n   expected: %+v\n   got:      %+v\n",
+				[]entities.Keypad{entities.KeypadBoth, entities.KeypadBoth, entities.KeypadNone, entities.KeypadBoth},
+				[]entities.Keypad{s.Keypads[1], s.Keypads[2], s.Keypads[3], s.Keypads[4]})
+		}
 	}
 }

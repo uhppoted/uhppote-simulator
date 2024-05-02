@@ -100,28 +100,28 @@ func (s *UT0311L04) SetTxQ(txq chan entities.Message) {
 func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 	switch v := rq.(type) {
 	case *messages.ActivateAccessKeypadsRequest:
-		if response, err := s.activateKeypads(src, v); err != nil {
+		if response, err := s.activateKeypads(v); err != nil {
 			warnf("get-status", "%v", err)
 		} else if response != nil {
 			s.send(src, response)
 		}
 
 	case *messages.GetStatusRequest:
-		if response, err := s.getStatus(src, v); err != nil {
+		if response, err := s.getStatus(v); err != nil {
 			warnf("get-status", "%v", err)
 		} else if response != nil {
 			s.send(src, response)
 		}
 
 	case *messages.GetTimeRequest:
-		if response, err := s.getTime(src, v); err != nil {
+		if response, err := s.getTime(v); err != nil {
 			warnf("set-time", "%v", err)
 		} else if response != nil {
 			s.send(src, response)
 		}
 
 	case *messages.SetTimeRequest:
-		if response, err := s.setTime(src, v); err != nil {
+		if response, err := s.setTime(v); err != nil {
 			warnf("set-time", "%v", err)
 		} else if response != nil {
 			s.send(src, response)
