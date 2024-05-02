@@ -2,29 +2,31 @@ package UT0311L04
 
 import (
 	"fmt"
+
 	"github.com/uhppoted/uhppote-core/messages"
-	"net"
 )
 
-func (s *UT0311L04) deleteCards(addr *net.UDPAddr, request *messages.DeleteCardsRequest) {
-	if request.SerialNumber == s.SerialNumber {
-		deleted := false
+func (s *UT0311L04) deleteCards(request *messages.DeleteCardsRequest) (*messages.DeleteCardsResponse, error) {
+	if request.SerialNumber != s.SerialNumber {
+		return nil, nil
+	}
 
-		if request.MagicWord == 0x55aaaa55 {
-			deleted = s.Cards.DeleteAll()
-		}
+	deleted := false
 
-		response := messages.DeleteCardsResponse{
-			SerialNumber: s.SerialNumber,
-			Succeeded:    deleted,
-		}
+	if request.MagicWord == 0x55aaaa55 {
+		deleted = s.Cards.DeleteAll()
+	}
 
-		s.send(addr, &response)
+	response := messages.DeleteCardsResponse{
+		SerialNumber: s.SerialNumber,
+		Succeeded:    deleted,
+	}
 
-		if deleted {
-			if err := s.Save(); err != nil {
-				fmt.Printf("ERROR: %v\n", err)
-			}
+	if deleted {
+		if err := s.Save(); err != nil {
+			fmt.Printf("ERROR: %v\n", err)
 		}
 	}
+
+	return &response, nil
 }

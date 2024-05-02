@@ -32,31 +32,27 @@ func TestGetDeviceWithMatchingAddress(t *testing.T) {
 		txq: txq,
 	}
 
-	src := net.UDPAddr{IP: net.IPv4(10, 0, 0, 1), Port: 12345}
 	date, _ := types.DateFromString("2020-12-05")
 
-	expected := entities.Message{
-		Destination: &src,
-		Message: &messages.GetDeviceResponse{
-			SerialNumber: 12345,
-			IpAddress:    net.IPv4(10, 0, 0, 100),
-			SubnetMask:   net.IPv4(255, 255, 255, 0),
-			Gateway:      net.IPv4(10, 0, 0, 1),
-			MacAddress:   types.MacAddress(MAC),
-			Version:      9876,
-			Date:         date,
-		},
+	expected := messages.GetDeviceResponse{
+		SerialNumber: 12345,
+		IpAddress:    net.IPv4(10, 0, 0, 100),
+		SubnetMask:   net.IPv4(255, 255, 255, 0),
+		Gateway:      net.IPv4(10, 0, 0, 1),
+		MacAddress:   types.MacAddress(MAC),
+		Version:      9876,
+		Date:         date,
 	}
 
 	request := messages.GetDeviceRequest{
 		SerialNumber: 12345,
 	}
 
-	s.getDevice(&src, &request)
-
-	response := <-txq
-
-	if !reflect.DeepEqual(response, expected) {
+	if response, err := s.getDevice(&request); err != nil {
+		t.Fatalf("%v", err)
+	} else if response == nil {
+		t.Fatalf("Invalid response (%v)", response)
+	} else if !reflect.DeepEqual(*response, expected) {
 		t.Errorf("'get-device' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, response)
 	}
 }
@@ -83,31 +79,27 @@ func TestGetDeviceWithAddress0(t *testing.T) {
 		txq: txq,
 	}
 
-	src := net.UDPAddr{IP: net.IPv4(10, 0, 0, 1), Port: 12345}
 	date, _ := types.DateFromString("2020-12-05")
 
-	expected := entities.Message{
-		Destination: &src,
-		Message: &messages.GetDeviceResponse{
-			SerialNumber: 12345,
-			IpAddress:    net.IPv4(10, 0, 0, 100),
-			SubnetMask:   net.IPv4(255, 255, 255, 0),
-			Gateway:      net.IPv4(10, 0, 0, 1),
-			MacAddress:   types.MacAddress(MAC),
-			Version:      9876,
-			Date:         date,
-		},
+	expected := messages.GetDeviceResponse{
+		SerialNumber: 12345,
+		IpAddress:    net.IPv4(10, 0, 0, 100),
+		SubnetMask:   net.IPv4(255, 255, 255, 0),
+		Gateway:      net.IPv4(10, 0, 0, 1),
+		MacAddress:   types.MacAddress(MAC),
+		Version:      9876,
+		Date:         date,
 	}
 
 	request := messages.GetDeviceRequest{
 		SerialNumber: 0,
 	}
 
-	s.getDevice(&src, &request)
-
-	response := <-txq
-
-	if !reflect.DeepEqual(response, expected) {
+	if response, err := s.getDevice(&request); err != nil {
+		t.Fatalf("%v", err)
+	} else if response == nil {
+		t.Fatalf("Invalid response (%v)", response)
+	} else if !reflect.DeepEqual(*response, expected) {
 		t.Errorf("'get-device' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, response)
 	}
 }
@@ -134,17 +126,13 @@ func TestGetDeviceWithDifferentAddress(t *testing.T) {
 		txq: txq,
 	}
 
-	src := net.UDPAddr{IP: net.IPv4(10, 0, 0, 1), Port: 12345}
-
 	request := messages.GetDeviceRequest{
 		SerialNumber: 54321,
 	}
 
-	s.getDevice(&src, &request)
-
-	select {
-	case <-txq:
+	if response, err := s.getDevice(&request); err != nil {
+		t.Fatalf("%v", err)
+	} else if response != nil {
 		t.Fatalf("'get-device' sent response to request with different request")
-	default:
 	}
 }

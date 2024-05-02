@@ -101,7 +101,91 @@ func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 	switch v := rq.(type) {
 	case *messages.ActivateAccessKeypadsRequest:
 		if response, err := s.activateKeypads(v); err != nil {
-			warnf("get-status", "%v", err)
+			warnf("activate-keypads", "%v", err)
+		} else if response != nil {
+			s.send(src, response)
+		}
+
+	case *messages.AddTaskRequest:
+		if response, err := s.addTask(v); err != nil {
+			warnf("add-task", "%v", err)
+		} else if response != nil {
+			s.send(src, response)
+		}
+
+	case *messages.ClearTaskListRequest:
+		if response, err := s.clearTaskList(v); err != nil {
+			warnf("clear-tasklist", "%v", err)
+		} else if response != nil {
+			s.send(src, response)
+		}
+
+	case *messages.ClearTimeProfilesRequest:
+		if response, err := s.clearTimeProfiles(v); err != nil {
+			warnf("clear-profiles", "%v", err)
+		} else if response != nil {
+			s.send(src, response)
+		}
+
+	case *messages.DeleteCardRequest:
+		if response, err := s.deleteCard(v); err != nil {
+			warnf("delete-card", "%v", err)
+		} else if response != nil {
+			s.send(src, response)
+		}
+
+	case *messages.DeleteCardsRequest:
+		if response, err := s.deleteCards(v); err != nil {
+			warnf("delete-cards", "%v", err)
+		} else if response != nil {
+			s.send(src, response)
+		}
+
+	case *messages.GetCardByIDRequest:
+		if response, err := s.getCardByID(v); err != nil {
+			warnf("get-card", "%v", err)
+		} else if response != nil {
+			s.send(src, response)
+		}
+
+	case *messages.GetCardByIndexRequest:
+		if response, err := s.getCardByIndex(v); err != nil {
+			warnf("get-card-by-index", "%v", err)
+		} else if response != nil {
+			s.send(src, response)
+		}
+
+	case *messages.GetDeviceRequest:
+		if response, err := s.getDevice(v); err != nil {
+			warnf("get-device", "%v", err)
+		} else if response != nil {
+			s.send(src, response)
+		}
+
+	case *messages.GetDoorControlStateRequest:
+		if response, err := s.getDoorControlState(v); err != nil {
+			warnf("get-door-control", "%v", err)
+		} else if response != nil {
+			s.send(src, response)
+		}
+
+	case *messages.GetEventRequest:
+		if response, err := s.getEvent(v); err != nil {
+			warnf("get-event", "%v", err)
+		} else if response != nil {
+			s.send(src, response)
+		}
+
+	case *messages.GetEventIndexRequest:
+		if response, err := s.getEventIndex(v); err != nil {
+			warnf("get-event-index", "%v", err)
+		} else if response != nil {
+			s.send(src, response)
+		}
+
+	case *messages.GetListenerRequest:
+		if response, err := s.getListener(v); err != nil {
+			warnf("get-listener", "%v", err)
 		} else if response != nil {
 			s.send(src, response)
 		}
@@ -120,9 +204,9 @@ func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 			s.send(src, response)
 		}
 
-	case *messages.SetTimeRequest:
-		if response, err := s.setTime(v); err != nil {
-			warnf("set-time", "%v", err)
+	case *messages.GetTimeProfileRequest:
+		if response, err := s.getTimeProfile(v); err != nil {
+			warnf("get-time-profile", "%v", err)
 		} else if response != nil {
 			s.send(src, response)
 		}
@@ -133,26 +217,11 @@ func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 	case *messages.PutCardRequest:
 		s.putCard(src, v)
 
-	case *messages.DeleteCardRequest:
-		s.deleteCard(src, v)
-
-	case *messages.DeleteCardsRequest:
-		s.deleteCards(src, v)
-
 	case *messages.GetCardsRequest:
 		s.getCards(src, v)
 
-	case *messages.GetCardByIDRequest:
-		s.getCardByID(src, v)
-
-	case *messages.GetCardByIndexRequest:
-		s.getCardByIndex(src, v)
-
 	case *messages.SetDoorControlStateRequest:
 		s.setDoorControlState(src, v)
-
-	case *messages.GetDoorControlStateRequest:
-		s.getDoorControlState(src, v)
 
 	case *messages.SetDoorPasscodesRequest:
 		s.setDoorPasscodes(src, v)
@@ -160,17 +229,8 @@ func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 	case *messages.SetListenerRequest:
 		s.setListener(src, v)
 
-	case *messages.GetListenerRequest:
-		s.getListener(src, v)
-
-	case *messages.GetDeviceRequest:
-		s.getDevice(src, v)
-
 	case *messages.SetAddressRequest:
 		s.setAddress(src, v)
-
-	case *messages.GetEventRequest:
-		s.getEvent(src, v)
 
 	case *messages.SetEventIndexRequest:
 		s.setEventIndex(src, v)
@@ -178,23 +238,8 @@ func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 	case *messages.RecordSpecialEventsRequest:
 		s.recordSpecialEvents(src, v)
 
-	case *messages.GetEventIndexRequest:
-		s.getEventIndex(src, v)
-
 	case *messages.SetTimeProfileRequest:
 		s.setTimeProfile(src, v)
-
-	case *messages.GetTimeProfileRequest:
-		s.getTimeProfile(src, v)
-
-	case *messages.ClearTimeProfilesRequest:
-		s.clearTimeProfiles(src, v)
-
-	case *messages.ClearTaskListRequest:
-		s.clearTaskList(src, v)
-
-	case *messages.AddTaskRequest:
-		s.addTask(src, v)
 
 	case *messages.RefreshTaskListRequest:
 		s.refreshTaskList(src, v)
@@ -204,6 +249,13 @@ func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
 
 	case *messages.SetInterlockRequest:
 		s.setInterlock(src, v)
+
+	case *messages.SetTimeRequest:
+		if response, err := s.setTime(v); err != nil {
+			warnf("set-time", "%v", err)
+		} else if response != nil {
+			s.send(src, response)
+		}
 
 	case *messages.RestoreDefaultParametersRequest:
 		s.restoreDefaultParameters(src, v)

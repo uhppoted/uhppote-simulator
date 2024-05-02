@@ -1,11 +1,16 @@
 package UT0311L04
 
 import (
-	"github.com/uhppoted/uhppote-core/messages"
 	"net"
+
+	"github.com/uhppoted/uhppote-core/messages"
 )
 
-func (s *UT0311L04) getListener(addr *net.UDPAddr, request *messages.GetListenerRequest) {
+func (s *UT0311L04) getListener(request *messages.GetListenerRequest) (*messages.GetListenerResponse, error) {
+	if s.SerialNumber != request.SerialNumber {
+		return nil, nil
+	}
+
 	address := net.IPv4(0, 0, 0, 0)
 	port := uint16(0)
 
@@ -14,13 +19,11 @@ func (s *UT0311L04) getListener(addr *net.UDPAddr, request *messages.GetListener
 		port = uint16(s.Listener.Port)
 	}
 
-	if s.SerialNumber == request.SerialNumber {
-		response := messages.GetListenerResponse{
-			SerialNumber: s.SerialNumber,
-			Address:      address,
-			Port:         port,
-		}
-
-		s.send(addr, &response)
+	response := messages.GetListenerResponse{
+		SerialNumber: s.SerialNumber,
+		Address:      address,
+		Port:         port,
 	}
+
+	return &response, nil
 }

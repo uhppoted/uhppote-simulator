@@ -1,15 +1,13 @@
 package UT0311L04
 
 import (
-	"net"
-
 	"github.com/uhppoted/uhppote-core/messages"
 	"github.com/uhppoted/uhppote-core/types"
 )
 
-func (s *UT0311L04) getEvent(addr *net.UDPAddr, request *messages.GetEventRequest) {
+func (s *UT0311L04) getEvent(request *messages.GetEventRequest) (*messages.GetEventResponse, error) {
 	if s.SerialNumber != request.SerialNumber {
-		return
+		return nil, nil
 	}
 
 	index := request.Index
@@ -35,5 +33,5 @@ func (s *UT0311L04) getEvent(addr *net.UDPAddr, request *messages.GetEventReques
 		Reason:       event.Reason,
 	}
 
-	s.send(addr, &response)
+	return &response, nil
 }
