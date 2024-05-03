@@ -1,7 +1,6 @@
 package UT0311L04
 
 import (
-	"net"
 	"reflect"
 	"testing"
 
@@ -19,14 +18,9 @@ func TestRecordSpecialEvents(t *testing.T) {
 		txq: txq,
 	}
 
-	src := net.UDPAddr{IP: net.IPv4(10, 0, 0, 1), Port: 12345}
-
-	expected := entities.Message{
-		Destination: &src,
-		Message: &messages.RecordSpecialEventsResponse{
-			SerialNumber: 12345,
-			Succeeded:    true,
-		},
+	expected := messages.RecordSpecialEventsResponse{
+		SerialNumber: 12345,
+		Succeeded:    true,
 	}
 
 	request := messages.RecordSpecialEventsRequest{
@@ -34,16 +28,18 @@ func TestRecordSpecialEvents(t *testing.T) {
 		Enable:       true,
 	}
 
-	s.recordSpecialEvents(&src, &request)
+	if response, err := s.recordSpecialEvents(&request); err != nil {
+		t.Fatalf("%v", err)
+	} else if response == nil {
+		t.Fatalf("invalid response %v", response)
+	} else {
+		if !reflect.DeepEqual(*response, expected) {
+			t.Errorf("'record-special-events' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, *response)
+		}
 
-	response := <-txq
-
-	if !reflect.DeepEqual(response, expected) {
-		t.Errorf("'record-special-events' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, response)
-	}
-
-	if !s.RecordSpecialEvents {
-		t.Errorf("'record-special-events' failed to update simulator 'RecordSpecialEvents' field\n   expected: %+v\n   got:      %+v\n", true, s.RecordSpecialEvents)
+		if !s.RecordSpecialEvents {
+			t.Errorf("'record-special-events' failed to update simulator 'RecordSpecialEvents' field\n   expected: %+v\n   got:      %+v\n", true, s.RecordSpecialEvents)
+		}
 	}
 }
 
@@ -57,14 +53,9 @@ func TestRecordSpecialEventsDisable(t *testing.T) {
 		txq: txq,
 	}
 
-	src := net.UDPAddr{IP: net.IPv4(10, 0, 0, 1), Port: 12345}
-
-	expected := entities.Message{
-		Destination: &src,
-		Message: &messages.RecordSpecialEventsResponse{
-			SerialNumber: 12345,
-			Succeeded:    true,
-		},
+	expected := messages.RecordSpecialEventsResponse{
+		SerialNumber: 12345,
+		Succeeded:    true,
 	}
 
 	request := messages.RecordSpecialEventsRequest{
@@ -72,15 +63,18 @@ func TestRecordSpecialEventsDisable(t *testing.T) {
 		Enable:       false,
 	}
 
-	s.recordSpecialEvents(&src, &request)
+	if response, err := s.recordSpecialEvents(&request); err != nil {
+		t.Fatalf("%v", err)
+	} else if response == nil {
+		t.Fatalf("invalid response (%v)", response)
+	} else {
 
-	response := <-txq
+		if !reflect.DeepEqual(*response, expected) {
+			t.Errorf("'record-special-events' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, *response)
+		}
 
-	if !reflect.DeepEqual(response, expected) {
-		t.Errorf("'record-special-events' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, response)
-	}
-
-	if s.RecordSpecialEvents {
-		t.Errorf("'record-special-events' failed to update simulator 'RecordSpecialEvents' field\n   expected: %+v\n   got:      %+v\n", false, s.RecordSpecialEvents)
+		if s.RecordSpecialEvents {
+			t.Errorf("'record-special-events' failed to update simulator 'RecordSpecialEvents' field\n   expected: %+v\n   got:      %+v\n", false, s.RecordSpecialEvents)
+		}
 	}
 }

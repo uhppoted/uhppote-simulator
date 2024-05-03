@@ -1,7 +1,6 @@
 package UT0311L04
 
 import (
-	"net"
 	"reflect"
 	"testing"
 
@@ -19,18 +18,13 @@ func TestSetDoorPasscodes(t *testing.T) {
 		txq: txq,
 	}
 
-	src := net.UDPAddr{IP: net.IPv4(10, 0, 0, 1), Port: 12345}
-
 	expected := struct {
-		response  entities.Message
+		response  messages.SetDoorPasscodesResponse
 		passcodes []uint32
 	}{
-		response: entities.Message{
-			Destination: &src,
-			Message: &messages.SetDoorPasscodesResponse{
-				SerialNumber: 405419896,
-				Succeeded:    true,
-			},
+		response: messages.SetDoorPasscodesResponse{
+			SerialNumber: 405419896,
+			Succeeded:    true,
 		},
 
 		passcodes: []uint32{12345, 0, 999999, 54321},
@@ -45,15 +39,18 @@ func TestSetDoorPasscodes(t *testing.T) {
 		Passcode4:    54321,
 	}
 
-	s.setDoorPasscodes(&src, &request)
+	if response, err := s.setDoorPasscodes(&request); err != nil {
+		t.Fatalf("%v", err)
+	} else if response == nil {
+		t.Fatalf("invalid response (%v)", response)
+	} else {
+		if !reflect.DeepEqual(*response, expected.response) {
+			t.Errorf("'set-door-passcodes' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected.response, *response)
+		}
 
-	response := <-txq
-
-	if !reflect.DeepEqual(response, expected.response) {
-		t.Errorf("'set-door-passcodes' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected.response, response)
+		if !reflect.DeepEqual(s.Doors.Passcodes(3), expected.passcodes) {
+			t.Errorf("'set-door-passcodes' failed to update simulator\n   expected: %+v\n   got:      %+v\n", expected.passcodes, s.Doors.Passcodes(3))
+		}
 	}
 
-	if !reflect.DeepEqual(s.Doors.Passcodes(3), expected.passcodes) {
-		t.Errorf("'set-door-passcodes' failed to update simulator\n   expected: %+v\n   got:      %+v\n", expected.passcodes, s.Doors.Passcodes(3))
-	}
 }

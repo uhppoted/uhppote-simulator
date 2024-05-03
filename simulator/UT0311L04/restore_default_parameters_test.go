@@ -67,21 +67,16 @@ func TestRestoreDefaultParameters(t *testing.T) {
 		PIN: 7531,
 	})
 
-	src := net.UDPAddr{IP: net.IPv4(10, 0, 0, 1), Port: 12345}
-
 	expected := struct {
-		response   entities.Message
+		response   messages.RestoreDefaultParametersResponse
 		IpAddress  net.IP
 		SubnetMask net.IP
 		Gateway    net.IP
 		Listener   *net.UDPAddr
 	}{
-		response: entities.Message{
-			Destination: &src,
-			Message: &messages.RestoreDefaultParametersResponse{
-				SerialNumber: 405419896,
-				Succeeded:    true,
-			},
+		response: messages.RestoreDefaultParametersResponse{
+			SerialNumber: 405419896,
+			Succeeded:    true,
 		},
 
 		IpAddress:  net.IPv4(0, 0, 0, 0),
@@ -95,53 +90,55 @@ func TestRestoreDefaultParameters(t *testing.T) {
 		MagicWord:    0x55aaaa55,
 	}
 
-	s.restoreDefaultParameters(&src, &request)
-
-	response := <-txq
-
-	if !reflect.DeepEqual(response, expected.response) {
-		t.Errorf("'restore-default-parameters' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected.response, response)
-	}
-
-	if !reflect.DeepEqual(s.IpAddress, expected.IpAddress) {
-		t.Errorf("'restore-default-parameters' failed to update simulator IPv4 address\n   expected: %+v\n   got:      %+v\n", expected.IpAddress, s.IpAddress)
-	}
-
-	if !reflect.DeepEqual(s.Gateway, expected.Gateway) {
-		t.Errorf("'restore-default-parameters' failed to update simulator IPv4 gateway\n   expected: %+v\n   got:      %+v\n", expected.Gateway, s.Gateway)
-	}
-
-	if s.Listener != nil {
-		t.Errorf("'restore-default-parameters' failed to update simulator event listener\n   expected: %+v\n   got:      %+v\n", nil, s.Listener)
-	}
-
-	if s.Events.Size() != 0 {
-		t.Errorf("'restore-default-parameters' failed to clear simulator event list\n   expected: %+v\n   got:      %+v\n", 0, s.Events.Size())
-	}
-
-	if s.Events.GetIndex() != 0 {
-		t.Errorf("'restore-default-parameters' failed to reset simulator event index\n   expected: %+v\n   got:      %+v\n", 0, s.Events.GetIndex())
-	}
-
-	if s.Cards.Size() != 0 {
-		t.Errorf("'restore-default-parameters' failed to clear simulator cards list\n   expected: %+v\n   got:      %+v\n", 0, s.Cards.Size())
-	}
-
-	for _, door := range []uint8{1, 2, 3, 4} {
-		if s.Doors.ControlState(door) != entities.Controlled {
-			t.Errorf("'restore-default-parameters' failed to reset door %v mode\n   expected: %+v\n   got:      %+v\n", door, entities.Controlled, s.Doors.ControlState(door))
+	if response, err := s.restoreDefaultParameters(&request); err != nil {
+		t.Fatalf("%v", err)
+	} else if response == nil {
+		t.Fatalf("invalid response (%v)", response)
+	} else {
+		if !reflect.DeepEqual(*response, expected.response) {
+			t.Errorf("'restore-default-parameters' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected.response, *response)
 		}
 
-		if s.Doors.Delay(door) != entities.DelayFromSeconds(5) {
-			t.Errorf("'restore-default-parameters' failed to reset door %v delay\n   expected: %+v\n   got:      %+v\n", door, 5, s.Doors.Delay(door))
+		if !reflect.DeepEqual(s.IpAddress, expected.IpAddress) {
+			t.Errorf("'restore-default-parameters' failed to update simulator IPv4 address\n   expected: %+v\n   got:      %+v\n", expected.IpAddress, s.IpAddress)
 		}
 
-		if !reflect.DeepEqual(s.Doors.Passcodes(door), []uint32{0, 0, 0, 0}) {
-			t.Errorf("'restore-default-parameters' failed to reset door %v passcodes\n   expected: %+v\n   got:      %+v\n", door, []uint32{0, 0, 0, 0}, s.Doors.Passcodes(door))
+		if !reflect.DeepEqual(s.Gateway, expected.Gateway) {
+			t.Errorf("'restore-default-parameters' failed to update simulator IPv4 gateway\n   expected: %+v\n   got:      %+v\n", expected.Gateway, s.Gateway)
 		}
-	}
 
-	if !reflect.DeepEqual(s.SubnetMask, expected.SubnetMask) {
-		t.Errorf("'restore-default-parameters' failed to update simulator IPv4 netmask\n   expected: %+v\n   got:      %+v\n", expected.SubnetMask, s.SubnetMask)
+		if s.Listener != nil {
+			t.Errorf("'restore-default-parameters' failed to update simulator event listener\n   expected: %+v\n   got:      %+v\n", nil, s.Listener)
+		}
+
+		if s.Events.Size() != 0 {
+			t.Errorf("'restore-default-parameters' failed to clear simulator event list\n   expected: %+v\n   got:      %+v\n", 0, s.Events.Size())
+		}
+
+		if s.Events.GetIndex() != 0 {
+			t.Errorf("'restore-default-parameters' failed to reset simulator event index\n   expected: %+v\n   got:      %+v\n", 0, s.Events.GetIndex())
+		}
+
+		if s.Cards.Size() != 0 {
+			t.Errorf("'restore-default-parameters' failed to clear simulator cards list\n   expected: %+v\n   got:      %+v\n", 0, s.Cards.Size())
+		}
+
+		for _, door := range []uint8{1, 2, 3, 4} {
+			if s.Doors.ControlState(door) != entities.Controlled {
+				t.Errorf("'restore-default-parameters' failed to reset door %v mode\n   expected: %+v\n   got:      %+v\n", door, entities.Controlled, s.Doors.ControlState(door))
+			}
+
+			if s.Doors.Delay(door) != entities.DelayFromSeconds(5) {
+				t.Errorf("'restore-default-parameters' failed to reset door %v delay\n   expected: %+v\n   got:      %+v\n", door, 5, s.Doors.Delay(door))
+			}
+
+			if !reflect.DeepEqual(s.Doors.Passcodes(door), []uint32{0, 0, 0, 0}) {
+				t.Errorf("'restore-default-parameters' failed to reset door %v passcodes\n   expected: %+v\n   got:      %+v\n", door, []uint32{0, 0, 0, 0}, s.Doors.Passcodes(door))
+			}
+		}
+
+		if !reflect.DeepEqual(s.SubnetMask, expected.SubnetMask) {
+			t.Errorf("'restore-default-parameters' failed to update simulator IPv4 netmask\n   expected: %+v\n   got:      %+v\n", expected.SubnetMask, s.SubnetMask)
+		}
 	}
 }

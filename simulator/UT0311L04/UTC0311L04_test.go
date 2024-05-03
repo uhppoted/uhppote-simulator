@@ -499,7 +499,6 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 		})
 
 	txq := make(chan entities.Message, 8)
-	src := net.UDPAddr{IP: net.IPv4(10, 0, 0, 1), Port: 12345}
 
 	s := UT0311L04{
 		SerialNumber: 12345,
@@ -516,28 +515,15 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 		txq: txq,
 	}
 
-	s.Handle(&src, request)
-
-	if expected != nil {
-		timeout := make(chan bool, 1)
-		go func() {
-			time.Sleep(100 * time.Millisecond)
-			timeout <- true
-		}()
-
-		select {
-		case response := <-txq:
-			if response.Message == nil {
-				t.Errorf("Invalid response: Expected: %v, got: %v", expected, response)
-				return
-			}
-
-			if !reflect.DeepEqual(response.Message, expected) {
-				t.Errorf("Incorrect response: Expected:\n%v, got:s\n%v", expected, response.Message)
-			}
-
-		case <-timeout:
-			t.Errorf("No response from simulator")
+	if response, err := s.Handle(request); err != nil {
+		t.Fatalf("%v", err)
+	} else if expected == nil {
+		if response != nil {
+			t.Errorf("invalid response - expected:%v, got:%v", expected, response)
 		}
+	} else if response == nil {
+		t.Errorf("Invalid response: Expected: %v, got: %v", expected, response)
+	} else if !reflect.DeepEqual(response, expected) {
+		t.Errorf("Incorrect response: Expected:\n%v, got:s\n%v", expected, response)
 	}
 }

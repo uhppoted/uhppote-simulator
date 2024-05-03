@@ -97,174 +97,106 @@ func (s *UT0311L04) SetTxQ(txq chan entities.Message) {
 	s.txq = txq
 }
 
-func (s *UT0311L04) Handle(src *net.UDPAddr, rq messages.Request) {
+func (s *UT0311L04) Handle(rq messages.Request) (any, error) {
+	s.touched = time.Now()
+
 	switch v := rq.(type) {
 	case *messages.ActivateAccessKeypadsRequest:
-		if response, err := s.activateKeypads(v); err != nil {
-			warnf("activate-keypads", "%v", err)
-		} else if response != nil {
-			s.send(src, response)
-		}
+		return s.activateKeypads(v)
 
 	case *messages.AddTaskRequest:
-		if response, err := s.addTask(v); err != nil {
-			warnf("add-task", "%v", err)
-		} else if response != nil {
-			s.send(src, response)
-		}
+		return s.addTask(v)
 
 	case *messages.ClearTaskListRequest:
-		if response, err := s.clearTaskList(v); err != nil {
-			warnf("clear-tasklist", "%v", err)
-		} else if response != nil {
-			s.send(src, response)
-		}
+		return s.clearTaskList(v)
 
 	case *messages.ClearTimeProfilesRequest:
-		if response, err := s.clearTimeProfiles(v); err != nil {
-			warnf("clear-profiles", "%v", err)
-		} else if response != nil {
-			s.send(src, response)
-		}
+		return s.clearTimeProfiles(v)
 
 	case *messages.DeleteCardRequest:
-		if response, err := s.deleteCard(v); err != nil {
-			warnf("delete-card", "%v", err)
-		} else if response != nil {
-			s.send(src, response)
-		}
+		return s.deleteCard(v)
 
 	case *messages.DeleteCardsRequest:
-		if response, err := s.deleteCards(v); err != nil {
-			warnf("delete-cards", "%v", err)
-		} else if response != nil {
-			s.send(src, response)
-		}
+		return s.deleteCards(v)
 
 	case *messages.GetCardByIDRequest:
-		if response, err := s.getCardByID(v); err != nil {
-			warnf("get-card", "%v", err)
-		} else if response != nil {
-			s.send(src, response)
-		}
+		return s.getCardByID(v)
 
 	case *messages.GetCardByIndexRequest:
-		if response, err := s.getCardByIndex(v); err != nil {
-			warnf("get-card-by-index", "%v", err)
-		} else if response != nil {
-			s.send(src, response)
-		}
-
-	case *messages.GetDeviceRequest:
-		if response, err := s.getDevice(v); err != nil {
-			warnf("get-device", "%v", err)
-		} else if response != nil {
-			s.send(src, response)
-		}
-
-	case *messages.GetDoorControlStateRequest:
-		if response, err := s.getDoorControlState(v); err != nil {
-			warnf("get-door-control", "%v", err)
-		} else if response != nil {
-			s.send(src, response)
-		}
-
-	case *messages.GetEventRequest:
-		if response, err := s.getEvent(v); err != nil {
-			warnf("get-event", "%v", err)
-		} else if response != nil {
-			s.send(src, response)
-		}
-
-	case *messages.GetEventIndexRequest:
-		if response, err := s.getEventIndex(v); err != nil {
-			warnf("get-event-index", "%v", err)
-		} else if response != nil {
-			s.send(src, response)
-		}
-
-	case *messages.GetListenerRequest:
-		if response, err := s.getListener(v); err != nil {
-			warnf("get-listener", "%v", err)
-		} else if response != nil {
-			s.send(src, response)
-		}
-
-	case *messages.GetStatusRequest:
-		if response, err := s.getStatus(v); err != nil {
-			warnf("get-status", "%v", err)
-		} else if response != nil {
-			s.send(src, response)
-		}
-
-	case *messages.GetTimeRequest:
-		if response, err := s.getTime(v); err != nil {
-			warnf("set-time", "%v", err)
-		} else if response != nil {
-			s.send(src, response)
-		}
-
-	case *messages.GetTimeProfileRequest:
-		if response, err := s.getTimeProfile(v); err != nil {
-			warnf("get-time-profile", "%v", err)
-		} else if response != nil {
-			s.send(src, response)
-		}
-
-	case *messages.OpenDoorRequest:
-		s.unlockDoor(src, v)
-
-	case *messages.PutCardRequest:
-		s.putCard(src, v)
+		return s.getCardByIndex(v)
 
 	case *messages.GetCardsRequest:
-		s.getCards(src, v)
+		return s.getCards(v)
 
-	case *messages.SetDoorControlStateRequest:
-		s.setDoorControlState(src, v)
+	case *messages.GetDeviceRequest:
+		return s.getDevice(v)
 
-	case *messages.SetDoorPasscodesRequest:
-		s.setDoorPasscodes(src, v)
+	case *messages.GetDoorControlStateRequest:
+		return s.getDoorControlState(v)
 
-	case *messages.SetListenerRequest:
-		s.setListener(src, v)
+	case *messages.GetEventRequest:
+		return s.getEvent(v)
 
-	case *messages.SetAddressRequest:
-		s.setAddress(src, v)
+	case *messages.GetEventIndexRequest:
+		return s.getEventIndex(v)
 
-	case *messages.SetEventIndexRequest:
-		s.setEventIndex(src, v)
+	case *messages.GetListenerRequest:
+		return s.getListener(v)
+
+	case *messages.GetStatusRequest:
+		return s.getStatus(v)
+
+	case *messages.GetTimeRequest:
+		return s.getTime(v)
+
+	case *messages.GetTimeProfileRequest:
+		return s.getTimeProfile(v)
+
+	case *messages.OpenDoorRequest:
+		return s.unlockDoor(v)
+
+	case *messages.PutCardRequest:
+		return s.putCard(v)
 
 	case *messages.RecordSpecialEventsRequest:
-		s.recordSpecialEvents(src, v)
-
-	case *messages.SetTimeProfileRequest:
-		s.setTimeProfile(src, v)
+		return s.recordSpecialEvents(v)
 
 	case *messages.RefreshTaskListRequest:
-		s.refreshTaskList(src, v)
-
-	case *messages.SetPCControlRequest:
-		s.setPCControl(src, v)
-
-	case *messages.SetInterlockRequest:
-		s.setInterlock(src, v)
-
-	case *messages.SetTimeRequest:
-		if response, err := s.setTime(v); err != nil {
-			warnf("set-time", "%v", err)
-		} else if response != nil {
-			s.send(src, response)
-		}
+		return s.refreshTaskList(v)
 
 	case *messages.RestoreDefaultParametersRequest:
-		s.restoreDefaultParameters(src, v)
+		return s.restoreDefaultParameters(v)
+
+	case *messages.SetAddressRequest:
+		return s.setAddress(v)
+
+	case *messages.SetDoorControlStateRequest:
+		return s.setDoorControlState(v)
+
+	case *messages.SetDoorPasscodesRequest:
+		return s.setDoorPasscodes(v)
+
+	case *messages.SetEventIndexRequest:
+		return s.setEventIndex(v)
+
+	case *messages.SetInterlockRequest:
+		return s.setInterlock(v)
+
+	case *messages.SetListenerRequest:
+		return s.setListener(v)
+
+	case *messages.SetPCControlRequest:
+		return s.setPCControl(v)
+
+	case *messages.SetTimeProfileRequest:
+		return s.setTimeProfile(v)
+
+	case *messages.SetTimeRequest:
+		return s.setTime(v)
 
 	default:
 		panic(fmt.Errorf("unsupported message type %T", v))
 	}
-
-	s.touched = time.Now()
 }
 
 func (s *UT0311L04) RunTasks() {
@@ -417,7 +349,7 @@ func (s *UT0311L04) Delete() error {
 	return nil
 }
 
-func (s *UT0311L04) send(dest *net.UDPAddr, message any) {
+func (s *UT0311L04) Send(dest *net.UDPAddr, message any) {
 	if s.txq == nil {
 		panic(fmt.Sprintf("Device %d: missing TXQ", s.SerialNumber))
 	}
@@ -539,10 +471,4 @@ func (s *UT0311L04) relays() uint8 {
 	}
 
 	return state
-}
-
-func warnf(tag any, format string, args ...any) {
-	f := fmt.Sprintf("%-10v  %v", tag, format)
-
-	log.Warnf(f, args...)
 }

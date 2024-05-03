@@ -1,7 +1,6 @@
 package UT0311L04
 
 import (
-	"net"
 	"reflect"
 	"testing"
 
@@ -19,14 +18,9 @@ func TestSetPCControl(t *testing.T) {
 		txq: txq,
 	}
 
-	src := net.UDPAddr{IP: net.IPv4(10, 0, 0, 1), Port: 12345}
-
-	expected := entities.Message{
-		Destination: &src,
-		Message: &messages.SetPCControlResponse{
-			SerialNumber: 12345,
-			Succeeded:    true,
-		},
+	expected := messages.SetPCControlResponse{
+		SerialNumber: 12345,
+		Succeeded:    true,
 	}
 
 	request := messages.SetPCControlRequest{
@@ -35,16 +29,18 @@ func TestSetPCControl(t *testing.T) {
 		Enable:       true,
 	}
 
-	s.setPCControl(&src, &request)
+	if response, err := s.setPCControl(&request); err != nil {
+		t.Fatalf("%v", err)
+	} else if response == nil {
+		t.Fatalf("invalid response (%v)", response)
+	} else {
+		if !reflect.DeepEqual(*response, expected) {
+			t.Errorf("'set-pc-control' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, response)
+		}
 
-	response := <-txq
-
-	if !reflect.DeepEqual(response, expected) {
-		t.Errorf("'set-pc-control' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, response)
-	}
-
-	if !s.PCControl {
-		t.Errorf("'set-pc-control' failed to update simulator 'PC control' field\n   expected: %+v\n   got:      %+v\n", true, s.PCControl)
+		if !s.PCControl {
+			t.Errorf("'set-pc-control' failed to update simulator 'PC control' field\n   expected: %+v\n   got:      %+v\n", true, s.PCControl)
+		}
 	}
 }
 
@@ -58,14 +54,9 @@ func TestSetPCControlDisable(t *testing.T) {
 		txq: txq,
 	}
 
-	src := net.UDPAddr{IP: net.IPv4(10, 0, 0, 1), Port: 12345}
-
-	expected := entities.Message{
-		Destination: &src,
-		Message: &messages.SetPCControlResponse{
-			SerialNumber: 12345,
-			Succeeded:    true,
-		},
+	expected := messages.SetPCControlResponse{
+		SerialNumber: 12345,
+		Succeeded:    true,
 	}
 
 	request := messages.SetPCControlRequest{
@@ -74,16 +65,18 @@ func TestSetPCControlDisable(t *testing.T) {
 		Enable:       false,
 	}
 
-	s.setPCControl(&src, &request)
+	if response, err := s.setPCControl(&request); err != nil {
+		t.Fatalf("%v", err)
+	} else if response == nil {
+		t.Fatalf("invalid response (%v)", response)
+	} else {
+		if !reflect.DeepEqual(*response, expected) {
+			t.Errorf("'set-pc-control' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, *response)
+		}
 
-	response := <-txq
-
-	if !reflect.DeepEqual(response, expected) {
-		t.Errorf("'set-pc-control' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, response)
-	}
-
-	if s.PCControl {
-		t.Errorf("'set-pc-control' failed to update simulator 'SetPCControl' field\n   expected: %+v\n   got:      %+v\n", false, s.PCControl)
+		if s.PCControl {
+			t.Errorf("'set-pc-control' failed to update simulator 'SetPCControl' field\n   expected: %+v\n   got:      %+v\n", false, s.PCControl)
+		}
 	}
 }
 
@@ -97,14 +90,9 @@ func TestSetPCControlWithoutMagicWord(t *testing.T) {
 		txq: txq,
 	}
 
-	src := net.UDPAddr{IP: net.IPv4(10, 0, 0, 1), Port: 12345}
-
-	expected := entities.Message{
-		Destination: &src,
-		Message: &messages.SetPCControlResponse{
-			SerialNumber: 12345,
-			Succeeded:    false,
-		},
+	expected := messages.SetPCControlResponse{
+		SerialNumber: 12345,
+		Succeeded:    false,
 	}
 
 	request := messages.SetPCControlRequest{
@@ -112,15 +100,17 @@ func TestSetPCControlWithoutMagicWord(t *testing.T) {
 		Enable:       true,
 	}
 
-	s.setPCControl(&src, &request)
+	if response, err := s.setPCControl(&request); err != nil {
+		t.Fatalf("%v", err)
+	} else if response == nil {
+		t.Fatalf("invalid response (%v)", response)
+	} else {
+		if !reflect.DeepEqual(*response, expected) {
+			t.Errorf("'set-pc-control' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, *response)
+		}
 
-	response := <-txq
-
-	if !reflect.DeepEqual(response, expected) {
-		t.Errorf("'set-pc-control' sent incorrect response\n   expected: %+v\n   got:      %+v\n", expected, response)
-	}
-
-	if s.PCControl {
-		t.Errorf("'set-pc-control' incorrectly updated simulator 'PC control' field\n   expected: %+v\n   got:      %+v\n", false, s.PCControl)
+		if s.PCControl {
+			t.Errorf("'set-pc-control' incorrectly updated simulator 'PC control' field\n   expected: %+v\n   got:      %+v\n", false, s.PCControl)
+		}
 	}
 }

@@ -106,7 +106,11 @@ func handle(ctx *simulator.Context, c *net.UDPConn, src *net.UDPAddr, bytes []by
 		log.Errorf("%v", err)
 	} else {
 		f := func(s simulator.Simulator) {
-			s.Handle(src, request)
+			if response, err := s.Handle(request); err != nil {
+				warnf(tag(request), "%v", err)
+			} else if response != nil {
+				s.Send(src, response)
+			}
 		}
 
 		ctx.DeviceList.Apply(f)
@@ -180,6 +184,112 @@ func sendto(bind *net.UDPAddr, dest *net.UDPAddr, message any) {
 	}
 }
 
+func warnf(tag any, format string, args ...any) {
+	f := fmt.Sprintf("%-10v  %v", tag, format)
+
+	log.Warnf(f, args...)
+}
+
 func dump(m []byte, prefix string) string {
 	return regexp.MustCompile("(?m)^(.*)").ReplaceAllString(hex.Dump(m), prefix+"$1")
+}
+
+func tag(rq any) string {
+	switch rq.(type) {
+	case *messages.ActivateAccessKeypadsRequest:
+		return "activate-keypads"
+
+	case *messages.AddTaskRequest:
+		return "add-task"
+
+	case *messages.ClearTaskListRequest:
+		return "clear-tasklist"
+
+	case *messages.ClearTimeProfilesRequest:
+		return "clear-profiles"
+
+	case *messages.DeleteCardRequest:
+		return "delete-card"
+
+	case *messages.DeleteCardsRequest:
+		return "delete-cards"
+
+	case *messages.GetCardByIDRequest:
+		return "get-card"
+
+	case *messages.GetCardByIndexRequest:
+		return "get-card-by-index"
+
+	case *messages.GetDeviceRequest:
+		return "get-device"
+
+	case *messages.GetDoorControlStateRequest:
+		return "get-door-control"
+
+	case *messages.GetEventRequest:
+		return "get-event"
+
+	case *messages.GetEventIndexRequest:
+		return "get-event-index"
+
+	case *messages.GetListenerRequest:
+		return "get-listener"
+
+	case *messages.GetStatusRequest:
+		return "get-status"
+
+	case *messages.GetTimeRequest:
+		return "get-time"
+
+	case *messages.GetTimeProfileRequest:
+		return "get-time-profile"
+
+	case *messages.OpenDoorRequest:
+		return "open-door"
+
+	case *messages.PutCardRequest:
+		return "put-card"
+
+	case *messages.GetCardsRequest:
+		return "get-cards"
+
+	case *messages.SetDoorControlStateRequest:
+		return "set-door-control"
+
+	case *messages.SetDoorPasscodesRequest:
+		return "set-passcodes"
+
+	case *messages.SetListenerRequest:
+		return "set-listener"
+
+	case *messages.SetAddressRequest:
+		return "set-address"
+
+	case *messages.SetEventIndexRequest:
+		return "set-event-index"
+
+	case *messages.RecordSpecialEventsRequest:
+		return "record-special-events"
+
+	case *messages.SetTimeProfileRequest:
+		return "set-time-profile"
+
+	case *messages.RefreshTaskListRequest:
+		return "refresh-tasklist"
+
+	case *messages.SetPCControlRequest:
+		return "set-pc-control"
+
+	case *messages.SetInterlockRequest:
+		return "set-interlock"
+
+	case *messages.SetTimeRequest:
+		return "set-time"
+
+	case *messages.RestoreDefaultParametersRequest:
+		return "restore-default-parameters"
+
+	default:
+		return "???"
+	}
 }

@@ -8,43 +8,45 @@ import (
 	"github.com/uhppoted/uhppote-simulator/entities"
 )
 
-func (s *UT0311L04) restoreDefaultParameters(addr *net.UDPAddr, request *messages.RestoreDefaultParametersRequest) {
-	if request.SerialNumber == s.SerialNumber {
-		reset := false
+func (s *UT0311L04) restoreDefaultParameters(request *messages.RestoreDefaultParametersRequest) (*messages.RestoreDefaultParametersResponse, error) {
+	if request.SerialNumber != s.SerialNumber {
+		return nil, nil
+	}
 
-		if request.MagicWord == 0x55aaaa55 {
-			reset = true
-			s.IpAddress = net.IPv4(0, 0, 0, 0)
-			s.SubnetMask = net.IPv4(255, 255, 255, 0)
-			s.Gateway = net.IPv4(0, 0, 0, 0)
-			s.Listener = nil
+	reset := false
 
-			for _, door := range []uint8{1, 2, 3, 4} {
-				s.Doors.SetControlState(door, entities.Controlled)
-				s.Doors.SetDelay(door, entities.DelayFromSeconds(5))
-				s.Doors.SetPasscodes(door)
-			}
+	if request.MagicWord == 0x55aaaa55 {
+		reset = true
+		s.IpAddress = net.IPv4(0, 0, 0, 0)
+		s.SubnetMask = net.IPv4(255, 255, 255, 0)
+		s.Gateway = net.IPv4(0, 0, 0, 0)
+		s.Listener = nil
 
-			if !s.Events.Clear() {
-				reset = false
-			}
-
-			if !s.Cards.DeleteAll() {
-				reset = false
-			}
+		for _, door := range []uint8{1, 2, 3, 4} {
+			s.Doors.SetControlState(door, entities.Controlled)
+			s.Doors.SetDelay(door, entities.DelayFromSeconds(5))
+			s.Doors.SetPasscodes(door)
 		}
 
-		response := messages.RestoreDefaultParametersResponse{
-			SerialNumber: s.SerialNumber,
-			Succeeded:    reset,
+		if !s.Events.Clear() {
+			reset = false
 		}
 
-		s.send(addr, &response)
-
-		if reset {
-			if err := s.Save(); err != nil {
-				fmt.Printf("ERROR: %v\n", err)
-			}
+		if !s.Cards.DeleteAll() {
+			reset = false
 		}
 	}
+
+	response := messages.RestoreDefaultParametersResponse{
+		SerialNumber: s.SerialNumber,
+		Succeeded:    reset,
+	}
+
+	if reset {
+		if err := s.Save(); err != nil {
+			fmt.Printf("ERROR: %v\n", err)
+		}
+	}
+
+	return &response, nil
 }

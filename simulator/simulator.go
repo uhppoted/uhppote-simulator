@@ -14,7 +14,8 @@ type Simulator interface {
 	FilePath() string
 	SetTxQ(chan entities.Message)
 
-	Handle(*net.UDPAddr, messages.Request)
+	Handle(messages.Request) (any, error)
+	Send(*net.UDPAddr, any) // FIXME interim thing for TCP support restructuring
 	RunTasks()
 	Save() error
 	Delete() error
