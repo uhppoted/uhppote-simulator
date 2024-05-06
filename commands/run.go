@@ -6,6 +6,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"reflect"
 	"regexp"
 	"time"
 
@@ -21,30 +22,58 @@ var debug bool = false
 func Simulate(ctx *simulator.Context, dbg bool) {
 	debug = dbg
 
-	if bind, err := net.ResolveUDPAddr("udp4", ctx.BindAddress); err != nil {
-		log.Errorf("failed to resolve UDP bind address [%v]", err)
-	} else if udp, err := net.ListenUDP("udp", bind); err != nil {
-		log.Errorf("failed to bind to UDP socket [%v]", err)
-	} else {
-		defer udp.Close()
+	var udp *net.UDPConn
+	var tcp *net.TCPListener
 
-		log.Infof("bound to address %s", bind)
+	{
+		bind, err := net.ResolveUDPAddr("udp4", ctx.BindAddress)
+		if err != nil {
+			log.Errorf("failed to resolve UDP bind address [%v]", err)
+			return
+		}
 
-		wait := make(chan int, 1)
-		interrupt := make(chan os.Signal, 1)
-		signal.Notify(interrupt, os.Interrupt)
+		udp, err = net.ListenUDP("udp", bind)
+		if err != nil {
+			log.Errorf("failed to bind to UDP socket [%v]", err)
+			return
+		}
 
-		go run(ctx, udp, wait)
-
-		<-interrupt
-		udp.Close()
-		<-wait
-
-		os.Exit(1)
+		log.Infof("UDP bound to address %s", bind)
 	}
+
+	defer udp.Close()
+
+	{
+		bind, err := net.ResolveTCPAddr("tcp4", ctx.BindAddress)
+		if err != nil {
+			log.Errorf("failed to resolve TCP bind address [%v]", err)
+			return
+		}
+		tcp, err = net.ListenTCP("tcp", bind)
+		if err != nil {
+			log.Errorf("failed to bind to TCP socket [%v]", err)
+			return
+		}
+
+		log.Infof("TCP bound to address %s", bind)
+	}
+
+	defer tcp.Close()
+
+	wait := make(chan int, 1)
+	interrupt := make(chan os.Signal, 1)
+	signal.Notify(interrupt, os.Interrupt)
+
+	go run(ctx, udp, tcp, wait)
+
+	<-interrupt
+	udp.Close()
+	<-wait
+
+	os.Exit(1)
 }
 
-func run(ctx *simulator.Context, udp *net.UDPConn, wait chan int) {
+func run(ctx *simulator.Context, udp *net.UDPConn, tcp *net.TCPListener, wait chan int) {
 	bind, err := net.ResolveUDPAddr("udp4", ctx.BindAddress)
 	if err != nil {
 		log.Errorf("failed to resolve UDP bind address [%v]", err)
@@ -53,7 +82,14 @@ func run(ctx *simulator.Context, udp *net.UDPConn, wait chan int) {
 
 	go func() {
 		if err := udpListenAndServe(ctx, udp); err != nil {
-			fmt.Printf("%v\n", err)
+			errorf("udp", "%v", err)
+		}
+		wait <- 0
+	}()
+
+	go func() {
+		if err := tcpListenAndServe(ctx, tcp); err != nil {
+			errorf("tcp", "%v", err)
 		}
 		wait <- 0
 	}()
@@ -92,28 +128,79 @@ func run(ctx *simulator.Context, udp *net.UDPConn, wait chan int) {
 }
 
 func udpListenAndServe(ctx *simulator.Context, c *net.UDPConn) error {
+	handle := func(src *net.UDPAddr, bytes []byte) {
+		if request, err := messages.UnmarshalRequest(bytes); err != nil {
+			errorf("udp", "%v", err)
+		} else {
+			f := func(s simulator.Simulator) {
+				if response, err := s.Handle(request); err != nil {
+					warnf(tag(request), "%v", err)
+				} else if response != nil {
+					s.Send(src, response)
+				}
+			}
+
+			ctx.DeviceList.Apply(f)
+		}
+	}
+
 	for {
 		if request, remote, err := receive(c); err != nil {
 			return err
 		} else {
-			handle(ctx, c, remote, request)
+			handle(remote, request)
 		}
 	}
 }
 
-func handle(ctx *simulator.Context, c *net.UDPConn, src *net.UDPAddr, bytes []byte) {
-	if request, err := messages.UnmarshalRequest(bytes); err != nil {
-		log.Errorf("%v", err)
-	} else {
-		f := func(s simulator.Simulator) {
-			if response, err := s.Handle(request); err != nil {
-				warnf(tag(request), "%v", err)
-			} else if response != nil {
-				s.Send(src, response)
+func tcpListenAndServe(ctx *simulator.Context, c *net.TCPListener) error {
+	handle := func(connection net.Conn) {
+		addr := connection.RemoteAddr()
+		packet := make([]byte, 2048)
+		deadline := time.Now().Add(5 * time.Second)
+
+		connection.SetDeadline(deadline)
+
+		if N, err := connection.Read(packet); err != nil {
+			errorf("tcp", "%v", err)
+		} else {
+			if debug {
+				debugf("tcp", "received %v bytes from %v\n%s", N, addr, dump(packet[0:N], " ...          "))
+			}
+
+			if request, err := messages.UnmarshalRequest(packet[0:N]); err != nil {
+				errorf("tcp", "%v", err)
+			} else {
+				f := func(s simulator.Simulator) {
+					if response, err := s.Handle(request); err != nil {
+						warnf(tag(request), "%v", err)
+					} else if !isNil(response) {
+						if msg, err := codec.Marshal(response); err != nil {
+							errorf("tcp", "%v", err)
+						} else if N, err := connection.Write(msg); err != nil {
+							errorf("tcp", "%v", err)
+						} else {
+							infof("tcp", "sent %v bytes to %v", N, addr)
+							if debug {
+								infof("tcp", "packet\n%s", dump(msg[0:N], " ...          "))
+							}
+						}
+					}
+				}
+
+				ctx.DeviceList.Apply(f)
 			}
 		}
 
-		ctx.DeviceList.Apply(f)
+		connection.Close()
+	}
+
+	for {
+		if client, err := c.Accept(); err != nil {
+			return err
+		} else {
+			handle(client)
+		}
 	}
 }
 
@@ -132,7 +219,7 @@ func receive(c *net.UDPConn) ([]byte, *net.UDPAddr, error) {
 	if err != nil {
 		return []byte{}, nil, fmt.Errorf("failed to read from UDP socket [%v]", err)
 	} else if debug {
-		log.Debugf("received %v bytes from %v\n%s", N, remote, dump(request[0:N], " ...          "))
+		debugf("udp", "received %v bytes from %v\n%s", N, remote, dump(request[0:N], " ...          "))
 	}
 
 	return request[:N], remote, nil
@@ -184,10 +271,45 @@ func sendto(bind *net.UDPAddr, dest *net.UDPAddr, message any) {
 	}
 }
 
+func debugf(tag any, format string, args ...any) {
+	f := fmt.Sprintf("%-10v  %v", tag, format)
+
+	log.Debugf(f, args...)
+}
+
+func infof(tag any, format string, args ...any) {
+	f := fmt.Sprintf("%-10v  %v", tag, format)
+
+	log.Infof(f, args...)
+}
+
 func warnf(tag any, format string, args ...any) {
 	f := fmt.Sprintf("%-10v  %v", tag, format)
 
 	log.Warnf(f, args...)
+}
+
+func errorf(tag any, format string, args ...any) {
+	f := fmt.Sprintf("%-10v  %v", tag, format)
+
+	log.Errorf(f, args...)
+}
+
+func isNil(v any) bool {
+	if v == nil {
+		return true
+	}
+
+	switch reflect.TypeOf(v).Kind() {
+	case reflect.Ptr,
+		reflect.Map,
+		reflect.Array,
+		reflect.Chan,
+		reflect.Slice:
+		return reflect.ValueOf(v).IsNil()
+	}
+
+	return false
 }
 
 func dump(m []byte, prefix string) string {
