@@ -9,6 +9,7 @@ services:
       - uhppoted:/usr/local/etc/uhppoted
     ports:
       - "60000:60000/udp"
+      - "60000:60000"
       - "8000:8000"
 
 volumes:

@@ -2,6 +2,7 @@ FROM alpine
 
 EXPOSE 8000
 EXPOSE 60000/udp
+EXPOSE 60000/tcp
 
 RUN mkdir -p /opt/uhppote
 RUN mkdir -p /usr/local/etc/uhppoted/simulator
