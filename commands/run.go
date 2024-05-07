@@ -100,8 +100,6 @@ func run(ctx *simulator.Context, udp *net.UDPConn, tcp *net.TCPListener, wait ch
 
 			if msg.Event {
 				sendto(bind, msg.Destination, msg.Message)
-			} else {
-				send(udp, msg.Destination, msg.Message)
 			}
 		}
 	}()
@@ -127,16 +125,25 @@ func run(ctx *simulator.Context, udp *net.UDPConn, tcp *net.TCPListener, wait ch
 
 }
 
-func udpListenAndServe(ctx *simulator.Context, c *net.UDPConn) error {
-	handle := func(src *net.UDPAddr, bytes []byte) {
+func udpListenAndServe(ctx *simulator.Context, udp *net.UDPConn) error {
+	handle := func(addr *net.UDPAddr, bytes []byte) {
 		if request, err := messages.UnmarshalRequest(bytes); err != nil {
 			errorf("udp", "%v", err)
 		} else {
 			f := func(s simulator.Simulator) {
 				if response, err := s.Handle(request); err != nil {
 					warnf(tag(request), "%v", err)
-				} else if response != nil {
-					s.Send(src, response)
+				} else if !isNil(response) {
+					if msg, err := codec.Marshal(response); err != nil {
+						errorf("udp", "%v", err)
+					} else if N, err := udp.WriteToUDP(msg, addr); err != nil {
+						errorf("udp", "%v", err)
+					} else {
+						infof("udp", "sent %v bytes to %v", N, addr)
+						if debug {
+							infof("udp", "packet\n%s", dump(msg[0:N], " ...          "))
+						}
+					}
 				}
 			}
 
@@ -145,10 +152,16 @@ func udpListenAndServe(ctx *simulator.Context, c *net.UDPConn) error {
 	}
 
 	for {
-		if request, remote, err := receive(c); err != nil {
+		request := make([]byte, 2048)
+
+		if N, raddr, err := udp.ReadFromUDP(request); err != nil {
 			return err
 		} else {
-			handle(remote, request)
+			if debug {
+				debugf("udp", "received %v bytes from %v\n%s", N, raddr, dump(request[0:N], " ...          "))
+			}
+
+			handle(raddr, request[:N])
 		}
 	}
 }
@@ -210,34 +223,6 @@ func tasks(ctx *simulator.Context) {
 	}
 
 	ctx.DeviceList.Apply(f)
-}
-
-func receive(c *net.UDPConn) ([]byte, *net.UDPAddr, error) {
-	request := make([]byte, 2048)
-
-	N, remote, err := c.ReadFromUDP(request)
-	if err != nil {
-		return []byte{}, nil, fmt.Errorf("failed to read from UDP socket [%v]", err)
-	} else if debug {
-		debugf("udp", "received %v bytes from %v\n%s", N, remote, dump(request[0:N], " ...          "))
-	}
-
-	return request[:N], remote, nil
-}
-
-func send(c *net.UDPConn, dest *net.UDPAddr, message any) {
-	msg, err := codec.Marshal(message)
-	if err != nil {
-		log.Errorf("%v", err)
-		return
-	}
-
-	N, err := c.WriteToUDP(msg, dest)
-	if err != nil {
-		log.Errorf("failed to write to UDP socket [%v]", err)
-	} else if debug {
-		log.Infof("sent %v bytes to %v\n%s", N, dest, dump(msg[0:N], " ...          "))
-	}
 }
 
 func sendto(bind *net.UDPAddr, dest *net.UDPAddr, message any) {

@@ -3,7 +3,8 @@
 - [ ] TCP/IP protocol (cf. https://github.com/uhppoted/uhppote-core/issues/17)
       - [x] Rework UDP handling so that `if request.SerialNumber == s.SerialNumber` returns false
       - [x] TCP accept socket
-      - [ ] Rework UDP request handling
+      - [x] Rework UDP request handling
+      - [ ] Rework UDP event handling
       - [ ] CHANGELOG
       - [ ] README
 
