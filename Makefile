@@ -199,10 +199,10 @@ docker-ghcr: build
 	cd dist/docker/ghcr && docker build --no-cache -f Dockerfile -t $(DOCKER) .
 
 docker-run-dev:
-	docker run --publish 8000:8000 --publish 60000:60000/udp --name simulator --rm uhppoted/simulator-dev
+	docker run --publish 8000:8000 --publish 60000:60000 --publish 60000:60000/udp --name simulator --rm uhppoted/simulator-dev
 
 docker-run-ghcr:
-	docker run --publish 8000:8000 --publish 60000:60000/udp --name simulator \
+	docker run --publish 8000:8000 --publish 60000:60000 --publish 60000:60000/udp --name simulator \
 	           --mount source=uhppoted-simulator,target=/usr/local/etc/uhppoted \
 	           --rm ghcr.io/uhppoted/simulator
 
