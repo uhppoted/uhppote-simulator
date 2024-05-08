@@ -1,16 +1,16 @@
 # TODO
 
+- [x] https://github.com/uhppoted/uhppote-simulator/issues/9
+
 - [ ] TCP/IP protocol (cf. https://github.com/uhppoted/uhppote-core/issues/17)
       - [x] Rework UDP handling so that `if request.SerialNumber == s.SerialNumber` returns false
       - [x] TCP accept socket
       - [x] Rework UDP request handling
-      - [ ] Rework UDP event handling
+      - [x] Rework UDP event handling
+      - (?) Remove `Simulator` interface 
+      - [ ] Update docker images, etc
       - [ ] CHANGELOG
       - [ ] README
-
-- [x] https://github.com/uhppoted/uhppote-simulator/issues/9
-      - https://stackoverflow.com/questions/54360408/docker-container-udp-communication-with-other-hosts
-      - https://blog.cloudflare.com/everything-you-ever-wanted-to-know-about-udp-sockets-but-were-afraid-to-ask-part-1/
 
 ## TODO
 
@@ -43,3 +43,4 @@
 ### Other
 
 1.  Integration tests
+

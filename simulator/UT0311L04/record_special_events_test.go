@@ -5,17 +5,12 @@ import (
 	"testing"
 
 	"github.com/uhppoted/uhppote-core/messages"
-	"github.com/uhppoted/uhppote-simulator/entities"
 )
 
 func TestRecordSpecialEvents(t *testing.T) {
-	txq := make(chan entities.Message, 8)
-
 	s := UT0311L04{
 		SerialNumber:        12345,
 		RecordSpecialEvents: false,
-
-		txq: txq,
 	}
 
 	expected := messages.RecordSpecialEventsResponse{
@@ -44,13 +39,9 @@ func TestRecordSpecialEvents(t *testing.T) {
 }
 
 func TestRecordSpecialEventsDisable(t *testing.T) {
-	txq := make(chan entities.Message, 8)
-
 	s := UT0311L04{
 		SerialNumber:        12345,
 		RecordSpecialEvents: true,
-
-		txq: txq,
 	}
 
 	expected := messages.RecordSpecialEventsResponse{

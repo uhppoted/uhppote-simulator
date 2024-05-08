@@ -12,8 +12,6 @@ import (
 )
 
 func TestRestoreDefaultParameters(t *testing.T) {
-	txq := make(chan entities.Message, 8)
-
 	s := UT0311L04{
 		SerialNumber: 405419896,
 		IpAddress:    net.IPv4(192, 168, 1, 100),
@@ -22,8 +20,6 @@ func TestRestoreDefaultParameters(t *testing.T) {
 		Listener:     &net.UDPAddr{IP: net.IPv4(192, 168, 1, 100), Port: 60001},
 
 		Doors: entities.MakeDoors(),
-
-		txq: txq,
 	}
 
 	s.Doors.SetControlState(1, entities.NormallyOpen)

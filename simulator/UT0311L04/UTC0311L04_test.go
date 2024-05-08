@@ -498,8 +498,6 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 			},
 		})
 
-	txq := make(chan entities.Message, 8)
-
 	s := UT0311L04{
 		SerialNumber: 12345,
 		IpAddress:    net.IPv4(10, 0, 0, 100),
@@ -511,8 +509,6 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 		Cards:        cards,
 		Events:       events,
 		Doors:        doors,
-
-		txq: txq,
 	}
 
 	if response, err := s.Handle(request); err != nil {

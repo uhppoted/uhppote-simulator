@@ -1,12 +1,10 @@
 package simulator
 
 import (
-	"github.com/uhppoted/uhppote-simulator/entities"
 	"github.com/uhppoted/uhppote-simulator/simulator/UT0311L04"
 )
 
 type DeviceList struct {
-	txq     chan entities.Message
 	devices []Simulator
 }
 
@@ -18,19 +16,9 @@ type Context struct {
 }
 
 func NewDeviceList(l []Simulator) DeviceList {
-	txq := make(chan entities.Message, 8)
-	for _, s := range l {
-		s.SetTxQ(txq)
-	}
-
 	return DeviceList{
-		txq:     txq,
 		devices: l,
 	}
-}
-
-func (l *DeviceList) GetMessage() entities.Message {
-	return <-l.txq
 }
 
 func (l *DeviceList) Apply(f func(Simulator)) {
@@ -57,13 +45,11 @@ func (l *DeviceList) Add(deviceID uint32, compressed bool, dir string) (bool, er
 	}
 
 	device := UT0311L04.NewUT0311L04(deviceID, dir, compressed)
-	device.SetTxQ(l.txq)
-	err := device.Save()
-	if err != nil {
+	if err := device.Save(); err != nil {
 		return false, err
+	} else {
+		l.devices = append(l.devices, device)
 	}
-
-	l.devices = append(l.devices, device)
 
 	return true, nil
 }

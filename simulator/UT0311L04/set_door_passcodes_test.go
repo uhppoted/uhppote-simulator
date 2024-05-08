@@ -9,13 +9,9 @@ import (
 )
 
 func TestSetDoorPasscodes(t *testing.T) {
-	txq := make(chan entities.Message, 8)
-
 	s := UT0311L04{
 		SerialNumber: 405419896,
 		Doors:        entities.MakeDoors(),
-
-		txq: txq,
 	}
 
 	expected := struct {

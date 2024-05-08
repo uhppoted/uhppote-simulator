@@ -9,13 +9,9 @@ import (
 )
 
 func TestSetInterlock1(t *testing.T) {
-	txq := make(chan entities.Message, 8)
-
 	s := UT0311L04{
 		SerialNumber: 12345,
 		Doors:        entities.MakeDoors(),
-
-		txq: txq,
 	}
 
 	expected := messages.SetInterlockResponse{
@@ -44,13 +40,9 @@ func TestSetInterlock1(t *testing.T) {
 }
 
 func TestSetInterlock2(t *testing.T) {
-	txq := make(chan entities.Message, 8)
-
 	s := UT0311L04{
 		SerialNumber: 12345,
 		Doors:        entities.MakeDoors(),
-
-		txq: txq,
 	}
 
 	expected := messages.SetInterlockResponse{
@@ -79,13 +71,9 @@ func TestSetInterlock2(t *testing.T) {
 }
 
 func TestSetInterlock3(t *testing.T) {
-	txq := make(chan entities.Message, 8)
-
 	s := UT0311L04{
 		SerialNumber: 12345,
 		Doors:        entities.MakeDoors(),
-
-		txq: txq,
 	}
 
 	expected := messages.SetInterlockResponse{
@@ -114,13 +102,9 @@ func TestSetInterlock3(t *testing.T) {
 }
 
 func TestSetInterlock4(t *testing.T) {
-	txq := make(chan entities.Message, 8)
-
 	s := UT0311L04{
 		SerialNumber: 12345,
 		Doors:        entities.MakeDoors(),
-
-		txq: txq,
 	}
 
 	expected := messages.SetInterlockResponse{
@@ -149,13 +133,9 @@ func TestSetInterlock4(t *testing.T) {
 }
 
 func TestSetInterlockDisable(t *testing.T) {
-	txq := make(chan entities.Message, 8)
-
 	s := UT0311L04{
 		SerialNumber: 12345,
 		Doors:        entities.MakeDoors(),
-
-		txq: txq,
 	}
 
 	s.Doors.Interlock = 1
@@ -186,13 +166,9 @@ func TestSetInterlockDisable(t *testing.T) {
 }
 
 func TestSetInvalidInterlock(t *testing.T) {
-	txq := make(chan entities.Message, 8)
-
 	s := UT0311L04{
 		SerialNumber: 12345,
 		Doors:        entities.MakeDoors(),
-
-		txq: txq,
 	}
 
 	s.Doors.Interlock = 3

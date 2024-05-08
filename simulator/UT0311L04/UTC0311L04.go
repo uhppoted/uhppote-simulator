@@ -10,7 +10,6 @@ import (
 	"net"
 	"os"
 	"path/filepath"
-	"reflect"
 	"time"
 
 	"github.com/uhppoted/uhppote-core/messages"
@@ -23,7 +22,6 @@ type UT0311L04 struct {
 	file       string
 	compressed bool
 	touched    time.Time
-	txq        chan entities.Message
 
 	SerialNumber        types.SerialNumber    `json:"serial-number"`
 	IpAddress           net.IP                `json:"address"`
@@ -46,6 +44,15 @@ type UT0311L04 struct {
 	TaskList            entities.TaskList     `json:"tasklist,omitempty"`
 	Cards               entities.CardList     `json:"cards"`
 	Events              entities.EventList    `json:"events"`
+}
+
+var onEvent = func(dest *net.UDPAddr, event any) {
+}
+
+func SetOnEvent(handler func(dest *net.UDPAddr, event any)) {
+	if handler != nil {
+		onEvent = handler
+	}
 }
 
 func NewUT0311L04(deviceID uint32, dir string, compressed bool) *UT0311L04 {
@@ -91,10 +98,6 @@ func (s *UT0311L04) DeviceType() string {
 
 func (s *UT0311L04) FilePath() string {
 	return s.file
-}
-
-func (s *UT0311L04) SetTxQ(txq chan entities.Message) {
-	s.txq = txq
 }
 
 func (s *UT0311L04) Handle(rq messages.Request) (any, error) {
@@ -349,34 +352,6 @@ func (s *UT0311L04) Delete() error {
 	return nil
 }
 
-func (s *UT0311L04) Send(dest *net.UDPAddr, message any) {
-	if s.txq == nil {
-		panic(fmt.Sprintf("Device %d: missing TXQ", s.SerialNumber))
-	}
-
-	if s.txq != nil && dest != nil && message != nil && !reflect.ValueOf(message).IsNil() {
-		s.txq <- entities.Message{
-			Destination: dest,
-			Message:     message,
-			Event:       false,
-		}
-	}
-}
-
-func (s *UT0311L04) sendto(dest *net.UDPAddr, message any) {
-	if s.txq == nil {
-		panic(fmt.Sprintf("Device %d: missing TXQ", s.SerialNumber))
-	}
-
-	if s.txq != nil && dest != nil && message != nil && !reflect.ValueOf(message).IsNil() {
-		s.txq <- entities.Message{
-			Destination: dest,
-			Message:     message,
-			Event:       true,
-		}
-	}
-}
-
 func saveGZ(filepath string, s *UT0311L04) error {
 	b, err := json.MarshalIndent(s, "", "  ")
 	if err != nil {
@@ -449,9 +424,9 @@ func (s *UT0311L04) add(event entities.Event) {
 			Event: e,
 		}
 
-		s.sendto(s.Listener, &e662)
+		onEvent(s.Listener, &e662)
 	} else {
-		s.sendto(s.Listener, &e)
+		onEvent(s.Listener, &e)
 	}
 }
 

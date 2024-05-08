@@ -5,17 +5,12 @@ import (
 	"testing"
 
 	"github.com/uhppoted/uhppote-core/messages"
-	"github.com/uhppoted/uhppote-simulator/entities"
 )
 
 func TestSetPCControl(t *testing.T) {
-	txq := make(chan entities.Message, 8)
-
 	s := UT0311L04{
 		SerialNumber: 12345,
 		PCControl:    false,
-
-		txq: txq,
 	}
 
 	expected := messages.SetPCControlResponse{
@@ -45,13 +40,9 @@ func TestSetPCControl(t *testing.T) {
 }
 
 func TestSetPCControlDisable(t *testing.T) {
-	txq := make(chan entities.Message, 8)
-
 	s := UT0311L04{
 		SerialNumber: 12345,
 		PCControl:    true,
-
-		txq: txq,
 	}
 
 	expected := messages.SetPCControlResponse{
@@ -81,13 +72,9 @@ func TestSetPCControlDisable(t *testing.T) {
 }
 
 func TestSetPCControlWithoutMagicWord(t *testing.T) {
-	txq := make(chan entities.Message, 8)
-
 	s := UT0311L04{
 		SerialNumber: 12345,
 		PCControl:    false,
-
-		txq: txq,
 	}
 
 	expected := messages.SetPCControlResponse{

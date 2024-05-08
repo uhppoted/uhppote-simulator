@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+1. Implemented TCP/IP interface.
+
 ### Updated
 1. Reworked event handling to use connected UDP socket to send events.
 

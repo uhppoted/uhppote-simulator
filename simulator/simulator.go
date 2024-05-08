@@ -1,7 +1,6 @@
 package simulator
 
 import (
-	"net"
 	"time"
 
 	"github.com/uhppoted/uhppote-core/messages"
@@ -12,10 +11,8 @@ type Simulator interface {
 	DeviceID() uint32
 	DeviceType() string
 	FilePath() string
-	SetTxQ(chan entities.Message)
 
 	Handle(messages.Request) (any, error)
-	Send(*net.UDPAddr, any) // FIXME interim thing for TCP support restructuring
 	RunTasks()
 	Save() error
 	Delete() error

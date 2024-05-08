@@ -14,7 +14,6 @@ func TestGetDeviceWithMatchingAddress(t *testing.T) {
 	MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
 	released, _ := types.DateFromString("2020-12-05")
 	listener := net.UDPAddr{IP: net.IPv4(10, 0, 0, 10), Port: 43210}
-	txq := make(chan entities.Message, 8)
 
 	s := UT0311L04{
 		SerialNumber: 12345,
@@ -28,8 +27,6 @@ func TestGetDeviceWithMatchingAddress(t *testing.T) {
 		Cards:        entities.CardList{},
 		Events:       entities.EventList{},
 		Doors:        entities.MakeDoors(),
-
-		txq: txq,
 	}
 
 	date, _ := types.DateFromString("2020-12-05")
@@ -61,7 +58,6 @@ func TestGetDeviceWithAddress0(t *testing.T) {
 	MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
 	released, _ := types.DateFromString("2020-12-05")
 	listener := net.UDPAddr{IP: net.IPv4(10, 0, 0, 10), Port: 43210}
-	txq := make(chan entities.Message, 8)
 
 	s := UT0311L04{
 		SerialNumber: 12345,
@@ -75,8 +71,6 @@ func TestGetDeviceWithAddress0(t *testing.T) {
 		Cards:        entities.CardList{},
 		Events:       entities.EventList{},
 		Doors:        entities.MakeDoors(),
-
-		txq: txq,
 	}
 
 	date, _ := types.DateFromString("2020-12-05")
@@ -108,7 +102,6 @@ func TestGetDeviceWithDifferentAddress(t *testing.T) {
 	MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
 	released, _ := types.DateFromString("2020-12-05")
 	listener := net.UDPAddr{IP: net.IPv4(10, 0, 0, 10), Port: 43210}
-	txq := make(chan entities.Message, 8)
 
 	s := UT0311L04{
 		SerialNumber: 12345,
@@ -122,8 +115,6 @@ func TestGetDeviceWithDifferentAddress(t *testing.T) {
 		Cards:        entities.CardList{},
 		Events:       entities.EventList{},
 		Doors:        entities.MakeDoors(),
-
-		txq: txq,
 	}
 
 	request := messages.GetDeviceRequest{

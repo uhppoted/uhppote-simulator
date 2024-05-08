@@ -9,8 +9,6 @@ import (
 )
 
 func TestActivateAccessKeypads(t *testing.T) {
-	txq := make(chan entities.Message, 8)
-
 	s := UT0311L04{
 		SerialNumber: 405419896,
 		Keypads: entities.Keypads{
@@ -19,8 +17,6 @@ func TestActivateAccessKeypads(t *testing.T) {
 			3: entities.KeypadNone,
 			4: entities.KeypadNone,
 		},
-
-		txq: txq,
 	}
 
 	expected := &messages.ActivateAccessKeypadsResponse{

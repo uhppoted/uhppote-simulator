@@ -15,6 +15,7 @@ import (
 	"github.com/uhppoted/uhppote-simulator/log"
 	"github.com/uhppoted/uhppote-simulator/rest"
 	"github.com/uhppoted/uhppote-simulator/simulator"
+	"github.com/uhppoted/uhppote-simulator/simulator/UT0311L04"
 )
 
 var debug bool = false
@@ -80,6 +81,12 @@ func run(ctx *simulator.Context, udp *net.UDPConn, tcp *net.TCPListener, wait ch
 		return
 	}
 
+	g := func(dest *net.UDPAddr, event any) {
+		sendto(bind, dest, event)
+	}
+
+	UT0311L04.SetOnEvent(g)
+
 	go func() {
 		if err := udpListenAndServe(ctx, udp); err != nil {
 			errorf("udp", "%v", err)
@@ -92,16 +99,6 @@ func run(ctx *simulator.Context, udp *net.UDPConn, tcp *net.TCPListener, wait ch
 			errorf("tcp", "%v", err)
 		}
 		wait <- 0
-	}()
-
-	go func() {
-		for {
-			msg := ctx.DeviceList.GetMessage()
-
-			if msg.Event {
-				sendto(bind, msg.Destination, msg.Message)
-			}
-		}
 	}()
 
 	go func() {
