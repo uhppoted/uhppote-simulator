@@ -3,7 +3,7 @@
 ## Unreleased
 
 ### Added
-1. Implemented TCP/IP interface.
+1. Implemented controller TCP/IP interface emulation.
 
 ### Updated
 1. Reworked event handling to use connected UDP socket to send events.

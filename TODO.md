@@ -2,15 +2,14 @@
 
 - [x] https://github.com/uhppoted/uhppote-simulator/issues/9
 
-- [ ] TCP/IP protocol (cf. https://github.com/uhppoted/uhppote-core/issues/17)
+- [x] TCP/IP protocol (cf. https://github.com/uhppoted/uhppote-core/issues/17)
       - [x] Rework UDP handling so that `if request.SerialNumber == s.SerialNumber` returns false
       - [x] TCP accept socket
       - [x] Rework UDP request handling
       - [x] Rework UDP event handling
-      - (?) Remove `Simulator` interface 
-      - [ ] Update docker images, etc
-      - [ ] CHANGELOG
-      - [ ] README
+      - [x] Update docker images, etc
+      - [x] CHANGELOG
+      - [x] README
 
 ## TODO
 

@@ -39,7 +39,7 @@ func Simulate(ctx *simulator.Context, dbg bool) {
 			return
 		}
 
-		log.Infof("UDP bound to address %s", bind)
+		infof("udp", "bound to address %s", bind)
 	}
 
 	defer udp.Close()
@@ -56,7 +56,7 @@ func Simulate(ctx *simulator.Context, dbg bool) {
 			return
 		}
 
-		log.Infof("TCP bound to address %s", bind)
+		infof("tcp", "bound to address %s", bind)
 	}
 
 	defer tcp.Close()
