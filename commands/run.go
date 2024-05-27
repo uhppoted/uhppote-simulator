@@ -4,6 +4,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"net"
+	"net/netip"
 	"os"
 	"os/signal"
 	"reflect"
@@ -81,8 +82,10 @@ func run(ctx *simulator.Context, udp *net.UDPConn, tcp *net.TCPListener, wait ch
 		return
 	}
 
-	g := func(dest *net.UDPAddr, event any) {
-		sendto(bind, dest, event)
+	g := func(dest netip.AddrPort, event any) {
+		if dest.IsValid() {
+			sendto(bind, net.UDPAddrFromAddrPort(dest), event)
+		}
 	}
 
 	UT0311L04.SetOnEvent(g)

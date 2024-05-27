@@ -3,6 +3,7 @@ package UT0311L04
 import (
 	"fmt"
 	"net"
+	"net/netip"
 
 	"github.com/uhppoted/uhppote-core/messages"
 	"github.com/uhppoted/uhppote-simulator/entities"
@@ -20,7 +21,7 @@ func (s *UT0311L04) restoreDefaultParameters(request *messages.RestoreDefaultPar
 		s.IpAddress = net.IPv4(0, 0, 0, 0)
 		s.SubnetMask = net.IPv4(255, 255, 255, 0)
 		s.Gateway = net.IPv4(0, 0, 0, 0)
-		s.Listener = nil
+		s.Listener = netip.AddrPort{}
 
 		for _, door := range []uint8{1, 2, 3, 4} {
 			s.Doors.SetControlState(door, entities.Controlled)

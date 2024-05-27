@@ -2,6 +2,7 @@ package UT0311L04
 
 import (
 	"net"
+	"net/netip"
 	"reflect"
 	"testing"
 	"time"
@@ -17,7 +18,7 @@ func TestRestoreDefaultParameters(t *testing.T) {
 		IpAddress:    net.IPv4(192, 168, 1, 100),
 		SubnetMask:   net.IPv4(255, 254, 253, 252),
 		Gateway:      net.IPv4(192, 168, 1, 1),
-		Listener:     &net.UDPAddr{IP: net.IPv4(192, 168, 1, 100), Port: 60001},
+		Listener:     netip.MustParseAddrPort("192.168.1.100:60001"),
 
 		Doors: entities.MakeDoors(),
 	}
@@ -103,8 +104,8 @@ func TestRestoreDefaultParameters(t *testing.T) {
 			t.Errorf("'restore-default-parameters' failed to update simulator IPv4 gateway\n   expected: %+v\n   got:      %+v\n", expected.Gateway, s.Gateway)
 		}
 
-		if s.Listener != nil {
-			t.Errorf("'restore-default-parameters' failed to update simulator event listener\n   expected: %+v\n   got:      %+v\n", nil, s.Listener)
+		if s.Listener.IsValid() {
+			t.Errorf("'restore-default-parameters' failed to update simulator event listener\n   expected: %+v\n   got:      %+v\n", netip.AddrPort{}, s.Listener)
 		}
 
 		if s.Events.Size() != 0 {

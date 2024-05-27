@@ -2,7 +2,6 @@ package UT0311L04
 
 import (
 	"fmt"
-	"net"
 
 	"github.com/uhppoted/uhppote-core/messages"
 )
@@ -12,8 +11,8 @@ func (s *UT0311L04) setListener(request *messages.SetListenerRequest) (*messages
 		return nil, nil
 	}
 
-	listener := net.UDPAddr{IP: request.Address, Port: int(request.Port)}
-	s.Listener = &listener
+	listener := request.AddrPort
+	s.Listener = listener
 
 	response := messages.SetListenerResponse{
 		SerialNumber: s.SerialNumber,

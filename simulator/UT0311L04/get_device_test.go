@@ -2,6 +2,7 @@ package UT0311L04
 
 import (
 	"net"
+	"net/netip"
 	"reflect"
 	"testing"
 
@@ -13,7 +14,7 @@ import (
 func TestGetDeviceWithMatchingAddress(t *testing.T) {
 	MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
 	released, _ := types.DateFromString("2020-12-05")
-	listener := net.UDPAddr{IP: net.IPv4(10, 0, 0, 10), Port: 43210}
+	listener := netip.MustParseAddrPort("10.0.0.10:43210")
 
 	s := UT0311L04{
 		SerialNumber: 12345,
@@ -23,7 +24,7 @@ func TestGetDeviceWithMatchingAddress(t *testing.T) {
 		MacAddress:   types.MacAddress(MAC),
 		Version:      9876,
 		Released:     (*ReleaseDate)(&released),
-		Listener:     &listener,
+		Listener:     listener,
 		Cards:        entities.CardList{},
 		Events:       entities.EventList{},
 		Doors:        entities.MakeDoors(),
@@ -57,7 +58,7 @@ func TestGetDeviceWithMatchingAddress(t *testing.T) {
 func TestGetDeviceWithAddress0(t *testing.T) {
 	MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
 	released, _ := types.DateFromString("2020-12-05")
-	listener := net.UDPAddr{IP: net.IPv4(10, 0, 0, 10), Port: 43210}
+	listener := netip.MustParseAddrPort("10.0.0.10:43210")
 
 	s := UT0311L04{
 		SerialNumber: 12345,
@@ -67,7 +68,7 @@ func TestGetDeviceWithAddress0(t *testing.T) {
 		MacAddress:   types.MacAddress(MAC),
 		Version:      9876,
 		Released:     (*ReleaseDate)(&released),
-		Listener:     &listener,
+		Listener:     listener,
 		Cards:        entities.CardList{},
 		Events:       entities.EventList{},
 		Doors:        entities.MakeDoors(),
@@ -101,7 +102,7 @@ func TestGetDeviceWithAddress0(t *testing.T) {
 func TestGetDeviceWithDifferentAddress(t *testing.T) {
 	MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
 	released, _ := types.DateFromString("2020-12-05")
-	listener := net.UDPAddr{IP: net.IPv4(10, 0, 0, 10), Port: 43210}
+	listener := netip.MustParseAddrPort("10.0.0.10:43210")
 
 	s := UT0311L04{
 		SerialNumber: 12345,
@@ -111,7 +112,7 @@ func TestGetDeviceWithDifferentAddress(t *testing.T) {
 		MacAddress:   types.MacAddress(MAC),
 		Version:      9876,
 		Released:     (*ReleaseDate)(&released),
-		Listener:     &listener,
+		Listener:     listener,
 		Cards:        entities.CardList{},
 		Events:       entities.EventList{},
 		Doors:        entities.MakeDoors(),

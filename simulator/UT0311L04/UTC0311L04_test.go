@@ -2,6 +2,7 @@ package UT0311L04
 
 import (
 	"net"
+	"net/netip"
 	"reflect"
 	"testing"
 	"time"
@@ -263,8 +264,7 @@ func TestHandleGetDoorControlState(t *testing.T) {
 func TestHandleSetListener(t *testing.T) {
 	request := messages.SetListenerRequest{
 		SerialNumber: 12345,
-		Address:      net.IPv4(10, 0, 0, 1),
-		Port:         43210,
+		AddrPort:     netip.MustParseAddrPort("10.0.0.1:43210"),
 	}
 
 	response := messages.SetListenerResponse{
@@ -378,7 +378,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 	from, _ := types.DateFromString("2019-01-01")
 	to, _ := types.DateFromString("2019-12-31")
 	timestamp := types.DateTime(time.Date(2019, time.August, 1, 12, 34, 56, 0, time.Local))
-	listener := net.UDPAddr{IP: net.IPv4(10, 0, 0, 10), Port: 43210}
+	listener := netip.MustParseAddrPort("10.0.0.10:43210")
 
 	doors := entities.MakeDoors()
 
@@ -505,7 +505,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 		Gateway:      net.IPv4(10, 0, 0, 1),
 		MacAddress:   types.MacAddress(MAC),
 		Version:      9876,
-		Listener:     &listener,
+		Listener:     listener,
 		Cards:        cards,
 		Events:       events,
 		Doors:        doors,

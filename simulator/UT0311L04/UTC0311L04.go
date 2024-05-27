@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"net"
+	"net/netip"
 	"os"
 	"path/filepath"
 	"time"
@@ -33,7 +34,7 @@ type UT0311L04 struct {
 	TimeOffset          entities.Offset       `json:"offset"`
 	Doors               entities.Doors        `json:"doors"`
 	Keypads             entities.Keypads      `json:"keypads"`
-	Listener            *net.UDPAddr          `json:"listener"`
+	Listener            netip.AddrPort        `json:"listener"`
 	RecordSpecialEvents bool                  `json:"record-special-events"`
 	PCControl           bool                  `json:"pc-control"`
 	SystemError         uint8                 `json:"system-error"`
@@ -46,10 +47,10 @@ type UT0311L04 struct {
 	Events              entities.EventList    `json:"events"`
 }
 
-var onEvent = func(dest *net.UDPAddr, event any) {
+var onEvent = func(dest netip.AddrPort, event any) {
 }
 
-func SetOnEvent(handler func(dest *net.UDPAddr, event any)) {
+func SetOnEvent(handler func(dest netip.AddrPort, event any)) {
 	if handler != nil {
 		onEvent = handler
 	}
@@ -281,20 +282,91 @@ func loadGZ(filepath string) (*UT0311L04, error) {
 		return nil, err
 	}
 
-	simulator := UT0311L04{
+	object := struct {
+		SerialNumber        types.SerialNumber    `json:"serial-number"`
+		IpAddress           net.IP                `json:"address"`
+		SubnetMask          net.IP                `json:"subnet"`
+		Gateway             net.IP                `json:"gateway"`
+		MacAddress          types.MacAddress      `json:"MAC"`
+		Version             types.Version         `json:"version"`
+		Released            *ReleaseDate          `json:"released"`
+		TimeOffset          entities.Offset       `json:"offset"`
+		Doors               entities.Doors        `json:"doors"`
+		Keypads             entities.Keypads      `json:"keypads"`
+		Listener            json.RawMessage       `json:"listener"`
+		RecordSpecialEvents bool                  `json:"record-special-events"`
+		PCControl           bool                  `json:"pc-control"`
+		SystemError         uint8                 `json:"system-error"`
+		SequenceId          uint32                `json:"sequence-id"`
+		SpecialInfo         uint8                 `json:"special-info"`
+		InputState          uint8                 `json:"input-state"`
+		TimeProfiles        entities.TimeProfiles `json:"time-profiles,omitempty"`
+		TaskList            json.RawMessage       `json:"tasklist,omitempty"`
+		Cards               entities.CardList     `json:"cards"`
+		Events              entities.EventList    `json:"events"`
+	}{
 		Released:     DefaultReleaseDate(),
 		Doors:        entities.MakeDoors(),
 		Keypads:      entities.MakeKeypads(),
 		TimeProfiles: entities.TimeProfiles{},
 	}
 
-	if err = json.Unmarshal(buffer, &simulator); err != nil {
+	if err = json.Unmarshal(buffer, &object); err != nil {
 		return nil, err
 	}
 
-	simulator.file = filepath
-	simulator.compressed = true
-	simulator.touched = time.Now()
+	// ... unmarshal event listener variants
+	var listener = netip.AddrPort{}
+	var addrPort netip.AddrPort
+	var udpAddr net.UDPAddr
+
+	if err := json.Unmarshal(object.Listener, &addrPort); err == nil {
+		listener = addrPort
+	} else if err := json.Unmarshal(object.Listener, &udpAddr); err == nil {
+		listener = udpAddr.AddrPort()
+	}
+
+	// ... unmarshal tasklist
+	tasklist := struct {
+		Tasks []types.Task `json:"tasks"`
+	}{
+		Tasks: []types.Task{},
+	}
+
+	if err := json.Unmarshal(object.TaskList, &tasklist); err != nil {
+		warnf(object.SerialNumber, "error loading tasklist (%v)", err)
+	}
+
+	// ... initialise simulator
+	simulator := UT0311L04{
+		file:       filepath,
+		compressed: true,
+		touched:    time.Now(),
+
+		SerialNumber:        object.SerialNumber,
+		IpAddress:           object.IpAddress,
+		SubnetMask:          object.SubnetMask,
+		Gateway:             object.Gateway,
+		MacAddress:          object.MacAddress,
+		Version:             object.Version,
+		Released:            object.Released,
+		TimeOffset:          object.TimeOffset,
+		Doors:               object.Doors,
+		Keypads:             object.Keypads,
+		Listener:            listener,
+		RecordSpecialEvents: object.RecordSpecialEvents,
+		PCControl:           object.PCControl,
+		SystemError:         object.SystemError,
+		SequenceId:          object.SequenceId,
+		SpecialInfo:         object.SpecialInfo,
+		InputState:          object.InputState,
+		TimeProfiles:        object.TimeProfiles,
+		TaskList: entities.TaskList{
+			Tasks: tasklist.Tasks,
+		},
+		Cards:  object.Cards,
+		Events: object.Events,
+	}
 
 	return &simulator, nil
 }
@@ -305,21 +377,91 @@ func load(filepath string) (*UT0311L04, error) {
 		return nil, err
 	}
 
-	simulator := UT0311L04{
+	object := struct {
+		SerialNumber        types.SerialNumber    `json:"serial-number"`
+		IpAddress           net.IP                `json:"address"`
+		SubnetMask          net.IP                `json:"subnet"`
+		Gateway             net.IP                `json:"gateway"`
+		MacAddress          types.MacAddress      `json:"MAC"`
+		Version             types.Version         `json:"version"`
+		Released            *ReleaseDate          `json:"released"`
+		TimeOffset          entities.Offset       `json:"offset"`
+		Doors               entities.Doors        `json:"doors"`
+		Keypads             entities.Keypads      `json:"keypads"`
+		Listener            json.RawMessage       `json:"listener"`
+		RecordSpecialEvents bool                  `json:"record-special-events"`
+		PCControl           bool                  `json:"pc-control"`
+		SystemError         uint8                 `json:"system-error"`
+		SequenceId          uint32                `json:"sequence-id"`
+		SpecialInfo         uint8                 `json:"special-info"`
+		InputState          uint8                 `json:"input-state"`
+		TimeProfiles        entities.TimeProfiles `json:"time-profiles,omitempty"`
+		TaskList            json.RawMessage       `json:"tasklist,omitempty"`
+		Cards               entities.CardList     `json:"cards"`
+		Events              entities.EventList    `json:"events"`
+	}{
 		Released:     DefaultReleaseDate(),
 		Doors:        entities.MakeDoors(),
 		Keypads:      entities.MakeKeypads(),
 		TimeProfiles: entities.TimeProfiles{},
 	}
 
-	err = json.Unmarshal(bytes, &simulator)
-	if err != nil {
+	if err = json.Unmarshal(bytes, &object); err != nil {
 		return nil, err
 	}
 
-	simulator.file = filepath
-	simulator.compressed = false
-	simulator.touched = time.Now()
+	// ... unmarshal event listener variants
+	var listener = netip.AddrPort{}
+	var addrPort netip.AddrPort
+	var udpAddr net.UDPAddr
+
+	if err := json.Unmarshal(object.Listener, &addrPort); err == nil {
+		listener = addrPort
+	} else if err := json.Unmarshal(object.Listener, &udpAddr); err == nil {
+		listener = udpAddr.AddrPort()
+	}
+
+	// ... unmarshal tasklist
+	tasklist := struct {
+		Tasks []types.Task `json:"tasks"`
+	}{
+		Tasks: []types.Task{},
+	}
+
+	if err := json.Unmarshal(object.TaskList, &tasklist); err != nil {
+		warnf(object.SerialNumber, "error loading tasklist (%v)", err)
+	}
+
+	// ... initialise simulator
+	simulator := UT0311L04{
+		file:       filepath,
+		compressed: false,
+		touched:    time.Now(),
+
+		SerialNumber:        object.SerialNumber,
+		IpAddress:           object.IpAddress,
+		SubnetMask:          object.SubnetMask,
+		Gateway:             object.Gateway,
+		MacAddress:          object.MacAddress,
+		Version:             object.Version,
+		Released:            object.Released,
+		TimeOffset:          object.TimeOffset,
+		Doors:               object.Doors,
+		Keypads:             object.Keypads,
+		Listener:            listener,
+		RecordSpecialEvents: object.RecordSpecialEvents,
+		PCControl:           object.PCControl,
+		SystemError:         object.SystemError,
+		SequenceId:          object.SequenceId,
+		SpecialInfo:         object.SpecialInfo,
+		InputState:          object.InputState,
+		TimeProfiles:        object.TimeProfiles,
+		TaskList: entities.TaskList{
+			Tasks: tasklist.Tasks,
+		},
+		Cards:  object.Cards,
+		Events: object.Events,
+	}
 
 	return &simulator, nil
 }
@@ -446,4 +588,10 @@ func (s *UT0311L04) relays() uint8 {
 	}
 
 	return state
+}
+
+func warnf(tag any, format string, args ...any) {
+	f := fmt.Sprintf("%-10v  %v", tag, format)
+
+	log.Warnf(f, args...)
 }
