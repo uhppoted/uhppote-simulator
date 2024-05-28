@@ -282,8 +282,7 @@ func TestHandleGetListener(t *testing.T) {
 
 	response := messages.GetListenerResponse{
 		SerialNumber: 12345,
-		Address:      net.IPv4(10, 0, 0, 10),
-		Port:         43210,
+		AddrPort:     netip.MustParseAddrPort("10.0.0.10:43210"),
 	}
 
 	testHandle(&request, &response, t)
