@@ -13,7 +13,7 @@ import (
 
 func TestGetDeviceWithMatchingAddress(t *testing.T) {
 	MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
-	released, _ := types.DateFromString("2020-12-05")
+	released := types.MustParseDate("2020-12-05")
 	listener := netip.MustParseAddrPort("10.0.0.10:43210")
 
 	s := UT0311L04{
@@ -30,8 +30,6 @@ func TestGetDeviceWithMatchingAddress(t *testing.T) {
 		Doors:        entities.MakeDoors(),
 	}
 
-	date, _ := types.DateFromString("2020-12-05")
-
 	expected := messages.GetDeviceResponse{
 		SerialNumber: 12345,
 		IpAddress:    net.IPv4(10, 0, 0, 100),
@@ -39,7 +37,7 @@ func TestGetDeviceWithMatchingAddress(t *testing.T) {
 		Gateway:      net.IPv4(10, 0, 0, 1),
 		MacAddress:   types.MacAddress(MAC),
 		Version:      9876,
-		Date:         date,
+		Date:         types.MustParseDate("2020-12-05"),
 	}
 
 	request := messages.GetDeviceRequest{
@@ -57,7 +55,7 @@ func TestGetDeviceWithMatchingAddress(t *testing.T) {
 
 func TestGetDeviceWithAddress0(t *testing.T) {
 	MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
-	released, _ := types.DateFromString("2020-12-05")
+	released := types.MustParseDate("2020-12-05")
 	listener := netip.MustParseAddrPort("10.0.0.10:43210")
 
 	s := UT0311L04{
@@ -74,8 +72,6 @@ func TestGetDeviceWithAddress0(t *testing.T) {
 		Doors:        entities.MakeDoors(),
 	}
 
-	date, _ := types.DateFromString("2020-12-05")
-
 	expected := messages.GetDeviceResponse{
 		SerialNumber: 12345,
 		IpAddress:    net.IPv4(10, 0, 0, 100),
@@ -83,7 +79,7 @@ func TestGetDeviceWithAddress0(t *testing.T) {
 		Gateway:      net.IPv4(10, 0, 0, 1),
 		MacAddress:   types.MacAddress(MAC),
 		Version:      9876,
-		Date:         date,
+		Date:         types.MustParseDate("2020-12-05"),
 	}
 
 	request := messages.GetDeviceRequest{
@@ -101,7 +97,7 @@ func TestGetDeviceWithAddress0(t *testing.T) {
 
 func TestGetDeviceWithDifferentAddress(t *testing.T) {
 	MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
-	released, _ := types.DateFromString("2020-12-05")
+	released := types.MustParseDate("2020-12-05")
 	listener := netip.MustParseAddrPort("10.0.0.10:43210")
 
 	s := UT0311L04{

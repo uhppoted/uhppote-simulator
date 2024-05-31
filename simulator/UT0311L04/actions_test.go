@@ -96,8 +96,8 @@ func TestCheckTimeProfile(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		from, _ := types.DateFromString(test.startDate)
-		to, _ := types.DateFromString(test.endDate)
+		from := types.MustParseDate(test.startDate)
+		to := types.MustParseDate(test.endDate)
 		start, _ := types.HHmmFromString(test.startTime)
 		end, _ := types.HHmmFromString(test.endTime)
 

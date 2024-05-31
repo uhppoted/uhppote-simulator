@@ -119,13 +119,11 @@ func TestHandleOpenDoor(t *testing.T) {
 }
 
 func TestHandlePutCardRequest(t *testing.T) {
-	from, _ := types.DateFromString("2019-01-01")
-	to, _ := types.DateFromString("2019-12-31")
 	request := messages.PutCardRequest{
 		SerialNumber: 12345,
 		CardNumber:   192837465,
-		From:         from,
-		To:           to,
+		From:         types.MustParseDate("2019-01-01"),
+		To:           types.MustParseDate("2019-12-31"),
 		Door1:        1,
 		Door2:        0,
 		Door3:        1,
@@ -182,9 +180,6 @@ func TestHandleGetCardsRequest(t *testing.T) {
 }
 
 func TestHandleGetCardById(t *testing.T) {
-	from, _ := types.DateFromString("2019-01-01")
-	to, _ := types.DateFromString("2019-12-31")
-
 	request := messages.GetCardByIDRequest{
 		SerialNumber: 12345,
 		CardNumber:   192837465,
@@ -193,8 +188,8 @@ func TestHandleGetCardById(t *testing.T) {
 	response := messages.GetCardByIDResponse{
 		SerialNumber: 12345,
 		CardNumber:   192837465,
-		From:         from,
-		To:           to,
+		From:         types.MustParseDate("2019-01-01"),
+		To:           types.MustParseDate("2019-12-31"),
 		Door1:        1,
 		Door2:        0,
 		Door3:        0,
@@ -205,9 +200,6 @@ func TestHandleGetCardById(t *testing.T) {
 }
 
 func TestHandleGetCardByIndex(t *testing.T) {
-	from, _ := types.DateFromString("2019-01-01")
-	to, _ := types.DateFromString("2019-12-31")
-
 	request := messages.GetCardByIndexRequest{
 		SerialNumber: 12345,
 		Index:        2,
@@ -216,8 +208,8 @@ func TestHandleGetCardByIndex(t *testing.T) {
 	response := messages.GetCardByIndexResponse{
 		SerialNumber: 12345,
 		CardNumber:   192837465,
-		From:         from,
-		To:           to,
+		From:         types.MustParseDate("2019-01-01"),
+		To:           types.MustParseDate("2019-12-31"),
 		Door1:        1,
 		Door2:        0,
 		Door3:        0,
@@ -374,8 +366,8 @@ func TestHandleGetEventIndex(t *testing.T) {
 
 func testHandle(request messages.Request, expected messages.Response, t *testing.T) {
 	MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
-	from, _ := types.DateFromString("2019-01-01")
-	to, _ := types.DateFromString("2019-12-31")
+	from := types.MustParseDate("2019-01-01")
+	to := types.MustParseDate("2019-12-31")
 	timestamp := types.DateTime(time.Date(2019, time.August, 1, 12, 34, 56, 0, time.Local))
 	listener := netip.MustParseAddrPort("10.0.0.10:43210")
 
