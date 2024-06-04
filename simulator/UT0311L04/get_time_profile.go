@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/uhppoted/uhppote-core/messages"
+	"github.com/uhppoted/uhppote-core/types"
 )
 
 func (s *UT0311L04) getTimeProfile(request *messages.GetTimeProfileRequest) (*messages.GetTimeProfileResponse, error) {
@@ -17,11 +18,22 @@ func (s *UT0311L04) getTimeProfile(request *messages.GetTimeProfileRequest) (*me
 
 	if request.ProfileID > 1 && request.ProfileID < 255 {
 		if profile, ok := s.TimeProfiles[request.ProfileID]; ok {
+			// FIXME: replace From in types.TimeProfile
+			from := types.Date{}
+			if profile.From != nil {
+				from = *profile.From
+			}
+
+			// FIXME: replace To in TimeProfile entity
+			to := types.Date{}
+			if profile.To != nil {
+				to = *profile.To
+			}
 
 			response.ProfileID = profile.ID
 			response.LinkedProfileID = profile.LinkedProfileID
-			response.From = profile.From
-			response.To = profile.To
+			response.From = from
+			response.To = to
 
 			response.Monday = profile.Weekdays[time.Monday]
 			response.Tuesday = profile.Weekdays[time.Tuesday]
