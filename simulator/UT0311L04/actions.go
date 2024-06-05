@@ -344,11 +344,13 @@ func checkTimeProfile(profile types.TimeProfile, offset entities.Offset) bool {
 	today := types.Date(adjusted)
 	weekday := today.Weekday()
 
-	if profile.From == nil || profile.From.After(today) {
+	// NTS: zero value 'from' date may be valid
+	if profile.From.IsZero() || profile.From.After(today) {
 		return false
 	}
 
-	if profile.To == nil || profile.To.Before(today) {
+	// NTS: zero value 'to' date may be valid
+	if profile.To.IsZero() || profile.To.Before(today) {
 		return false
 	}
 

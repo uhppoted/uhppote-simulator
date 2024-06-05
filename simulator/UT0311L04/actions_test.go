@@ -96,16 +96,14 @@ func TestCheckTimeProfile(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		from := types.MustParseDate(test.startDate)
-		to := types.MustParseDate(test.endDate)
 		start, _ := types.HHmmFromString(test.startTime)
 		end, _ := types.HHmmFromString(test.endTime)
 
 		profile := types.TimeProfile{
 			ID:              37,
 			LinkedProfileID: 0,
-			From:            &from,
-			To:              &to,
+			From:            types.MustParseDate(test.startDate),
+			To:              types.MustParseDate(test.endDate),
 			Weekdays: types.Weekdays{
 				time.Monday:    test.monday,
 				time.Tuesday:   test.tuesday,

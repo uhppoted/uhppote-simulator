@@ -16,8 +16,8 @@ func (s *UT0311L04) setTimeProfile(request *messages.SetTimeProfileRequest) (*me
 	profile := types.TimeProfile{
 		ID:              request.ProfileID,
 		LinkedProfileID: request.LinkedProfileID,
-		From:            &request.From,
-		To:              &request.To,
+		From:            request.From,
+		To:              request.To,
 		Weekdays: types.Weekdays{
 			time.Monday:    request.Monday,
 			time.Tuesday:   request.Tuesday,
