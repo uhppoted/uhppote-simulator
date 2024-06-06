@@ -5,7 +5,6 @@ import (
 	"net/netip"
 	"reflect"
 	"testing"
-	"time"
 
 	"github.com/uhppoted/uhppote-core/messages"
 	"github.com/uhppoted/uhppote-core/types"
@@ -53,8 +52,8 @@ func TestRestoreDefaultParameters(t *testing.T) {
 
 	s.Cards.Put(&entities.Card{
 		CardNumber: 10058400,
-		From:       types.ToDate(2024, time.January, 1),
-		To:         types.ToDate(2024, time.December, 21),
+		From:       types.MustParseDate("2024-01-01"),
+		To:         types.MustParseDate("2024-12-21"),
 		Doors: map[uint8]uint8{
 			1: 1,
 			2: 1,
