@@ -11,9 +11,28 @@ import (
 	"github.com/uhppoted/uhppote-simulator/entities"
 )
 
+// TODO: deferred pending some way to compare Date field
+// func TestHandleFindDevices(t *testing.T) {
+//  MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
+//  now := types.Date(time.Now().UTC())
+//
+//  request := messages.FindDevicesRequest{}
+//
+//  response := messages.FindDevicesResponse{
+//      SerialNumber: 12345,
+//      IpAddress:    net.IPv4(10, 0, 0, 100),
+//      SubnetMask:   net.IPv4(255, 255, 255, 0),
+//      Gateway:      net.IPv4(10, 0, 0, 1),
+//      MacAddress:   types.MacAddress(MAC),
+//      Version:      9876,
+//      Date:         now,
+//  }
+//
+//  testHandle(&request, &response, t)
+// }
+
 func TestGetDeviceWithMatchingAddress(t *testing.T) {
 	MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
-	released := types.MustParseDate("2020-12-05")
 	listener := netip.MustParseAddrPort("10.0.0.10:43210")
 
 	s := UT0311L04{
@@ -23,7 +42,7 @@ func TestGetDeviceWithMatchingAddress(t *testing.T) {
 		Gateway:      net.IPv4(10, 0, 0, 1),
 		MacAddress:   types.MacAddress(MAC),
 		Version:      9876,
-		Released:     (*ReleaseDate)(&released),
+		Released:     types.MustParseDate("2020-12-05"),
 		Listener:     listener,
 		Cards:        entities.CardList{},
 		Events:       entities.EventList{},
@@ -55,7 +74,6 @@ func TestGetDeviceWithMatchingAddress(t *testing.T) {
 
 func TestGetDeviceWithAddress0(t *testing.T) {
 	MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
-	released := types.MustParseDate("2020-12-05")
 	listener := netip.MustParseAddrPort("10.0.0.10:43210")
 
 	s := UT0311L04{
@@ -65,7 +83,7 @@ func TestGetDeviceWithAddress0(t *testing.T) {
 		Gateway:      net.IPv4(10, 0, 0, 1),
 		MacAddress:   types.MacAddress(MAC),
 		Version:      9876,
-		Released:     (*ReleaseDate)(&released),
+		Released:     types.MustParseDate("2020-12-05"),
 		Listener:     listener,
 		Cards:        entities.CardList{},
 		Events:       entities.EventList{},
@@ -97,7 +115,6 @@ func TestGetDeviceWithAddress0(t *testing.T) {
 
 func TestGetDeviceWithDifferentAddress(t *testing.T) {
 	MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
-	released := types.MustParseDate("2020-12-05")
 	listener := netip.MustParseAddrPort("10.0.0.10:43210")
 
 	s := UT0311L04{
@@ -107,7 +124,7 @@ func TestGetDeviceWithDifferentAddress(t *testing.T) {
 		Gateway:      net.IPv4(10, 0, 0, 1),
 		MacAddress:   types.MacAddress(MAC),
 		Version:      9876,
-		Released:     (*ReleaseDate)(&released),
+		Released:     types.MustParseDate("2020-12-05"),
 		Listener:     listener,
 		Cards:        entities.CardList{},
 		Events:       entities.EventList{},

@@ -17,7 +17,7 @@ func (s *UT0311L04) getDevice(request *messages.GetDeviceRequest) (*messages.Get
 		Gateway:      s.Gateway,
 		MacAddress:   s.MacAddress,
 		Version:      types.Version(s.Version),
-		Date:         types.Date(*s.Released),
+		Date:         s.Released,
 	}
 
 	return &response, nil

@@ -20,7 +20,7 @@ func TestNewUT0311L04(t *testing.T) {
 		Gateway:      net.IPv4(0, 0, 0, 0),
 		// MacAddress:   types.MacAddress(mac),
 		Version:      0x0892,
-		Released:     DefaultReleaseDate(),
+		Released:     RELEASE_DATE,
 		Doors:        entities.MakeDoors(),
 		TimeProfiles: entities.TimeProfiles{},
 		TaskList:     entities.TaskList{},
@@ -66,302 +66,136 @@ func TestNewUT0311L04(t *testing.T) {
 	}
 }
 
-// TODO: ignore date/time fields
-// func TestHandleGetStatus(t *testing.T) {
-// 	swipeDateTime, _ := types.DateTimeFromString("2019-08-01 12:34:56")
-// 	request := messages.GetStatusRequest{
-// 		SerialNumber: 12345,
-// 	}
-//
-// 	response := messages.GetStatusResponse{
-// 		SerialNumber:  12345,
-// 		EventIndex:     3,
-// 		SwipeRecord:   0x00,
-// 		Granted:       false,
-// 		Door:          3,
-// 		DoorOpened:    false,
-// 		UserId:        1234567890,
-// 		SwipeDateTime: *swipeDateTime,
-// 		SwipeReason:   0x05,
-// 		Door1State:    false,
-// 		Door2State:    false,
-// 		Door3State:    false,
-// 		Door4State:    false,
-// 		Door1Button:   false,
-// 		Door2Button:   false,
-// 		Door3Button:   false,
-// 		Door4Button:   false,
-// 		SystemState:   0x00,
-// 		//	SystemDate     types.SystemDate   `uhppote:"offset:51"`
-// 		//	SystemTime     types.SystemTime   `uhppote:"offset:37"`
-// 		PacketNumber:   0,
-// 		Backup:         0,
-// 		SpecialMessage: 0,
-// 		Battery:        0,
-// 		FireAlarm:      0,
-// 	}
-//
-// 	testHandle(&request, &response, t)
-// }
+func TestUT0311L04Unmarshal(t *testing.T) {
+	MAC, _ := net.ParseMAC("00:12:23:34:45:56")
+	doors := entities.MakeDoors()
 
-func TestHandleOpenDoor(t *testing.T) {
-	request := messages.OpenDoorRequest{
-		SerialNumber: 12345,
-		Door:         3,
+	expected := UT0311L04{
+		file:       "test.json",
+		compressed: false,
+
+		SerialNumber: types.SerialNumber(405419896),
+		IpAddress:    net.IPv4(0, 0, 0, 0),
+		SubnetMask:   net.IPv4(255, 255, 255, 0),
+		Gateway:      net.IPv4(0, 0, 0, 0),
+		MacAddress:   types.MacAddress(MAC),
+		Version:      0x0892,
+		Released:     types.MustParseDate("2018-11-05"),
+		Listener:     netip.MustParseAddrPort("192.168.1.100:60001"),
+		Doors:        doors,
+		Keypads:      map[uint8]entities.Keypad{1: 3, 2: 3, 3: 0, 4: 3},
+		TimeProfiles: entities.TimeProfiles{},
+		TaskList:     entities.TaskList{},
+		Events:       entities.NewEventList(),
 	}
 
-	response := messages.OpenDoorResponse{
-		SerialNumber: 12345,
-		Succeeded:    true,
+	JSON := `
+	{
+	  "serial-number": 405419896,
+	  "address": "0.0.0.0",
+	  "subnet": "255.255.255.0",
+	  "gateway": "0.0.0.0",
+	  "MAC": "00:12:23:34:45:56",
+	  "version": "0892",
+	  "released": "2018-11-05",
+	  "offset": "-7h0m0.666172s",
+	  "doors": {
+	    "1": { "control": 3, "delay": "5s", "passcodes": [ 0, 0, 0, 0 ] },
+	    "2": { "control": 3, "delay": "5s", "passcodes": [ 0, 0, 0, 0 ] },
+	    "3": { "control": 3, "delay": "5s", "passcodes": [ 0, 0, 0, 0 ] },
+	    "4": { "control": 3, "delay": "5s", "passcodes": [ 0, 0, 0, 0 ] },
+	    "interlock": 4
+	  },
+	  "keypads": { "1": 3, "2": 3, "3": 0, "4": 3 },
+	  "listener": "192.168.1.100:60001",
+	  "record-special-events": true,
+	  "pc-control": true,
+	  "system-error": 0,
+	  "sequence-id": 0,
+	  "special-info": 0,
+	  "input-state": 0,
+	  "time-profiles": {
+	    "100": {
+	      "id": 100,
+	      "start-date": "2023-04-01",
+	      "end-date": "2023-12-31",
+	      "weekdays": "Monday,Wednesday,Friday",
+	      "segments": [
+	        { "start": "08:30", "end": "11:30" },
+	        { "start": "00:00", "end": "00:00" },
+	        { "start": "13:45", "end": "17:00" }
+	      ]
+	    }
+	  },
+	  "tasklist": {
+	    "tasks": [
+	      { "task": "LOCK DOOR", "door": 4, "start-date": "2024-01-01", "end-date": "2024-12-31", "weekdays": "Monday,Friday", "start": "08:30" }
+	    ]
+	  },
+	  "cards": [],
+	  "events": {
+	    "size": 256,
+	    "chunk": 8,
+	    "index": 0,
+	    "events": [
+	      { "index": 1, "type": 1, "granted": false, "door": 3, "direction": 1, "card": 10058400, "timestamp": "2024-05-08 10:50:53", "reason": 18 }
+	    ]
+	  }
 	}
+	`
 
-	testHandle(&request, &response, t)
+	if controller, err := unmarshal([]byte(JSON), "test.json", false); err != nil {
+		t.Fatalf("error unmarshalling UT0311L04 (%v)", err)
+	} else if controller == nil {
+		t.Fatalf("error unmarshalling UT0311L04, expected UT0311L04{}, got %v", controller)
+	} else {
+		expected.touched = controller.touched
+
+		if controller.SerialNumber != expected.SerialNumber {
+			t.Errorf("incorrect serial number - expected:%v, got:%v", expected.SerialNumber, controller.SerialNumber)
+		}
+
+		if !reflect.DeepEqual(controller.IpAddress, expected.IpAddress) {
+			t.Errorf("incorrect IP address - expected:%v, got:%v", expected.IpAddress, controller.IpAddress)
+		}
+
+		if !reflect.DeepEqual(controller.SubnetMask, expected.SubnetMask) {
+			t.Errorf("incorrect netmask - expected:%v, got:%v", expected.SubnetMask, controller.SubnetMask)
+		}
+
+		if controller.Version != expected.Version {
+			t.Errorf("incorrect version - expected:%v, got:%v", expected.Version, controller.Version)
+		}
+
+		if !reflect.DeepEqual(controller.Released, expected.Released) {
+			t.Errorf("incorrect firmware date - expected:%v, got:%v", expected.Released, controller.Released)
+		}
+	}
 }
 
-func TestHandlePutCardRequest(t *testing.T) {
-	request := messages.PutCardRequest{
-		SerialNumber: 12345,
-		CardNumber:   192837465,
-		From:         types.MustParseDate("2019-01-01"),
-		To:           types.MustParseDate("2019-12-31"),
-		Door1:        1,
-		Door2:        0,
-		Door3:        1,
-		Door4:        0,
+func TestUT0311L04UnmarshalDefaultValues(t *testing.T) {
+	expected := UT0311L04{
+		file:       "test.json",
+		compressed: false,
+		Released:   RELEASE_DATE,
 	}
 
-	response := messages.PutCardResponse{
-		SerialNumber: 12345,
-		Succeeded:    true,
+	JSON := `
+	{
 	}
+	`
 
-	testHandle(&request, &response, t)
-}
+	if controller, err := unmarshal([]byte(JSON), "test.json", false); err != nil {
+		t.Fatalf("error unmarshalling UT0311L04 (%v)", err)
+	} else if controller == nil {
+		t.Fatalf("error unmarshalling UT0311L04, expected UT0311L04{}, got %v", controller)
+	} else {
+		expected.touched = controller.touched
 
-func TestHandleDeleteCardRequest(t *testing.T) {
-	request := messages.DeleteCardRequest{
-		SerialNumber: 12345,
-		CardNumber:   192837465,
+		if !reflect.DeepEqual(controller.Released, expected.Released) {
+			t.Errorf("incorrect firmware date - expected:%v, got:%v", expected.Released, controller.Released)
+		}
 	}
-
-	response := messages.DeleteCardResponse{
-		SerialNumber: 12345,
-		Succeeded:    true,
-	}
-
-	testHandle(&request, &response, t)
-}
-
-func TestHandleDeleteCardsRequest(t *testing.T) {
-	request := messages.DeleteCardsRequest{
-		SerialNumber: 12345,
-		MagicWord:    0x55aaaa55,
-	}
-
-	response := messages.DeleteCardsResponse{
-		SerialNumber: 12345,
-		Succeeded:    true,
-	}
-
-	testHandle(&request, &response, t)
-}
-
-func TestHandleGetCardsRequest(t *testing.T) {
-	request := messages.GetCardsRequest{
-		SerialNumber: 12345,
-	}
-
-	response := messages.GetCardsResponse{
-		SerialNumber: 12345,
-		Records:      3,
-	}
-
-	testHandle(&request, &response, t)
-}
-
-func TestHandleGetCardById(t *testing.T) {
-	request := messages.GetCardByIDRequest{
-		SerialNumber: 12345,
-		CardNumber:   192837465,
-	}
-
-	response := messages.GetCardByIDResponse{
-		SerialNumber: 12345,
-		CardNumber:   192837465,
-		From:         types.MustParseDate("2019-01-01"),
-		To:           types.MustParseDate("2019-12-31"),
-		Door1:        1,
-		Door2:        0,
-		Door3:        0,
-		Door4:        1,
-	}
-
-	testHandle(&request, &response, t)
-}
-
-func TestHandleGetCardByIndex(t *testing.T) {
-	request := messages.GetCardByIndexRequest{
-		SerialNumber: 12345,
-		Index:        2,
-	}
-
-	response := messages.GetCardByIndexResponse{
-		SerialNumber: 12345,
-		CardNumber:   192837465,
-		From:         types.MustParseDate("2019-01-01"),
-		To:           types.MustParseDate("2019-12-31"),
-		Door1:        1,
-		Door2:        0,
-		Door3:        0,
-		Door4:        1,
-	}
-
-	testHandle(&request, &response, t)
-}
-
-func TestHandleSetDoorControlState(t *testing.T) {
-	request := messages.SetDoorControlStateRequest{
-		SerialNumber: 12345,
-		Door:         2,
-		ControlState: 3,
-		Delay:        7,
-	}
-
-	response := messages.SetDoorControlStateResponse{
-		SerialNumber: 12345,
-		Door:         2,
-		ControlState: 3,
-		Delay:        7,
-	}
-
-	testHandle(&request, &response, t)
-}
-
-func TestHandleGetDoorControlState(t *testing.T) {
-	request := messages.GetDoorControlStateRequest{
-		SerialNumber: 12345,
-		Door:         2,
-	}
-
-	response := messages.GetDoorControlStateResponse{
-		SerialNumber: 12345,
-		Door:         2,
-		ControlState: 2,
-		Delay:        22,
-	}
-
-	testHandle(&request, &response, t)
-}
-
-func TestHandleSetListener(t *testing.T) {
-	request := messages.SetListenerRequest{
-		SerialNumber: 12345,
-		AddrPort:     netip.MustParseAddrPort("10.0.0.1:43210"),
-	}
-
-	response := messages.SetListenerResponse{
-		SerialNumber: 12345,
-		Succeeded:    true,
-	}
-
-	testHandle(&request, &response, t)
-}
-
-func TestHandleGetListener(t *testing.T) {
-	request := messages.GetListenerRequest{
-		SerialNumber: 12345,
-	}
-
-	response := messages.GetListenerResponse{
-		SerialNumber: 12345,
-		AddrPort:     netip.MustParseAddrPort("10.0.0.10:43210"),
-	}
-
-	testHandle(&request, &response, t)
-}
-
-// TODO: deferred pending some way to compare Date field
-// func TestHandleFindDevices(t *testing.T) {
-// 	MAC, _ := net.ParseMAC("00:66:19:39:55:2d")
-// 	now := types.Date(time.Now().UTC())
-//
-// 	request := messages.FindDevicesRequest{}
-//
-// 	response := messages.FindDevicesResponse{
-// 		SerialNumber: 12345,
-// 		IpAddress:    net.IPv4(10, 0, 0, 100),
-// 		SubnetMask:   net.IPv4(255, 255, 255, 0),
-// 		Gateway:      net.IPv4(10, 0, 0, 1),
-// 		MacAddress:   types.MacAddress(MAC),
-// 		Version:      9876,
-// 		Date:         now,
-// 	}
-//
-// 	testHandle(&request, &response, t)
-// }
-
-func TestHandleSetAddress(t *testing.T) {
-	request := messages.SetAddressRequest{
-		SerialNumber: 12345,
-		Address:      net.IPv4(10, 0, 0, 100),
-		Mask:         net.IPv4(255, 255, 255, 0),
-		Gateway:      net.IPv4(10, 0, 0, 1),
-		MagicWord:    0x55aaaa55,
-	}
-
-	testHandle(&request, nil, t)
-}
-
-func TestHandleGetEvent(t *testing.T) {
-	datetime, _ := time.ParseInLocation("2006-01-02 15:04:05", "2019-08-01 12:34:56", time.Local)
-	timestamp := types.DateTime(datetime)
-
-	request := messages.GetEventRequest{
-		SerialNumber: 12345,
-		Index:        2,
-	}
-
-	response := messages.GetEventResponse{
-		SerialNumber: 12345,
-		Index:        2,
-		Type:         0x06,
-		Granted:      true,
-		Door:         4,
-		Direction:    0x01,
-		CardNumber:   555444321,
-		Timestamp:    timestamp,
-		Reason:       9,
-	}
-
-	testHandle(&request, &response, t)
-}
-
-func TestHandleSetEventIndex(t *testing.T) {
-	request := messages.SetEventIndexRequest{
-		SerialNumber: 12345,
-		Index:        7,
-		MagicWord:    0x55aaaa55,
-	}
-
-	response := messages.SetEventIndexResponse{
-		SerialNumber: 12345,
-		Changed:      true,
-	}
-
-	testHandle(&request, &response, t)
-}
-
-func TestHandleGetEventIndex(t *testing.T) {
-	request := messages.GetEventIndexRequest{
-		SerialNumber: 12345,
-	}
-
-	response := messages.GetEventIndexResponse{
-		SerialNumber: 12345,
-		Index:        123,
-	}
-
-	testHandle(&request, &response, t)
 }
 
 func testHandle(request messages.Request, expected messages.Response, t *testing.T) {

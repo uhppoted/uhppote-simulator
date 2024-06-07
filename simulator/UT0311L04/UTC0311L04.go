@@ -30,7 +30,7 @@ type UT0311L04 struct {
 	Gateway             net.IP                `json:"gateway"`
 	MacAddress          types.MacAddress      `json:"MAC"`
 	Version             types.Version         `json:"version"`
-	Released            *ReleaseDate          `json:"released"`
+	Released            types.Date            `json:"released,omitempty"`
 	TimeOffset          entities.Offset       `json:"offset"`
 	Doors               entities.Doors        `json:"doors"`
 	Keypads             entities.Keypads      `json:"keypads"`
@@ -46,6 +46,8 @@ type UT0311L04 struct {
 	Cards               entities.CardList     `json:"cards"`
 	Events              entities.EventList    `json:"events"`
 }
+
+var RELEASE_DATE = types.MustParseDate("2020-01-01")
 
 var onEvent = func(dest netip.AddrPort, event any) {
 }
@@ -78,7 +80,7 @@ func NewUT0311L04(deviceID uint32, dir string, compressed bool) *UT0311L04 {
 		Gateway:      net.IPv4(0, 0, 0, 0),
 		MacAddress:   types.MacAddress(mac),
 		Version:      0x0892,
-		Released:     DefaultReleaseDate(),
+		Released:     RELEASE_DATE,
 		Doors:        entities.MakeDoors(),
 		Keypads:      entities.MakeKeypads(),
 		TimeProfiles: entities.TimeProfiles{},
@@ -277,98 +279,12 @@ func loadGZ(filepath string) (*UT0311L04, error) {
 		return nil, err
 	}
 
-	buffer, err := io.ReadAll(zr)
+	bytes, err := io.ReadAll(zr)
 	if err != nil {
 		return nil, err
 	}
 
-	object := struct {
-		SerialNumber        types.SerialNumber    `json:"serial-number"`
-		IpAddress           net.IP                `json:"address"`
-		SubnetMask          net.IP                `json:"subnet"`
-		Gateway             net.IP                `json:"gateway"`
-		MacAddress          types.MacAddress      `json:"MAC"`
-		Version             types.Version         `json:"version"`
-		Released            *ReleaseDate          `json:"released"`
-		TimeOffset          entities.Offset       `json:"offset"`
-		Doors               entities.Doors        `json:"doors"`
-		Keypads             entities.Keypads      `json:"keypads"`
-		Listener            json.RawMessage       `json:"listener"`
-		RecordSpecialEvents bool                  `json:"record-special-events"`
-		PCControl           bool                  `json:"pc-control"`
-		SystemError         uint8                 `json:"system-error"`
-		SequenceId          uint32                `json:"sequence-id"`
-		SpecialInfo         uint8                 `json:"special-info"`
-		InputState          uint8                 `json:"input-state"`
-		TimeProfiles        entities.TimeProfiles `json:"time-profiles,omitempty"`
-		TaskList            json.RawMessage       `json:"tasklist,omitempty"`
-		Cards               entities.CardList     `json:"cards"`
-		Events              entities.EventList    `json:"events"`
-	}{
-		Released:     DefaultReleaseDate(),
-		Doors:        entities.MakeDoors(),
-		Keypads:      entities.MakeKeypads(),
-		TimeProfiles: entities.TimeProfiles{},
-	}
-
-	if err = json.Unmarshal(buffer, &object); err != nil {
-		return nil, err
-	}
-
-	// ... unmarshal event listener variants
-	var listener = netip.AddrPort{}
-	var addrPort netip.AddrPort
-	var udpAddr net.UDPAddr
-
-	if err := json.Unmarshal(object.Listener, &addrPort); err == nil {
-		listener = addrPort
-	} else if err := json.Unmarshal(object.Listener, &udpAddr); err == nil {
-		listener = udpAddr.AddrPort()
-	}
-
-	// ... unmarshal tasklist
-	tasklist := struct {
-		Tasks []types.Task `json:"tasks"`
-	}{
-		Tasks: []types.Task{},
-	}
-
-	if err := json.Unmarshal(object.TaskList, &tasklist); err != nil {
-		warnf(object.SerialNumber, "error loading tasklist (%v)", err)
-	}
-
-	// ... initialise simulator
-	simulator := UT0311L04{
-		file:       filepath,
-		compressed: true,
-		touched:    time.Now(),
-
-		SerialNumber:        object.SerialNumber,
-		IpAddress:           object.IpAddress,
-		SubnetMask:          object.SubnetMask,
-		Gateway:             object.Gateway,
-		MacAddress:          object.MacAddress,
-		Version:             object.Version,
-		Released:            object.Released,
-		TimeOffset:          object.TimeOffset,
-		Doors:               object.Doors,
-		Keypads:             object.Keypads,
-		Listener:            listener,
-		RecordSpecialEvents: object.RecordSpecialEvents,
-		PCControl:           object.PCControl,
-		SystemError:         object.SystemError,
-		SequenceId:          object.SequenceId,
-		SpecialInfo:         object.SpecialInfo,
-		InputState:          object.InputState,
-		TimeProfiles:        object.TimeProfiles,
-		TaskList: entities.TaskList{
-			Tasks: tasklist.Tasks,
-		},
-		Cards:  object.Cards,
-		Events: object.Events,
-	}
-
-	return &simulator, nil
+	return unmarshal(bytes, filepath, true)
 }
 
 func load(filepath string) (*UT0311L04, error) {
@@ -377,6 +293,10 @@ func load(filepath string) (*UT0311L04, error) {
 		return nil, err
 	}
 
+	return unmarshal(bytes, filepath, false)
+}
+
+func unmarshal(bytes []byte, filepath string, compressed bool) (*UT0311L04, error) {
 	object := struct {
 		SerialNumber        types.SerialNumber    `json:"serial-number"`
 		IpAddress           net.IP                `json:"address"`
@@ -384,7 +304,7 @@ func load(filepath string) (*UT0311L04, error) {
 		Gateway             net.IP                `json:"gateway"`
 		MacAddress          types.MacAddress      `json:"MAC"`
 		Version             types.Version         `json:"version"`
-		Released            *ReleaseDate          `json:"released"`
+		Released            types.Date            `json:"released,omitempty"`
 		TimeOffset          entities.Offset       `json:"offset"`
 		Doors               entities.Doors        `json:"doors"`
 		Keypads             entities.Keypads      `json:"keypads"`
@@ -400,13 +320,13 @@ func load(filepath string) (*UT0311L04, error) {
 		Cards               entities.CardList     `json:"cards"`
 		Events              entities.EventList    `json:"events"`
 	}{
-		Released:     DefaultReleaseDate(),
+		Released:     RELEASE_DATE,
 		Doors:        entities.MakeDoors(),
 		Keypads:      entities.MakeKeypads(),
 		TimeProfiles: entities.TimeProfiles{},
 	}
 
-	if err = json.Unmarshal(bytes, &object); err != nil {
+	if err := json.Unmarshal(bytes, &object); err != nil {
 		return nil, err
 	}
 
@@ -435,7 +355,7 @@ func load(filepath string) (*UT0311L04, error) {
 	// ... initialise simulator
 	simulator := UT0311L04{
 		file:       filepath,
-		compressed: false,
+		compressed: compressed,
 		touched:    time.Now(),
 
 		SerialNumber:        object.SerialNumber,
