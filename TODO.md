@@ -11,6 +11,10 @@
       - [x] CHANGELOG
       - [x] README
 
+- [x] _405419896   error loading tasklist (unexpected end of JSON input)_
+- [ ] Check `dump` udp/tcp packet labellingmay be mislabelling udp/tcp packets
+
+
 ## TODO
 
 - [ ] Verify fields in listen events/status replies against SDK

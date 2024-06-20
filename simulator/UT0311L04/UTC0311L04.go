@@ -348,8 +348,10 @@ func unmarshal(bytes []byte, filepath string, compressed bool) (*UT0311L04, erro
 		Tasks: []types.Task{},
 	}
 
-	if err := json.Unmarshal(object.TaskList, &tasklist); err != nil {
-		warnf(object.SerialNumber, "error loading tasklist (%v)", err)
+	if object.TaskList != nil && len(object.TaskList) > 0 {
+		if err := json.Unmarshal(object.TaskList, &tasklist); err != nil {
+			warnf(object.SerialNumber, "error loading tasklist (%v)", err)
+		}
 	}
 
 	// ... initialise simulator

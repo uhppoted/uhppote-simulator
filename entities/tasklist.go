@@ -10,7 +10,7 @@ import (
 )
 
 type TaskList struct {
-	Tasks     []types.Task `json:"tasks"`
+	Tasks     []types.Task `json:"tasks,omitempty"`
 	added     []types.Task
 	scheduled map[int]scheduled
 	last      string
