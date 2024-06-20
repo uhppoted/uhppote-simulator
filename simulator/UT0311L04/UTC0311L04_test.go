@@ -191,8 +191,8 @@ func TestUT0311L04Unmarshal(t *testing.T) {
 			t.Errorf("incorrect firmware date - expected:%v, got:%v", expected.Released, controller.Released)
 		}
 
-		if !reflect.DeepEqual(controller.TaskList, expected.TaskList) {
-			t.Errorf("incorrect tasklist - expected:%v, got:%v", expected.TaskList, controller.TaskList)
+		if !reflect.DeepEqual(controller.TaskList.Tasks, expected.TaskList.Tasks) {
+			t.Errorf("incorrect tasklist - expected:%v, got:%v", expected.TaskList.Tasks, controller.TaskList.Tasks)
 		}
 	}
 }
@@ -324,8 +324,8 @@ func TestUT0311L04UnmarshalWithMissingTaskList(t *testing.T) {
 			t.Errorf("incorrect firmware date - expected:%v, got:%v", expected.Released, controller.Released)
 		}
 
-		if !reflect.DeepEqual(controller.TaskList, expected.TaskList) {
-			t.Errorf("incorrect tasklist - expected:%v, got:%v", expected.TaskList, controller.TaskList)
+		if !reflect.DeepEqual(controller.TaskList.Tasks, expected.TaskList.Tasks) {
+			t.Errorf("incorrect tasklist - expected:%v, got:%v", expected.TaskList.Tasks, controller.TaskList.Tasks)
 		}
 	}
 }
@@ -433,8 +433,8 @@ func TestUT0311L04UnmarshalWithInvalidTaskList(t *testing.T) {
 			t.Errorf("incorrect firmware date - expected:%v, got:%v", expected.Released, controller.Released)
 		}
 
-		if !reflect.DeepEqual(controller.TaskList, expected.TaskList) {
-			t.Errorf("incorrect tasklist - expected:%v, got:%v", expected.TaskList, controller.TaskList)
+		if !reflect.DeepEqual(controller.TaskList.Tasks, expected.TaskList.Tasks) {
+			t.Errorf("incorrect tasklist - expected:%v, got:%v", expected.TaskList.Tasks, controller.TaskList.Tasks)
 		}
 	}
 }

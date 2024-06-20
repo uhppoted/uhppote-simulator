@@ -44,7 +44,7 @@ func TestTaskListToJSON(t *testing.T) {
 
 	expected := `{"tasks":[{"task":"CONTROL DOOR","door":2,"start-date":"2024-01-01","end-date":"2024-12-31","weekdays":"Monday,Friday","start":"12:34","cards":17}]}`
 
-	if bytes, err := json.Marshal(tasklist); err != nil {
+	if bytes, err := json.Marshal(&tasklist); err != nil {
 		t.Fatalf("Error marshalling task list (%v)", err)
 	} else if string(bytes) != expected {
 		t.Errorf("TaskList marshalled incorrectly:\n   expected:%v\n   got:     %v", expected, string(bytes))
@@ -73,7 +73,7 @@ func TestEmptyTaskListToJSON(t *testing.T) {
 
 	expected := `{}`
 
-	if bytes, err := json.Marshal(tasklist); err != nil {
+	if bytes, err := json.Marshal(&tasklist); err != nil {
 		t.Fatalf("Error marshalling task list (%v)", err)
 	} else if string(bytes) != expected {
 		t.Errorf("TaskList marshalled incorrectly:\n   expected:%v\n   got:     %v", expected, string(bytes))
