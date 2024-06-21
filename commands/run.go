@@ -249,9 +249,9 @@ func sendto(bind *net.UDPAddr, dest *net.UDPAddr, message any) {
 
 		N, err := c.Write(msg)
 		if err != nil {
-			log.Errorf("failed to write to UDP socket [%v]", err)
+			errorf("udp", "failed to write to UDP socket [%v]", err)
 		} else if debug {
-			log.Infof("sent %v bytes to %v\n%s", N, dest, dump(msg[0:N], " ...          "))
+			infof("udp", "sent %v bytes to %v\n%s", N, dest, dump(msg[0:N], " ...          "))
 		}
 	}
 }
