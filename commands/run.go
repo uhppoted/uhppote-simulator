@@ -1,18 +1,17 @@
 package commands
 
 import (
-	"encoding/hex"
 	"fmt"
 	"net"
 	"net/netip"
 	"os"
 	"os/signal"
 	"reflect"
-	"regexp"
 	"time"
 
 	codec "github.com/uhppoted/uhppote-core/encoding/UTO311-L0x"
 	"github.com/uhppoted/uhppote-core/messages"
+
 	"github.com/uhppoted/uhppote-simulator/log"
 	"github.com/uhppoted/uhppote-simulator/rest"
 	"github.com/uhppoted/uhppote-simulator/simulator"
@@ -141,7 +140,7 @@ func udpListenAndServe(ctx *simulator.Context, udp *net.UDPConn) error {
 					} else {
 						infof("udp", "sent %v bytes to %v", N, addr)
 						if debug {
-							infof("udp", "packet\n%s", dump(msg[0:N], " ...          "))
+							infof("udp", "packet\n%s", codec.Dump(msg[0:N], " ...          "))
 						}
 					}
 				}
@@ -158,7 +157,7 @@ func udpListenAndServe(ctx *simulator.Context, udp *net.UDPConn) error {
 			return err
 		} else {
 			if debug {
-				debugf("udp", "received %v bytes from %v\n%s", N, raddr, dump(request[0:N], " ...          "))
+				debugf("udp", "received %v bytes from %v\n%s", N, raddr, codec.Dump(request[0:N], " ...          "))
 			}
 
 			handle(raddr, request[:N])
@@ -178,7 +177,7 @@ func tcpListenAndServe(ctx *simulator.Context, c *net.TCPListener) error {
 			errorf("tcp", "%v", err)
 		} else {
 			if debug {
-				debugf("tcp", "received %v bytes from %v\n%s", N, addr, dump(packet[0:N], " ...          "))
+				debugf("tcp", "received %v bytes from %v\n%s", N, addr, codec.Dump(packet[0:N], " ...          "))
 			}
 
 			if request, err := messages.UnmarshalRequest(packet[0:N]); err != nil {
@@ -195,7 +194,7 @@ func tcpListenAndServe(ctx *simulator.Context, c *net.TCPListener) error {
 						} else {
 							infof("tcp", "sent %v bytes to %v", N, addr)
 							if debug {
-								infof("tcp", "packet\n%s", dump(msg[0:N], " ...          "))
+								infof("tcp", "packet\n%s", codec.Dump(msg[0:N], " ...          "))
 							}
 						}
 					}
@@ -251,7 +250,7 @@ func sendto(bind *net.UDPAddr, dest *net.UDPAddr, message any) {
 		if err != nil {
 			errorf("udp", "failed to write to UDP socket [%v]", err)
 		} else if debug {
-			infof("udp", "sent %v bytes to %v\n%s", N, dest, dump(msg[0:N], " ...          "))
+			infof("udp", "sent %v bytes to %v\n%s", N, dest, codec.Dump(msg[0:N], " ...          "))
 		}
 	}
 }
@@ -295,10 +294,6 @@ func isNil(v any) bool {
 	}
 
 	return false
-}
-
-func dump(m []byte, prefix string) string {
-	return regexp.MustCompile("(?m)^(.*)").ReplaceAllString(hex.Dump(m), prefix+"$1")
 }
 
 func tag(rq any) string {
