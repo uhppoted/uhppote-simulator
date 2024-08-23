@@ -1,19 +1,8 @@
 # TODO
 
 - [x] https://github.com/uhppoted/uhppote-simulator/issues/9
-
 - [x] TCP/IP protocol (cf. https://github.com/uhppoted/uhppote-core/issues/17)
-      - [x] Rework UDP handling so that `if request.SerialNumber == s.SerialNumber` returns false
-      - [x] TCP accept socket
-      - [x] Rework UDP request handling
-      - [x] Rework UDP event handling
-      - [x] Update docker images, etc
-      - [x] CHANGELOG
-      - [x] README
-
-- [x] _405419896   error loading tasklist (unexpected end of JSON input)_
-- [x] Check `dump` udp/tcp packet labellingmay be mislabelling udp/tcp packets
-
+- [x] Update to Go 1.23 (cf. https://github.com/uhppoted/uhppoted/issues/53)
 
 ## TODO
 
