@@ -52,6 +52,7 @@ func Run(ctx *simulator.Context) {
 	d.Add("^/uhppote/simulator/[0-9]+/swipe$", swipe)
 	d.Add("^/uhppote/simulator/[0-9]+/code$", code)
 	d.Add("^/uhppote/simulator/[0-9]+/door/[1-4]$", door)
+	d.Add("^/uhppote/simulator/[0-9]+/cards/[0-9]+$", cards)
 
 	log.Fatal(http.ListenAndServe(ctx.RestAddress, &d))
 }

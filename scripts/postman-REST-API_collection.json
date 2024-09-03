@@ -257,6 +257,35 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "put-card",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"card\": {{card}},\n    \"start-date\": \"2024-01-01\",\n    \"end-date\": \"2024-12-31\",\n    \"doors\": [1,2,4],\n    \"PIN\": {{PIN}}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base-url}}",
+					"host": [
+						"{{base-url}}"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"variable": [

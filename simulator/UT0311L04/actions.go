@@ -304,6 +304,46 @@ func (s *UT0311L04) ButtonPressed(door uint8, duration time.Duration) (bool, err
 	return pressed && (reason == 0x00), nil
 }
 
+// Implements the REST PUT 'card' API.
+//
+// Adds the card to the controller cards list. Unlike the controller 'put-card' API, the REST API allows
+// invalid start and end dates (for testing purposes).
+func (s *UT0311L04) StoreCard(card uint32, from types.Date, to types.Date, doors []uint8, PIN uint32) error {
+	c := entities.Card{
+		CardNumber: card,
+		From:       from,
+		To:         to,
+		Doors: map[uint8]uint8{
+			1: 0,
+			2: 0,
+			3: 0,
+			4: 0,
+		},
+		PIN: PIN,
+	}
+
+	for _, d := range doors {
+		switch d {
+		case 1:
+			c.Doors[1] = 1
+		case 2:
+			c.Doors[2] = 1
+		case 3:
+			c.Doors[3] = 1
+		case 4:
+			c.Doors[4] = 1
+		}
+	}
+
+	if err := s.Cards.Put(&c); err != nil {
+		return err
+	} else if err := s.Save(); err != nil {
+		return err
+	} else {
+		return nil
+	}
+}
+
 // Builds list of linked time profiles and then checks each individual profile
 func (s *UT0311L04) checkTimeProfile(profileID uint8) bool {
 	profiles := map[uint8]bool{}

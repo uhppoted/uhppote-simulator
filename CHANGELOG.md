@@ -4,6 +4,7 @@
 
 ### Added
 1. Implemented controller TCP/IP interface emulation.
+2. REST _put-card_ API to add/update simulated controller cards.
 
 ### Updated
 1. Reworked event handling to use connected UDP socket to send events.

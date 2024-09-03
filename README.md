@@ -326,6 +326,31 @@ controller   controller serial number e.g. 405419896
 curl -X DELETE "http://127.0.0.1:8000/uhppote/simulator/405419896" -H "accept: */*"
 ```
 
+### `put-card`
+Adds or updates a card on a simulated controller. Unlike the controller `put-card` API, the REST API does not 
+require a valid start/end date (for testing purposes).
+```
+URL: `http://localhost:8000/uhppote/simulator/<controller>/cards/<card>`
+Method: PUT
+Request:
+{
+    "start-date": <start-date>,
+    "end-date": <end-date>,
+    "doors": <doors>,
+    "PIN": <uint32>
+}
+
+controller     controller serial number e.g. 405419896
+start-date     card 'valid from' date e.g 2024-01-01
+end-date       card 'valid until' date e.g 2024-12-31
+doors          list of doors the card for which the card has access e.g. [1,2,4]
+PIN            card PIN e.g.7531
+```
+```
+curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/cards/10058400" -H "accept: */*" -H "Content-Type: application/json" -d '{"start-date": "2024-01-01", "end-date": "2024-12-31", "doors": [1,2,4], "PIN": 7531}'
+```
+
+
 ### Postman
 
 ### Python
@@ -336,7 +361,7 @@ curl -X DELETE "http://127.0.0.1:8000/uhppote/simulator/405419896" -H "accept: *
 
 ### `put-card`
 
-The UHPPOTE access controller has a weird behaviour around the PIN field. According to the SDK 
+1. The UHPPOTE access controller has a weird behaviour around the PIN field. According to the SDK 
 documentation, valid PINs are in the range 0 to 999999. However the controller will accept a 
 PIN number out of that range and only keep the lower 7 nibbles of the 32-bit unsigned value.
 e.g:
@@ -354,6 +379,10 @@ e.g:
 Note that by design, the simulator does not emulate this behaviour, on the grounds that it is probably a 
 version specific bug.
 
+2. The emulated controller does not accept cards with a 'zero' start or end date - the REST _put-card_ API 
+can be used to add cards without valid start/end dates for testing.
+
+
 ### `restore-default-parameters`
 
 `restore-default-parameters` has (for practical reasons) NOT been validated against an actual controller. Resetting
@@ -365,11 +394,13 @@ the simulator:
 - sets all doors to `controlled` mode and 5 seconds delay
 - clears all door passcodes
 
+
 ### `passcode`
 
 1. If a supervisor passcode is entered for a door that is _normally closed_, the UHPPOTE controller will
    unlock the door and then immediately relock it. This seems anomalous and in this case the simulator 
    unlocks the door on the assumption that the supervisor code is intended to be an override.
+
 
 ### Events
 

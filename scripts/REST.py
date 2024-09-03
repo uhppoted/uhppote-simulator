@@ -22,6 +22,7 @@ def commands():
         'list-controllers': list_controllers,
         'create-controller': create_controller,
         'delete-controller': delete_controller,
+        'put-card': put_card,
     }
 
 
@@ -274,6 +275,31 @@ def delete_controller(args):
     else:
         response.raise_for_status()
 
+def put_card(args):
+    controller = args.controller
+    card = args.card
+
+    url = f'{BASEURL}/{controller}/cards/{card}'
+
+    headers = {
+        'accept': 'application/json',
+    }
+
+    doors = [int(v) for v in f'{args.doors}'.split(',') if v.isdigit()]
+
+    body = {
+        'start-date': args.start_date,
+        'end-date': args.end_date,
+        'doors': doors,
+        'PIN': args.PIN,
+    }
+
+    response = requests.put(url, headers=headers, json=body)
+
+    if response.ok:
+        print('put-card  ok')
+    else:
+        response.raise_for_status()
 
 def parse_args():
     parser = argparse.ArgumentParser(description='uhppote-simulator CLI')
@@ -342,6 +368,15 @@ def parse_args():
     # ... delete controller
     delete_controller = subparsers.add_parser('delete-controller', help='deletes an emulated controller')
     delete_controller.add_argument('--controller', type=int, help='controller serial number, e.g. 405419896')
+
+    # ... put_card
+    put_card = subparsers.add_parser('put-card', help='creates a new controller emulation')
+    put_card.add_argument('--controller', type=int, help='controller serial number, e.g. 405419896')
+    put_card.add_argument('--card', type=int, help='card number e.g. 10058400')
+    put_card.add_argument('--start-date', type=str, help='card start date e.g. 2024-01-01')
+    put_card.add_argument('--end-date', type=str, help='card end date e.g. 2024-12-31')
+    put_card.add_argument('--doors', type=str, help='card door permissions list e.g. 1,2,4')
+    put_card.add_argument('--PIN', type=int, help='card PIN e.g. 7531')
 
     # ... parse args
     return parser.parse_args()

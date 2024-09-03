@@ -128,6 +128,9 @@ close:
 button:
 	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/door/$(DOOR)" -H "accept: application/json" -H "Content-Type: application/json" -d '{"action":"button", "duration":10}'
 
+card:
+	curl -X PUT "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/cards/${CARD}" -H "accept: */*" -H "Content-Type: application/json" -d '{"start-date":"2024-01-01", "end-date":"2024-12-31", "doors": [1,2,3,4], "PIN": 7531}'
+
 # v06.62 events
 v6.62-swipe:
 	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/201020304/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"door\":$(DOOR),\"card-number\":$(CARD)}"
@@ -176,6 +179,9 @@ rest-delete-controller:
 
 rest-list-controllers:
 	python3 scripts/REST.py list-controllers
+
+rest-put-card:
+	python3 scripts/REST.py put-card --controller 405419896 --card 10058400 --start-date 2024-01-01 --end-date 2024-12-31 --doors 1,2,3 --PIN 7531
 
 docker: docker-dev docker-ghcr
 	cd docker && find . -name .DS_Store -delete && rm -f compose.zip && zip --recurse-paths compose.zip compose
