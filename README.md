@@ -39,15 +39,14 @@ Supported operating systems:
 
 ### Current release
 
-**[v0.8.8](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.8) - 2024-03-27**
+**[v0.8.9](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.9) - 2024-09-06**
 
-1. `restore-default-parameters` command emulation.
-2. Python REST API CLI client implementation.
-3. Added public Docker image to ghcr.io.
-4. Bumped Go version to 1.22
-5. Updated README with REST API.
-6. Updated REST API OpenAPI specification.
-7. Fixed uninitialised map in controller doors deserialization.
+1. Implemented controller TCP/IP interface emulation.
+2. Added REST _put-card_ API to add/update simulated controller cards.
+3. Reworked event handling to use connected UDP socket to send events.
+4. Reworked `put-card` handler to return false if card _from_ or _to_ date is a zero value.
+5. Updated to Go 1.23.
+
 
 ## Installation
 
