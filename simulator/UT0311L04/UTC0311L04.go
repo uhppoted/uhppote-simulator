@@ -209,7 +209,7 @@ func (s *UT0311L04) Handle(rq messages.Request) (any, error) {
 }
 
 func (s *UT0311L04) Tick() {
-	dt := time.Now().Sub(s.autosent)
+	dt := time.Since(s.autosent)
 	ms := 1000 * int64(s.AutoSend)
 
 	if s.AutoSend > 0 && dt.Milliseconds() >= ms {
