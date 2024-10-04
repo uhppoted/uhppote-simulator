@@ -15,6 +15,7 @@ type Simulator interface {
 	FilePath() string
 
 	Handle(messages.Request) (any, error)
+	Tick()
 	RunTasks()
 	Save() error
 	Delete() error

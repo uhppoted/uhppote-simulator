@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+1. Added support for event auto-send and updated _get-event-listener_ and _set-event-listener_
+   with the auto-send interval field.
+
 
 ## [0.8.9](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.9) - 2024-09-06
 

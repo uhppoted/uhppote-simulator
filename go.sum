@@ -84,6 +84,10 @@ github.com/uhppoted/uhppote-core v0.8.9-0.20240905182113-96b4c7f5bb0e h1:4K/9n6b
 github.com/uhppoted/uhppote-core v0.8.9-0.20240905182113-96b4c7f5bb0e/go.mod h1:oUQdz4NBMXkcwzEHUd6lYQgF6He32+jnb+FMwehZRwg=
 github.com/uhppoted/uhppote-core v0.8.9 h1:1+PE/rSS5fWJfPZ97UXkRBWHmp/h80QLgQ+P3942WZU=
 github.com/uhppoted/uhppote-core v0.8.9/go.mod h1:oUQdz4NBMXkcwzEHUd6lYQgF6He32+jnb+FMwehZRwg=
+github.com/uhppoted/uhppote-core v0.8.10-0.20241003170443-d27fd34f29b9 h1:RmK6+EHvt1P8kBHcpnw6tm+S1I253MQCAn+axifRXSM=
+github.com/uhppoted/uhppote-core v0.8.10-0.20241003170443-d27fd34f29b9/go.mod h1:oUQdz4NBMXkcwzEHUd6lYQgF6He32+jnb+FMwehZRwg=
+github.com/uhppoted/uhppote-core v0.8.10-0.20241004174540-7675ee2e4254 h1:sLBIaNzUUHdWpTiMQd+0Havgl2ryEe4BscuhWPMzn6o=
+github.com/uhppoted/uhppote-core v0.8.10-0.20241004174540-7675ee2e4254/go.mod h1:oUQdz4NBMXkcwzEHUd6lYQgF6He32+jnb+FMwehZRwg=
 github.com/uhppoted/uhppoted-lib v0.8.5 h1:X5RarX5QMRGJvOwPk8ceowrH8k6Ow3t+TraWmhYO950=
 github.com/uhppoted/uhppoted-lib v0.8.5/go.mod h1:euK2cLO934w0GDgvvnWMjYNtZ29K1xSMrMse6THOzDQ=
 github.com/uhppoted/uhppoted-lib v0.8.6-0.20230714155133-57e68f2d1360 h1:XaVqmMmjwskTrX6iCdUl2I4ezrvuoA/yhLzf/455E10=
@@ -170,3 +174,7 @@ github.com/uhppoted/uhppoted-lib v0.8.9-0.20240827173223-f5262c207d8b h1:ItQCO+P
 github.com/uhppoted/uhppoted-lib v0.8.9-0.20240827173223-f5262c207d8b/go.mod h1:vz01fBAy8QYbwUGBCfFEZh5naPt9Ma6SHlzp/SIRLcE=
 github.com/uhppoted/uhppoted-lib v0.8.9 h1:PQmlZeESlYhLfkGpBxTeRyQaD2b3melImtcsgb8VVhw=
 github.com/uhppoted/uhppoted-lib v0.8.9/go.mod h1:tQgA5Jno0R2g8hlv7Wi52vVZYmdB9DFFLehLWLHuuKU=
+github.com/uhppoted/uhppoted-lib v0.8.10-0.20241003171530-4730250c895b h1:3ik03orWNVrmLNAD/jKoDKN1UnEFQt5s6eYegQNoQfs=
+github.com/uhppoted/uhppoted-lib v0.8.10-0.20241003171530-4730250c895b/go.mod h1:zCYkLi2rpO8XIIzu44i493uQZmGQdGvzc1fvp6cVlOE=
+github.com/uhppoted/uhppoted-lib v0.8.10-0.20241004175014-8977bb8805c4 h1:fyz/8hvQ24elhbC/j1RE6cY74Z8tK3UYKphWPGKHzEk=
+github.com/uhppoted/uhppoted-lib v0.8.10-0.20241004175014-8977bb8805c4/go.mod h1:v3TrajHALeSIL2n7kHECWVNwTR8bSBY07mIDBnPnZiE=

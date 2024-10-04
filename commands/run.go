@@ -103,13 +103,23 @@ func run(ctx *simulator.Context, udp *net.UDPConn, tcp *net.TCPListener, wait ch
 		wait <- 0
 	}()
 
+	// ... auto-send tick
 	go func() {
-		ticker := time.NewTicker(1 * time.Second)
-		defer ticker.Stop()
+		ticker := time.Tick(100 * time.Millisecond)
+
+		for {
+			<-ticker
+			tick(ctx)
+		}
+	}()
+
+	// ... on-the-minute 'tick'
+	go func() {
+		ticker := time.Tick(1 * time.Second)
 
 		last := "00:00"
 		for {
-			<-ticker.C
+			<-ticker
 			now := time.Now().Format("15:34")
 			if now != last {
 				last = now
@@ -214,6 +224,14 @@ func tcpListenAndServe(ctx *simulator.Context, c *net.TCPListener) error {
 			handle(client)
 		}
 	}
+}
+
+func tick(ctx *simulator.Context) {
+	f := func(s simulator.Simulator) {
+		s.Tick()
+	}
+
+	ctx.DeviceList.Apply(f)
 }
 
 func tasks(ctx *simulator.Context) {

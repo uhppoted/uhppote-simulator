@@ -23,6 +23,7 @@ type UT0311L04 struct {
 	file       string
 	compressed bool
 	touched    time.Time
+	autosent   time.Time
 
 	SerialNumber        types.SerialNumber    `json:"serial-number"`
 	IpAddress           net.IP                `json:"address"`
@@ -35,6 +36,7 @@ type UT0311L04 struct {
 	Doors               entities.Doors        `json:"doors"`
 	Keypads             entities.Keypads      `json:"keypads"`
 	Listener            netip.AddrPort        `json:"listener"`
+	AutoSend            uint8                 `json:"auto-send"`
 	RecordSpecialEvents bool                  `json:"record-special-events"`
 	PCControl           bool                  `json:"pc-control"`
 	SystemError         uint8                 `json:"system-error"`
@@ -73,6 +75,7 @@ func NewUT0311L04(deviceID uint32, dir string, compressed bool) *UT0311L04 {
 		file:       filepath.Join(dir, filename),
 		compressed: compressed,
 		touched:    time.Now(),
+		autosent:   time.Now(),
 
 		SerialNumber: types.SerialNumber(deviceID),
 		IpAddress:    net.IPv4(0, 0, 0, 0),
@@ -205,6 +208,65 @@ func (s *UT0311L04) Handle(rq messages.Request) (any, error) {
 	}
 }
 
+func (s *UT0311L04) Tick() {
+	dt := time.Now().Sub(s.autosent)
+	ms := 1000 * int64(s.AutoSend)
+
+	if s.AutoSend > 0 && dt.Milliseconds() >= ms {
+		event := s.Events.Get(0xffffffff)
+
+		if event != (entities.Event{}) {
+			utc := time.Now().UTC()
+			datetime := utc.Add(time.Duration(s.TimeOffset))
+
+			e := messages.Event{
+				SerialNumber: s.SerialNumber,
+				EventIndex:   event.Index,
+				SystemError:  s.SystemError,
+				SystemDate:   types.SystemDate(datetime),
+				SystemTime:   types.SystemTime(datetime),
+				SequenceId:   s.SequenceId,
+				SpecialInfo:  s.SpecialInfo,
+				RelayState:   s.relays(),
+				InputState:   s.InputState,
+
+				Door1State: s.Doors.IsOpen(1),
+				Door2State: s.Doors.IsOpen(2),
+				Door3State: s.Doors.IsOpen(3),
+				Door4State: s.Doors.IsOpen(4),
+
+				Door1Button: s.Doors.IsButtonPressed(1),
+				Door2Button: s.Doors.IsButtonPressed(2),
+				Door3Button: s.Doors.IsButtonPressed(3),
+				Door4Button: s.Doors.IsButtonPressed(4),
+
+				EventType:  event.Type,
+				Reason:     event.Reason,
+				Timestamp:  event.Timestamp,
+				CardNumber: event.Card,
+				Granted:    event.Granted,
+				Door:       event.Door,
+				Direction:  event.Direction,
+			}
+
+			// ... firmware 6.62 had a slightly different format
+			if fmt.Sprintf("%v", s.Version) == "6.62" {
+				e662 := messages.EventV6_62{
+					Event: e,
+				}
+
+				onEvent(s.Listener, &e662)
+			} else {
+				onEvent(s.Listener, &e)
+			}
+
+			log.Infof("%v  autosend event %v", s.SerialNumber, event.Index)
+		}
+
+		s.autosent = time.Now()
+	}
+}
+
 func (s *UT0311L04) RunTasks() {
 	handler := func(door uint8, task types.TaskType) {
 		switch task {
@@ -309,6 +371,7 @@ func unmarshal(bytes []byte, filepath string, compressed bool) (*UT0311L04, erro
 		Doors               entities.Doors        `json:"doors"`
 		Keypads             entities.Keypads      `json:"keypads"`
 		Listener            json.RawMessage       `json:"listener"`
+		AutoSend            uint8                 `json:"auto-send"`
 		RecordSpecialEvents bool                  `json:"record-special-events"`
 		PCControl           bool                  `json:"pc-control"`
 		SystemError         uint8                 `json:"system-error"`
@@ -359,6 +422,7 @@ func unmarshal(bytes []byte, filepath string, compressed bool) (*UT0311L04, erro
 		file:       filepath,
 		compressed: compressed,
 		touched:    time.Now(),
+		autosent:   time.Now(),
 
 		SerialNumber:        object.SerialNumber,
 		IpAddress:           object.IpAddress,
@@ -371,6 +435,7 @@ func unmarshal(bytes []byte, filepath string, compressed bool) (*UT0311L04, erro
 		Doors:               object.Doors,
 		Keypads:             object.Keypads,
 		Listener:            listener,
+		AutoSend:            object.AutoSend,
 		RecordSpecialEvents: object.RecordSpecialEvents,
 		PCControl:           object.PCControl,
 		SystemError:         object.SystemError,

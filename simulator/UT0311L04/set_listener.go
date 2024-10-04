@@ -2,6 +2,7 @@ package UT0311L04
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/uhppoted/uhppote-core/messages"
 )
@@ -11,8 +12,9 @@ func (s *UT0311L04) setListener(request *messages.SetListenerRequest) (*messages
 		return nil, nil
 	}
 
-	listener := request.AddrPort
-	s.Listener = listener
+	s.Listener = request.AddrPort
+	s.AutoSend = request.Interval
+	s.autosent = time.Now()
 
 	response := messages.SetListenerResponse{
 		SerialNumber: s.SerialNumber,

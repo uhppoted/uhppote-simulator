@@ -406,9 +406,9 @@ the simulator:
 _tl;dr; The UHPPOTE controller does not 'rollover' when the onboard event store is filled._
 
 From experimentation, it appears that the UHPPOTE controller has an event store for approximately 200 000 events
-(possibly varies varies with model/version). On filling the event buffer the controller seems to discard a _chunk_
-of about 2048 events from the start of the event buffer to make space for new events. The event index continues to
-increment monotonically.
+(the user manual says 100 000, so possibly varies varies with model/version). On filling the event buffer the controller
+seems to discard a _chunk_ of about 2048 events from the start of the event buffer to make space for new events. The event
+index continues to increment monotonically.
 
 
 

@@ -1,16 +1,12 @@
 # TODO
 
-- [x] https://github.com/uhppoted/uhppote-simulator/issues/9
-- [x] TCP/IP protocol (cf. https://github.com/uhppoted/uhppote-core/issues/17)
-- [x] Update to Go 1.23 (cf. https://github.com/uhppoted/uhppoted/issues/53)
-- [x] _PutCard_ with zero from/to dates (cf. https://github.com/uhppoted/uhppoted-httpd/issues/29)
-      - [x] Return succeeded `false` respohse if either of card from or to dates is a zero value
-      - [x] REST put-card API to store cards without valid from/to dates
+- [x] event listener: add listen auto-send interval (cf. https://github.com/uhppoted/uhppote-core/issues/21)
+      - [x] add _interval_ to simulator
+      - [x] set-event-listener
+      - [x] get-event-listener
+      - [x] event auto-send
       - [x] CHANGELOG
       - [x] README
-      - [x] OpenAPI
-      - [x] Postman
-      - [x] Python scripts
 
 ## TODO
 

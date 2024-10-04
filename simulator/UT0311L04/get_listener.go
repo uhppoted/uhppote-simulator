@@ -19,6 +19,7 @@ func (s *UT0311L04) getListener(request *messages.GetListenerRequest) (*messages
 	response := messages.GetListenerResponse{
 		SerialNumber: s.SerialNumber,
 		AddrPort:     addr,
+		Interval:     s.AutoSend,
 	}
 
 	return &response, nil
