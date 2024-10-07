@@ -178,3 +178,5 @@ github.com/uhppoted/uhppoted-lib v0.8.10-0.20241003171530-4730250c895b h1:3ik03o
 github.com/uhppoted/uhppoted-lib v0.8.10-0.20241003171530-4730250c895b/go.mod h1:zCYkLi2rpO8XIIzu44i493uQZmGQdGvzc1fvp6cVlOE=
 github.com/uhppoted/uhppoted-lib v0.8.10-0.20241004175014-8977bb8805c4 h1:fyz/8hvQ24elhbC/j1RE6cY74Z8tK3UYKphWPGKHzEk=
 github.com/uhppoted/uhppoted-lib v0.8.10-0.20241004175014-8977bb8805c4/go.mod h1:v3TrajHALeSIL2n7kHECWVNwTR8bSBY07mIDBnPnZiE=
+github.com/uhppoted/uhppoted-lib v0.8.10-0.20241007153101-aa559cf3e032 h1:2UesZ2POpC2fHiyiAaiswTv9SfMHZPzUMkg3hd++buA=
+github.com/uhppoted/uhppoted-lib v0.8.10-0.20241007153101-aa559cf3e032/go.mod h1:v3TrajHALeSIL2n7kHECWVNwTR8bSBY07mIDBnPnZiE=
