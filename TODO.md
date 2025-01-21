@@ -1,12 +1,7 @@
 # TODO
 
 - [x] event listener: add listen auto-send interval (cf. https://github.com/uhppoted/uhppote-core/issues/21)
-      - [x] add _interval_ to simulator
-      - [x] set-event-listener
-      - [x] get-event-listener
-      - [x] event auto-send
-      - [x] CHANGELOG
-      - [x] README
+- [x] ARM6 target (cf. https://github.com/uhppoted/uhppoted/issues/55)
 
 ## TODO
 
