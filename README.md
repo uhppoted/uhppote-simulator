@@ -39,13 +39,11 @@ Supported operating systems:
 
 ### Current release
 
-**[v0.8.9](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.9) - 2024-09-06**
+**[v0.8.10](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.10) - 2025-01-30**
 
-1. Implemented controller TCP/IP interface emulation.
-2. Added REST _put-card_ API to add/update simulated controller cards.
-3. Reworked event handling to use connected UDP socket to send events.
-4. Reworked `put-card` handler to return false if card _from_ or _to_ date is a zero value.
-5. Updated to Go 1.23.
+1. Added support for event auto-send and updated _get-event-listener_ and _set-event-listener_
+   with the auto-send interval field.
+2. Added ARMv6 build target (RaspberryPi ZeroW).
 
 
 ## Installation
