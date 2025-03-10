@@ -36,6 +36,7 @@ type UT0311L04 struct {
 	Doors               entities.Doors        `json:"doors"`
 	Keypads             entities.Keypads      `json:"keypads"`
 	Listener            netip.AddrPort        `json:"listener"`
+	AntiPassback        types.AntiPassback    `json:"anti-passback"`
 	AutoSend            uint8                 `json:"auto-send"`
 	RecordSpecialEvents bool                  `json:"record-special-events"`
 	PCControl           bool                  `json:"pc-control"`
@@ -84,6 +85,7 @@ func NewUT0311L04(deviceID uint32, dir string, compressed bool) *UT0311L04 {
 		MacAddress:   types.MacAddress(mac),
 		Version:      0x0892,
 		Released:     RELEASE_DATE,
+		AntiPassback: 0,
 		Doors:        entities.MakeDoors(),
 		Keypads:      entities.MakeKeypads(),
 		TimeProfiles: entities.TimeProfiles{},
@@ -127,6 +129,9 @@ func (s *UT0311L04) Handle(rq messages.Request) (any, error) {
 
 	case *messages.DeleteCardsRequest:
 		return s.deleteCards(v)
+
+	case *messages.GetAntiPassbackRequest:
+		return s.getAntiPassback(v)
 
 	case *messages.GetCardByIDRequest:
 		return s.getCardByID(v)
@@ -178,6 +183,9 @@ func (s *UT0311L04) Handle(rq messages.Request) (any, error) {
 
 	case *messages.SetAddressRequest:
 		return s.setAddress(v)
+
+	case *messages.SetAntiPassbackRequest:
+		return s.setAntiPassback(v)
 
 	case *messages.SetDoorControlStateRequest:
 		return s.setDoorControlState(v)

@@ -572,6 +572,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 		MacAddress:   types.MacAddress(MAC),
 		Version:      9876,
 		Listener:     listener,
+		AntiPassback: types.Readers1_234,
 		Cards:        cards,
 		Events:       events,
 		Doors:        doors,
@@ -579,13 +580,11 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 
 	if response, err := s.Handle(request); err != nil {
 		t.Fatalf("%v", err)
-	} else if expected == nil {
-		if response != nil {
-			t.Errorf("invalid response - expected:%v, got:%v", expected, response)
-		}
-	} else if response == nil {
+	} else if expected == nil && response != nil {
+		t.Errorf("invalid response - expected:%v, got:%v", expected, response)
+	} else if expected != nil && response == nil {
 		t.Errorf("Invalid response: Expected: %v, got: %v", expected, response)
 	} else if !reflect.DeepEqual(response, expected) {
-		t.Errorf("Incorrect response: Expected:\n%v, got:s\n%v", expected, response)
+		t.Errorf("Incorrect response\n   expected:%v\n   got:     %v", expected, response)
 	}
 }

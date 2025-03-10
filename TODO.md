@@ -1,7 +1,10 @@
 # TODO
 
-- [x] event listener: add listen auto-send interval (cf. https://github.com/uhppoted/uhppote-core/issues/21)
-- [x] ARM6 target (cf. https://github.com/uhppoted/uhppoted/issues/55)
+- [ ] anti-passback (https://github.com/uhppoted/uhppoted/issues/60)
+      - [x] messages
+      - [ ] anti-passback
+      - [ ] CHANGELOG
+      - [ ] README
 
 ## TODO
 
