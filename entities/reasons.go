@@ -6,6 +6,7 @@ const (
 	ReasonPCControl             uint8 = 0x05
 	ReasonNoPrivilege           uint8 = 0x06
 	ReasonInvalidPIN            uint8 = 0x07
+	ReasonAntiPassback          uint8 = 0x08
 	ReasonNormallyClosed        uint8 = 0x0b
 	ReasonInvalidTimezone       uint8 = 0x0f
 	ReasonNoPass                uint8 = 0x12

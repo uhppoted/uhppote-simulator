@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/uhppoted/uhppote-core/messages"
-	"github.com/uhppoted/uhppote-core/types"
 )
 
 func (s *UT0311L04) setAntiPassback(request *messages.SetAntiPassbackRequest) (*messages.SetAntiPassbackResponse, error) {
@@ -12,12 +11,7 @@ func (s *UT0311L04) setAntiPassback(request *messages.SetAntiPassbackRequest) (*
 		return nil, nil
 	}
 
-	ok := false
-
-	if request.AntiPassback <= 0x04 {
-		s.AntiPassback = types.AntiPassback(request.AntiPassback)
-		ok = true
-	}
+	ok := s.AntiPassback.Set(request.AntiPassback)
 
 	response := messages.SetAntiPassbackResponse{
 		SerialNumber: s.SerialNumber,

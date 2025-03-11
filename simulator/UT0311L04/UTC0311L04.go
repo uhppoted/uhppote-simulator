@@ -36,7 +36,7 @@ type UT0311L04 struct {
 	Doors               entities.Doors        `json:"doors"`
 	Keypads             entities.Keypads      `json:"keypads"`
 	Listener            netip.AddrPort        `json:"listener"`
-	AntiPassback        types.AntiPassback    `json:"anti-passback"`
+	AntiPassback        entities.AntiPassback `json:"anti-passback"`
 	AutoSend            uint8                 `json:"auto-send"`
 	RecordSpecialEvents bool                  `json:"record-special-events"`
 	PCControl           bool                  `json:"pc-control"`
@@ -85,7 +85,7 @@ func NewUT0311L04(deviceID uint32, dir string, compressed bool) *UT0311L04 {
 		MacAddress:   types.MacAddress(mac),
 		Version:      0x0892,
 		Released:     RELEASE_DATE,
-		AntiPassback: 0,
+		AntiPassback: entities.AntiPassback{},
 		Doors:        entities.MakeDoors(),
 		Keypads:      entities.MakeKeypads(),
 		TimeProfiles: entities.TimeProfiles{},
@@ -390,6 +390,7 @@ func unmarshal(bytes []byte, filepath string, compressed bool) (*UT0311L04, erro
 		TaskList            json.RawMessage       `json:"tasklist,omitempty"`
 		Cards               entities.CardList     `json:"cards"`
 		Events              entities.EventList    `json:"events"`
+		AntiPassback        entities.AntiPassback `json:"anti-passback"`
 	}{
 		Released:     RELEASE_DATE,
 		Doors:        entities.MakeDoors(),
@@ -454,8 +455,9 @@ func unmarshal(bytes []byte, filepath string, compressed bool) (*UT0311L04, erro
 		TaskList: entities.TaskList{
 			Tasks: tasklist.Tasks,
 		},
-		Cards:  object.Cards,
-		Events: object.Events,
+		Cards:        object.Cards,
+		Events:       object.Events,
+		AntiPassback: object.AntiPassback,
 	}
 
 	return &simulator, nil

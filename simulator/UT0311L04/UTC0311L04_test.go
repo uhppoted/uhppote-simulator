@@ -25,6 +25,7 @@ func TestNewUT0311L04(t *testing.T) {
 		TimeProfiles: entities.TimeProfiles{},
 		TaskList:     entities.TaskList{},
 		Events:       entities.NewEventList(),
+		AntiPassback: entities.AntiPassback{},
 	}
 
 	controller := NewUT0311L04(405060708, ".", false)
@@ -106,7 +107,8 @@ func TestUT0311L04Unmarshal(t *testing.T) {
 				},
 			},
 		},
-		Events: entities.NewEventList(),
+		Events:       entities.NewEventList(),
+		AntiPassback: entities.MakeAntiPassback(types.Readers1_234),
 	}
 
 	JSON := `
@@ -160,7 +162,8 @@ func TestUT0311L04Unmarshal(t *testing.T) {
 	    "events": [
 	      { "index": 1, "type": 1, "granted": false, "door": 3, "direction": 1, "card": 10058400, "timestamp": "2024-05-08 10:50:53", "reason": 18 }
 	    ]
-	  }
+	  },
+	  "anti-passback": 4
 	}
 	`
 
@@ -172,27 +175,31 @@ func TestUT0311L04Unmarshal(t *testing.T) {
 		expected.touched = controller.touched
 
 		if controller.SerialNumber != expected.SerialNumber {
-			t.Errorf("incorrect serial number - expected:%v, got:%v", expected.SerialNumber, controller.SerialNumber)
+			t.Errorf("incorrect serial number\n   expected:%v\n   got:    %v", expected.SerialNumber, controller.SerialNumber)
 		}
 
 		if !reflect.DeepEqual(controller.IpAddress, expected.IpAddress) {
-			t.Errorf("incorrect IP address - expected:%v, got:%v", expected.IpAddress, controller.IpAddress)
+			t.Errorf("incorrect IP address\n   expected:%v\n   got:    %v", expected.IpAddress, controller.IpAddress)
 		}
 
 		if !reflect.DeepEqual(controller.SubnetMask, expected.SubnetMask) {
-			t.Errorf("incorrect netmask - expected:%v, got:%v", expected.SubnetMask, controller.SubnetMask)
+			t.Errorf("incorrect netmask\n   expected:%v\n   got:    %v", expected.SubnetMask, controller.SubnetMask)
 		}
 
 		if controller.Version != expected.Version {
-			t.Errorf("incorrect version - expected:%v, got:%v", expected.Version, controller.Version)
+			t.Errorf("incorrect version\n   expected:%v\n   got:    %v", expected.Version, controller.Version)
 		}
 
 		if !reflect.DeepEqual(controller.Released, expected.Released) {
-			t.Errorf("incorrect firmware date - expected:%v, got:%v", expected.Released, controller.Released)
+			t.Errorf("incorrect firmware date\n   expected:%v\n   got:    %v", expected.Released, controller.Released)
 		}
 
 		if !reflect.DeepEqual(controller.TaskList.Tasks, expected.TaskList.Tasks) {
-			t.Errorf("incorrect tasklist - expected:%v, got:%v", expected.TaskList.Tasks, controller.TaskList.Tasks)
+			t.Errorf("incorrect tasklist\n   expected:%v\n   got:    %v", expected.TaskList.Tasks, controller.TaskList.Tasks)
+		}
+
+		if !reflect.DeepEqual(controller.AntiPassback, expected.AntiPassback) {
+			t.Errorf("incorrect anti-passback\n   expected:%v\n   got:     %v", expected.AntiPassback, controller.AntiPassback)
 		}
 	}
 }
@@ -445,7 +452,6 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 	to := types.MustParseDate("2019-12-31")
 	timestamp := types.DateTime(time.Date(2019, time.August, 1, 12, 34, 56, 0, time.Local))
 	listener := netip.MustParseAddrPort("10.0.0.10:43210")
-
 	doors := entities.MakeDoors()
 
 	doors.SetControlState(1, 3)
@@ -572,7 +578,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 		MacAddress:   types.MacAddress(MAC),
 		Version:      9876,
 		Listener:     listener,
-		AntiPassback: types.Readers1_234,
+		AntiPassback: entities.MakeAntiPassback(types.Readers1_234),
 		Cards:        cards,
 		Events:       events,
 		Doors:        doors,

@@ -90,17 +90,25 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, direction entities.Dire
 			}
 		}
 
-		// unlock door
+		// normally closed?
 		if s.Doors.IsNormallyClosed(door) {
 			swiped(0x01, false, entities.ReasonNormallyClosed)
 			return false, nil
 		}
 
+		// interlocked?
 		if s.Doors.IsInterlocked(door) {
 			swiped(0x01, false, entities.ReasonInterlock)
 			return false, nil
 		}
 
+		// anti-passback?
+		if s.AntiPassback.Deny(cardNumber, door) {
+			swiped(0x01, false, entities.ReasonAntiPassback)
+			return false, nil
+		}
+
+		// unlock door!
 		if s.Doors.Unlock(door, 0*time.Second) {
 			swiped(0x02, true, entities.ReasonSwipePass)
 			return true, nil

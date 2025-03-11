@@ -11,7 +11,7 @@ func (s *UT0311L04) getAntiPassback(request *messages.GetAntiPassbackRequest) (*
 
 	response := messages.GetAntiPassbackResponse{
 		SerialNumber: s.SerialNumber,
-		AntiPassback: uint8(s.AntiPassback),
+		AntiPassback: s.AntiPassback.Get(),
 	}
 
 	return &response, nil
