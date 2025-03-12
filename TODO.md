@@ -1,9 +1,9 @@
 # TODO
 
-- [ ] anti-passback (https://github.com/uhppoted/uhppoted/issues/60)
+- [ ] anti-passback (cf. https://github.com/uhppoted/uhppoted/issues/60)
       - [x] messages
       - [x] save/restore
-      - [ ] anti-passback
+      - [x] anti-passback
       - [ ] clean up 'find card' logic in swipe
       - [ ] CHANGELOG
       - [ ] README

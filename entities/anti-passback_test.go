@@ -8,6 +8,201 @@ import (
 	"github.com/uhppoted/uhppote-core/types"
 )
 
+func TestAntiPassbackDisabled(t *testing.T) {
+	antipassback := AntiPassback{
+		antipassback: types.Disabled,
+	}
+
+	sequence := []struct {
+		card     uint32
+		door     uint8
+		expected bool
+	}{
+		{10058400, 1, true},
+		{10058400, 1, true},
+		{10058400, 2, true},
+		{10058400, 2, true},
+		{10058400, 3, true},
+		{10058400, 3, true},
+		{10058400, 4, true},
+		{10058400, 4, true},
+	}
+
+	for _, v := range sequence {
+		if allowed := antipassback.Allow(v.card, v.door); allowed != v.expected {
+			t.Fatalf("incorrect 'deny' - expected:%v, got:%v", v.expected, allowed)
+		} else if allowed {
+			antipassback.Allowed(v.card, v.door)
+		}
+	}
+}
+
+func TestAntiPassback12_34(t *testing.T) {
+	antipassback := AntiPassback{
+		antipassback: types.Readers12_34,
+	}
+
+	sequence := []struct {
+		card     uint32
+		door     uint8
+		expected bool
+	}{
+		{10058400, 1, true},
+		{10058400, 1, false},
+		{10058400, 1, false},
+		{10058400, 2, true},
+		{10058400, 2, false},
+		{10058400, 2, false},
+		{10058400, 1, true},
+		{10058400, 1, false},
+		{10058400, 1, false},
+
+		{10058400, 3, true},
+		{10058400, 3, false},
+		{10058400, 3, false},
+		{10058400, 4, true},
+		{10058400, 4, false},
+		{10058400, 4, false},
+		{10058400, 3, true},
+		{10058400, 3, false},
+		{10058400, 3, false},
+	}
+
+	for _, v := range sequence {
+		if allowed := antipassback.Allow(v.card, v.door); allowed != v.expected {
+			t.Fatalf("incorrect 'deny' - expected:%v, got:%v", v.expected, allowed)
+		} else if allowed {
+			antipassback.Allowed(v.card, v.door)
+		}
+	}
+}
+
+func TestAntiPassback13_24(t *testing.T) {
+	antipassback := AntiPassback{
+		antipassback: types.Readers13_24,
+	}
+
+	sequence := []struct {
+		card     uint32
+		door     uint8
+		expected bool
+	}{
+		{10058400, 1, true},
+		{10058400, 1, false},
+		{10058400, 1, false},
+		{10058400, 3, true},
+		{10058400, 3, false},
+		{10058400, 3, false},
+		{10058400, 1, true},
+		{10058400, 1, false},
+		{10058400, 1, false},
+
+		{10058400, 2, true},
+		{10058400, 2, false},
+		{10058400, 2, false},
+		{10058400, 4, true},
+		{10058400, 4, false},
+		{10058400, 4, false},
+		{10058400, 2, true},
+		{10058400, 2, false},
+		{10058400, 2, false},
+	}
+
+	for _, v := range sequence {
+		if allowed := antipassback.Allow(v.card, v.door); allowed != v.expected {
+			t.Fatalf("incorrect 'deny' - expected:%v, got:%v", v.expected, allowed)
+		} else if allowed {
+			antipassback.Allowed(v.card, v.door)
+		}
+	}
+}
+
+func TestAntiPassback1_23(t *testing.T) {
+	antipassback := AntiPassback{
+		antipassback: types.Readers1_23,
+	}
+
+	sequence := []struct {
+		card     uint32
+		door     uint8
+		expected bool
+	}{
+		{10058400, 1, true},
+		{10058400, 1, false},
+		{10058400, 2, true},
+		{10058400, 2, false},
+		{10058400, 3, false},
+		{10058400, 1, true},
+		{10058400, 2, true},
+
+		{10058400, 1, true},
+		{10058400, 1, false},
+		{10058400, 3, true},
+		{10058400, 2, false},
+		{10058400, 3, false},
+		{10058400, 1, true},
+		{10058400, 3, true},
+
+		{10058400, 4, true},
+		{10058400, 4, true},
+	}
+
+	for _, v := range sequence {
+		if allowed := antipassback.Allow(v.card, v.door); allowed != v.expected {
+			t.Fatalf("incorrect 'deny' - expected:%v, got:%v", v.expected, allowed)
+		} else if allowed {
+			antipassback.Allowed(v.card, v.door)
+		}
+	}
+}
+
+func TestAntiPassback1_234(t *testing.T) {
+	antipassback := AntiPassback{
+		antipassback: types.Readers1_234,
+	}
+
+	sequence := []struct {
+		card     uint32
+		door     uint8
+		expected bool
+	}{
+		{10058400, 1, true},
+		{10058400, 1, false},
+		{10058400, 2, true},
+		{10058400, 2, false},
+		{10058400, 3, false},
+		{10058400, 4, false},
+		{10058400, 1, true},
+		{10058400, 2, true},
+
+		{10058400, 1, true},
+		{10058400, 1, false},
+		{10058400, 3, true},
+		{10058400, 2, false},
+		{10058400, 3, false},
+		{10058400, 4, false},
+		{10058400, 1, true},
+		{10058400, 3, true},
+
+		{10058400, 1, true},
+		{10058400, 1, false},
+		{10058400, 4, true},
+		{10058400, 2, false},
+		{10058400, 3, false},
+		{10058400, 4, false},
+		{10058400, 1, true},
+		{10058400, 4, true},
+	}
+
+	for _, v := range sequence {
+		if allowed := antipassback.Allow(v.card, v.door); allowed != v.expected {
+			t.Fatalf("incorrect 'deny' - expected:%v, got:%v", v.expected, allowed)
+		} else if allowed {
+			antipassback.Allowed(v.card, v.door)
+		}
+	}
+}
+
 func TestAntiPassbackMarshal(t *testing.T) {
 	antipassback := AntiPassback{
 		antipassback: types.Readers1_234,

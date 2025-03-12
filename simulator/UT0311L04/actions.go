@@ -103,7 +103,7 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, direction entities.Dire
 		}
 
 		// anti-passback?
-		if s.AntiPassback.Deny(cardNumber, door) {
+		if !s.AntiPassback.Allow(cardNumber, door) {
 			swiped(0x01, false, entities.ReasonAntiPassback)
 			return false, nil
 		}
