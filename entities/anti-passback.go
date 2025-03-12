@@ -7,7 +7,7 @@ import (
 	"github.com/uhppoted/uhppote-core/types"
 )
 
-var alt = map[types.AntiPassback]map[uint8]struct {
+var rules = map[types.AntiPassback]map[uint8]struct {
 	deny  []uint8
 	allow []uint8
 }{
@@ -87,8 +87,8 @@ func (a AntiPassback) Allow(card uint32, door uint8) bool {
 }
 
 func (a *AntiPassback) Allowed(card uint32, door uint8) {
-	a.append(card, alt[a.antipassback][door].deny...)
-	a.delete(card, alt[a.antipassback][door].allow...)
+	a.append(card, rules[a.antipassback][door].deny...)
+	a.delete(card, rules[a.antipassback][door].allow...)
 }
 
 func (a *AntiPassback) append(card uint32, doors ...uint8) {
