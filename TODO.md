@@ -7,7 +7,8 @@
       - [x] clean up 'find card' logic in swipe
       - [x] CHANGELOG
       - [x] README
-      - [ ] antipassback per-instance mutex
+      - [x] antipassback per-instance mutex
+      - [ ] validate against UHPPOTE controller
 
 ## TODO
 

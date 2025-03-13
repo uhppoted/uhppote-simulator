@@ -26,8 +26,8 @@ func TestSetAntiPassback(t *testing.T) {
 
 	if ok := antipassback.Set(0x04); !ok {
 		t.Errorf("incorrect return value:%v, got:%v", true, ok)
-	} else if !reflect.DeepEqual(antipassback, expected) {
-		t.Errorf("incorrect entity\n   expected: %v\ngot:    %v", expected, antipassback)
+	} else if !reflect.DeepEqual(&antipassback, &expected) {
+		t.Errorf("incorrect entity\n   expected: %v\ngot:    %v", &expected, &antipassback)
 	}
 }
 
@@ -233,7 +233,7 @@ func TestAntiPassbackMarshal(t *testing.T) {
 
 	expected := "4"
 
-	if encoded, err := json.Marshal(antipassback); err != nil {
+	if encoded, err := json.Marshal(&antipassback); err != nil {
 		t.Fatalf("error marshalling AntiPassback (%v)", err)
 	} else if string(encoded) != expected {
 		t.Errorf("incorrectly marshalled JSON\n   expected:%v\n   got:     %v", expected, string(encoded))
@@ -250,7 +250,7 @@ func TestAntiPassbackUnmarshal(t *testing.T) {
 
 	if err := json.Unmarshal(encoded, &antipassback); err != nil {
 		t.Fatalf("error unmarshalling AntiPassback (%v)", err)
-	} else if !reflect.DeepEqual(antipassback, expected) {
-		t.Errorf("incorrectly unmarshalled AntiPassback\n   expected:%v\n   got:     %v", expected, antipassback)
+	} else if !reflect.DeepEqual(&antipassback, &expected) {
+		t.Errorf("incorrectly unmarshalled AntiPassback\n   expected:%v\n   got:     %v", &expected, &antipassback)
 	}
 }

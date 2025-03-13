@@ -25,7 +25,7 @@ func TestNewUT0311L04(t *testing.T) {
 		TimeProfiles: entities.TimeProfiles{},
 		TaskList:     entities.TaskList{},
 		Events:       entities.NewEventList(),
-		AntiPassback: entities.AntiPassback{},
+		AntiPassback: &entities.AntiPassback{},
 	}
 
 	controller := NewUT0311L04(405060708, ".", false)

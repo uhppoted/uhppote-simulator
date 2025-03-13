@@ -25,29 +25,29 @@ type UT0311L04 struct {
 	touched    time.Time
 	autosent   time.Time
 
-	SerialNumber        types.SerialNumber    `json:"serial-number"`
-	IpAddress           net.IP                `json:"address"`
-	SubnetMask          net.IP                `json:"subnet"`
-	Gateway             net.IP                `json:"gateway"`
-	MacAddress          types.MacAddress      `json:"MAC"`
-	Version             types.Version         `json:"version"`
-	Released            types.Date            `json:"released,omitempty"`
-	TimeOffset          entities.Offset       `json:"offset"`
-	Doors               entities.Doors        `json:"doors"`
-	Keypads             entities.Keypads      `json:"keypads"`
-	Listener            netip.AddrPort        `json:"listener"`
-	AntiPassback        entities.AntiPassback `json:"anti-passback"`
-	AutoSend            uint8                 `json:"auto-send"`
-	RecordSpecialEvents bool                  `json:"record-special-events"`
-	PCControl           bool                  `json:"pc-control"`
-	SystemError         uint8                 `json:"system-error"`
-	SequenceId          uint32                `json:"sequence-id"`
-	SpecialInfo         uint8                 `json:"special-info"`
-	InputState          uint8                 `json:"input-state"`
-	TimeProfiles        entities.TimeProfiles `json:"time-profiles,omitempty"`
-	TaskList            entities.TaskList     `json:"tasklist,omitempty"`
-	Cards               entities.CardList     `json:"cards"`
-	Events              entities.EventList    `json:"events"`
+	SerialNumber        types.SerialNumber     `json:"serial-number"`
+	IpAddress           net.IP                 `json:"address"`
+	SubnetMask          net.IP                 `json:"subnet"`
+	Gateway             net.IP                 `json:"gateway"`
+	MacAddress          types.MacAddress       `json:"MAC"`
+	Version             types.Version          `json:"version"`
+	Released            types.Date             `json:"released,omitempty"`
+	TimeOffset          entities.Offset        `json:"offset"`
+	Doors               entities.Doors         `json:"doors"`
+	Keypads             entities.Keypads       `json:"keypads"`
+	Listener            netip.AddrPort         `json:"listener"`
+	AntiPassback        *entities.AntiPassback `json:"anti-passback"`
+	AutoSend            uint8                  `json:"auto-send"`
+	RecordSpecialEvents bool                   `json:"record-special-events"`
+	PCControl           bool                   `json:"pc-control"`
+	SystemError         uint8                  `json:"system-error"`
+	SequenceId          uint32                 `json:"sequence-id"`
+	SpecialInfo         uint8                  `json:"special-info"`
+	InputState          uint8                  `json:"input-state"`
+	TimeProfiles        entities.TimeProfiles  `json:"time-profiles,omitempty"`
+	TaskList            entities.TaskList      `json:"tasklist,omitempty"`
+	Cards               entities.CardList      `json:"cards"`
+	Events              entities.EventList     `json:"events"`
 }
 
 var RELEASE_DATE = types.MustParseDate("2020-01-01")
@@ -85,7 +85,7 @@ func NewUT0311L04(deviceID uint32, dir string, compressed bool) *UT0311L04 {
 		MacAddress:   types.MacAddress(mac),
 		Version:      0x0892,
 		Released:     RELEASE_DATE,
-		AntiPassback: entities.AntiPassback{},
+		AntiPassback: &entities.AntiPassback{},
 		Doors:        entities.MakeDoors(),
 		Keypads:      entities.MakeKeypads(),
 		TimeProfiles: entities.TimeProfiles{},
@@ -368,29 +368,29 @@ func load(filepath string) (*UT0311L04, error) {
 
 func unmarshal(bytes []byte, filepath string, compressed bool) (*UT0311L04, error) {
 	object := struct {
-		SerialNumber        types.SerialNumber    `json:"serial-number"`
-		IpAddress           net.IP                `json:"address"`
-		SubnetMask          net.IP                `json:"subnet"`
-		Gateway             net.IP                `json:"gateway"`
-		MacAddress          types.MacAddress      `json:"MAC"`
-		Version             types.Version         `json:"version"`
-		Released            types.Date            `json:"released,omitempty"`
-		TimeOffset          entities.Offset       `json:"offset"`
-		Doors               entities.Doors        `json:"doors"`
-		Keypads             entities.Keypads      `json:"keypads"`
-		Listener            json.RawMessage       `json:"listener"`
-		AutoSend            uint8                 `json:"auto-send"`
-		RecordSpecialEvents bool                  `json:"record-special-events"`
-		PCControl           bool                  `json:"pc-control"`
-		SystemError         uint8                 `json:"system-error"`
-		SequenceId          uint32                `json:"sequence-id"`
-		SpecialInfo         uint8                 `json:"special-info"`
-		InputState          uint8                 `json:"input-state"`
-		TimeProfiles        entities.TimeProfiles `json:"time-profiles,omitempty"`
-		TaskList            json.RawMessage       `json:"tasklist,omitempty"`
-		Cards               entities.CardList     `json:"cards"`
-		Events              entities.EventList    `json:"events"`
-		AntiPassback        entities.AntiPassback `json:"anti-passback"`
+		SerialNumber        types.SerialNumber     `json:"serial-number"`
+		IpAddress           net.IP                 `json:"address"`
+		SubnetMask          net.IP                 `json:"subnet"`
+		Gateway             net.IP                 `json:"gateway"`
+		MacAddress          types.MacAddress       `json:"MAC"`
+		Version             types.Version          `json:"version"`
+		Released            types.Date             `json:"released,omitempty"`
+		TimeOffset          entities.Offset        `json:"offset"`
+		Doors               entities.Doors         `json:"doors"`
+		Keypads             entities.Keypads       `json:"keypads"`
+		Listener            json.RawMessage        `json:"listener"`
+		AutoSend            uint8                  `json:"auto-send"`
+		RecordSpecialEvents bool                   `json:"record-special-events"`
+		PCControl           bool                   `json:"pc-control"`
+		SystemError         uint8                  `json:"system-error"`
+		SequenceId          uint32                 `json:"sequence-id"`
+		SpecialInfo         uint8                  `json:"special-info"`
+		InputState          uint8                  `json:"input-state"`
+		TimeProfiles        entities.TimeProfiles  `json:"time-profiles,omitempty"`
+		TaskList            json.RawMessage        `json:"tasklist,omitempty"`
+		Cards               entities.CardList      `json:"cards"`
+		Events              entities.EventList     `json:"events"`
+		AntiPassback        *entities.AntiPassback `json:"anti-passback"`
 	}{
 		Released:     RELEASE_DATE,
 		Doors:        entities.MakeDoors(),
