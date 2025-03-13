@@ -18,6 +18,7 @@ func TestRestoreDefaultParameters(t *testing.T) {
 		SubnetMask:   net.IPv4(255, 254, 253, 252),
 		Gateway:      net.IPv4(192, 168, 1, 1),
 		Listener:     netip.MustParseAddrPort("192.168.1.100:60001"),
+		AntiPassback: entities.MakeAntiPassback(types.Readers1_234),
 
 		Doors: entities.MakeDoors(),
 	}
@@ -64,21 +65,23 @@ func TestRestoreDefaultParameters(t *testing.T) {
 	})
 
 	expected := struct {
-		response   messages.RestoreDefaultParametersResponse
-		IpAddress  net.IP
-		SubnetMask net.IP
-		Gateway    net.IP
-		Listener   *net.UDPAddr
+		response     messages.RestoreDefaultParametersResponse
+		IpAddress    net.IP
+		SubnetMask   net.IP
+		Gateway      net.IP
+		Listener     *net.UDPAddr
+		AntiPassback entities.AntiPassback
 	}{
 		response: messages.RestoreDefaultParametersResponse{
 			SerialNumber: 405419896,
 			Succeeded:    true,
 		},
 
-		IpAddress:  net.IPv4(0, 0, 0, 0),
-		SubnetMask: net.IPv4(255, 255, 255, 0),
-		Gateway:    net.IPv4(0, 0, 0, 0),
-		Listener:   nil,
+		IpAddress:    net.IPv4(0, 0, 0, 0),
+		SubnetMask:   net.IPv4(255, 255, 255, 0),
+		Gateway:      net.IPv4(0, 0, 0, 0),
+		Listener:     nil,
+		AntiPassback: entities.AntiPassback{},
 	}
 
 	request := messages.RestoreDefaultParametersRequest{
@@ -135,6 +138,10 @@ func TestRestoreDefaultParameters(t *testing.T) {
 
 		if !reflect.DeepEqual(s.SubnetMask, expected.SubnetMask) {
 			t.Errorf("'restore-default-parameters' failed to update simulator IPv4 netmask\n   expected: %+v\n   got:      %+v\n", expected.SubnetMask, s.SubnetMask)
+		}
+
+		if !reflect.DeepEqual(s.AntiPassback, expected.AntiPassback) {
+			t.Errorf("'restore-default-parameters' failed to update simulator anti-passback\n   expected: %+v\n   got:      %+v\n", expected.AntiPassback, s.AntiPassback)
 		}
 	}
 }

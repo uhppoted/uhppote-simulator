@@ -2,6 +2,7 @@ package UT0311L04
 
 import (
 	"fmt"
+	"slices"
 	"time"
 
 	"github.com/uhppoted/uhppote-core/types"
@@ -37,10 +38,12 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, direction entities.Dire
 		s.add(event)
 	}
 
-	for _, c := range s.Cards {
-		if c == nil || c.CardNumber != cardNumber {
-			continue
-		}
+	f := func(card *entities.Card) bool {
+		return card != nil && card.CardNumber == cardNumber
+	}
+
+	if ix := slices.IndexFunc(s.Cards[:], f); ix != -1 {
+		card := s.Cards[ix]
 
 		// PC control ?
 		lastTouched := time.Since(s.touched)
@@ -50,8 +53,8 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, direction entities.Dire
 		}
 
 		// PIN?
-		if c.PIN != 0 && c.PIN < 1000000 {
-			if PIN != c.PIN {
+		if card.PIN != 0 && card.PIN < 1000000 {
+			if PIN != card.PIN {
 				if s.Keypads[door] == entities.KeypadIn && direction == entities.DirectionIn {
 					swiped(0x01, false, entities.ReasonInvalidPIN)
 					return false, nil
@@ -70,7 +73,7 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, direction entities.Dire
 		}
 
 		// no access rights?
-		profileID := c.Doors[door]
+		profileID := card.Doors[door]
 
 		if profileID < 1 || profileID > 254 {
 			swiped(0x01, false, entities.ReasonNoPrivilege)
@@ -113,8 +116,6 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, direction entities.Dire
 			swiped(0x02, true, entities.ReasonSwipePass)
 			return true, nil
 		}
-
-		break
 	}
 
 	// Denied!

@@ -4,9 +4,10 @@
       - [x] messages
       - [x] save/restore
       - [x] anti-passback
-      - [ ] clean up 'find card' logic in swipe
-      - [ ] CHANGELOG
-      - [ ] README
+      - [x] clean up 'find card' logic in swipe
+      - [x] CHANGELOG
+      - [x] README
+      - [ ] antipassback per-instance mutex
 
 ## TODO
 

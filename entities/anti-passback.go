@@ -3,6 +3,7 @@ package entities
 import (
 	"encoding/json"
 	"slices"
+	"sync"
 
 	"github.com/uhppoted/uhppote-core/types"
 )
@@ -57,6 +58,9 @@ type AntiPassback struct {
 	deny         []pair
 }
 
+// NTS: really need per-instance mutex
+var guard sync.RWMutex
+
 func MakeAntiPassback(antipassback types.AntiPassback) AntiPassback {
 	return AntiPassback{
 		antipassback: antipassback,
@@ -64,12 +68,21 @@ func MakeAntiPassback(antipassback types.AntiPassback) AntiPassback {
 }
 
 func (a AntiPassback) Get() uint8 {
-	return uint8(a.antipassback)
+	guard.RLock()
+	defer guard.RUnlock()
+
+	u8 := uint8(a.antipassback)
+
+	return u8
 }
 
 func (a *AntiPassback) Set(antipassback uint8) bool {
+	guard.Lock()
+	defer guard.Unlock()
+
 	if antipassback <= 0x04 {
 		a.antipassback = types.AntiPassback(antipassback)
+		a.deny = []pair{}
 		return true
 	}
 
@@ -77,6 +90,9 @@ func (a *AntiPassback) Set(antipassback uint8) bool {
 }
 
 func (a AntiPassback) Allow(card uint32, door uint8) bool {
+	guard.RLock()
+	defer guard.RUnlock()
+
 	for _, v := range a.deny {
 		if v.card == card && v.door == door {
 			return false
@@ -87,6 +103,9 @@ func (a AntiPassback) Allow(card uint32, door uint8) bool {
 }
 
 func (a *AntiPassback) Allowed(card uint32, door uint8) {
+	guard.Lock()
+	defer guard.Unlock()
+
 	a.append(card, rules[a.antipassback][door].deny...)
 	a.delete(card, rules[a.antipassback][door].allow...)
 }

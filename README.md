@@ -124,6 +124,8 @@ Supported `uhppote` functions:
 - PutCard
 - DeleteCard
 - DeleteCards
+- GetAntiPassback
+- SetAntiPassback
 - GetTimeProfile
 - SetTimeProfile
 - ClearTimeProfiles
@@ -390,6 +392,7 @@ the simulator:
 - deletes all cards
 - sets all doors to `controlled` mode and 5 seconds delay
 - clears all door passcodes
+- sets the anti-passback mode to _disabled_
 
 
 ### `passcode`
@@ -404,9 +407,9 @@ the simulator:
 _tl;dr; The UHPPOTE controller does not 'rollover' when the onboard event store is filled._
 
 From experimentation, it appears that the UHPPOTE controller has an event store for approximately 200 000 events
-(the user manual says 100 000, so possibly varies varies with model/version). On filling the event buffer the controller
-seems to discard a _chunk_ of about 2048 events from the start of the event buffer to make space for new events. The event
-index continues to increment monotonically.
+(the user manual says 100 000, so possibly varies with model/version). On filling the event buffer the controller
+seems to discard a _chunk_ of about 2048 events from the start of the event buffer to make space for new events. 
+The event index continues to increment monotonically (presumably until the uint32 overflows and wraps back to 0).
 
 
 

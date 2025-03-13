@@ -8,6 +8,29 @@ import (
 	"github.com/uhppoted/uhppote-core/types"
 )
 
+func TestSetAntiPassback(t *testing.T) {
+	antipassback := AntiPassback{
+		antipassback: types.Readers12_34,
+		deny: []pair{
+			{10058400, 1},
+			{10058400, 3},
+			{10058399, 2},
+			{10058399, 4},
+		},
+	}
+
+	expected := AntiPassback{
+		antipassback: types.Readers1_234,
+		deny:         []pair{},
+	}
+
+	if ok := antipassback.Set(0x04); !ok {
+		t.Errorf("incorrect return value:%v, got:%v", true, ok)
+	} else if !reflect.DeepEqual(antipassback, expected) {
+		t.Errorf("incorrect entity\n   expected: %v\ngot:    %v", expected, antipassback)
+	}
+}
+
 func TestAntiPassbackDisabled(t *testing.T) {
 	antipassback := AntiPassback{
 		antipassback: types.Disabled,

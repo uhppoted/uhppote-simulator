@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+1. `get/set-antipassback` command emulation.
+
 ### Updated
 1. Updated to Go 1.24.
 
