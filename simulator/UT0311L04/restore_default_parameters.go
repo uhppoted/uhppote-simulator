@@ -22,7 +22,7 @@ func (s *UT0311L04) restoreDefaultParameters(request *messages.RestoreDefaultPar
 		s.SubnetMask = net.IPv4(255, 255, 255, 0)
 		s.Gateway = net.IPv4(0, 0, 0, 0)
 		s.Listener = netip.AddrPort{}
-		s.AntiPassback = &entities.AntiPassback{}
+		s.AntiPassback = entities.AntiPassback{}
 
 		for _, door := range []uint8{1, 2, 3, 4} {
 			s.Doors.SetControlState(door, entities.Controlled)

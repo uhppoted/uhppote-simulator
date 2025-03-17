@@ -9,6 +9,18 @@
       - [x] README
       - [x] antipassback per-instance mutex
       - [ ] validate against UHPPOTE controller
+      - [x] crash:
+```
+panic: runtime error: invalid memory address or nil pointer dereference
+[signal SIGSEGV: segmentation violation code=0x1 addr=0x30 pc=0x681b08]
+
+goroutine 19 [running]:
+github.com/uhppoted/uhppote-simulator/entities.(*AntiPassback).Get(0x47336c?)
+      github.com/uhppoted/uhppote-simulator/entities/anti-passback.go:69 +0x28
+...
+```
+      - (?) Replace global lock with external per controller lock
+            - maybe time to think about a proper DB ?
 
 ## TODO
 

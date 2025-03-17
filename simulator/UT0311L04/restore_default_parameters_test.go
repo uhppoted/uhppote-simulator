@@ -140,8 +140,8 @@ func TestRestoreDefaultParameters(t *testing.T) {
 			t.Errorf("'restore-default-parameters' failed to update simulator IPv4 netmask\n   expected: %+v\n   got:      %+v\n", expected.SubnetMask, s.SubnetMask)
 		}
 
-		if !reflect.DeepEqual(s.AntiPassback, &expected.AntiPassback) {
-			t.Errorf("'restore-default-parameters' failed to update simulator anti-passback\n   expected: %+v\n   got:      %+v\n", &expected.AntiPassback, s.AntiPassback)
+		if !reflect.DeepEqual(s.AntiPassback, expected.AntiPassback) {
+			t.Errorf("'restore-default-parameters' failed to update simulator anti-passback\n   expected: %+v\n   got:      %+v\n", expected.AntiPassback, s.AntiPassback)
 		}
 	}
 }
