@@ -101,41 +101,112 @@ func TestAntiPassback12_34(t *testing.T) {
 }
 
 func TestAntiPassback13_24(t *testing.T) {
-	antipassback := AntiPassback{
-		antipassback: types.Readers13_24,
-	}
-
-	sequence := []struct {
+	sequences := [][]struct {
 		card     uint32
 		door     uint8
 		expected bool
 	}{
-		{10058400, 1, true},
-		{10058400, 1, false},
-		{10058400, 1, false},
-		{10058400, 3, true},
-		{10058400, 3, false},
-		{10058400, 3, false},
-		{10058400, 1, true},
-		{10058400, 1, false},
-		{10058400, 1, false},
-
-		{10058400, 2, true},
-		{10058400, 2, false},
-		{10058400, 2, false},
-		{10058400, 4, true},
-		{10058400, 4, false},
-		{10058400, 4, false},
-		{10058400, 2, true},
-		{10058400, 2, false},
-		{10058400, 2, false},
+		{
+			{10058400, 1, true},
+			{10058400, 1, false},
+			{10058400, 3, false},
+			{10058400, 1, false},
+			{10058400, 3, false},
+			{10058400, 2, true},
+			{10058400, 2, false},
+			{10058400, 4, false},
+			{10058400, 1, true},
+		},
+		{
+			{10058400, 1, true},
+			{10058400, 1, false},
+			{10058400, 3, false},
+			{10058400, 1, false},
+			{10058400, 3, false},
+			{10058400, 4, true},
+			{10058400, 2, false},
+			{10058400, 4, false},
+			{10058400, 1, true},
+		},
+		{
+			{10058400, 2, true},
+			{10058400, 2, false},
+			{10058400, 4, false},
+			{10058400, 2, false},
+			{10058400, 4, false},
+			{10058400, 1, true},
+			{10058400, 1, false},
+			{10058400, 3, false},
+			{10058400, 2, true},
+		},
+		{
+			{10058400, 2, true},
+			{10058400, 2, false},
+			{10058400, 4, false},
+			{10058400, 2, false},
+			{10058400, 4, false},
+			{10058400, 3, true},
+			{10058400, 1, false},
+			{10058400, 3, false},
+			{10058400, 2, true},
+		},
+		{
+			{10058400, 3, true},
+			{10058400, 1, false},
+			{10058400, 3, false},
+			{10058400, 1, false},
+			{10058400, 3, false},
+			{10058400, 2, true},
+			{10058400, 2, false},
+			{10058400, 4, false},
+			{10058400, 3, true},
+		},
+		{
+			{10058400, 3, true},
+			{10058400, 1, false},
+			{10058400, 3, false},
+			{10058400, 1, false},
+			{10058400, 3, false},
+			{10058400, 4, true},
+			{10058400, 2, false},
+			{10058400, 4, false},
+			{10058400, 3, true},
+		},
+		{
+			{10058400, 4, true},
+			{10058400, 2, false},
+			{10058400, 4, false},
+			{10058400, 2, false},
+			{10058400, 4, false},
+			{10058400, 1, true},
+			{10058400, 1, false},
+			{10058400, 3, false},
+			{10058400, 4, true},
+		},
+		{
+			{10058400, 4, true},
+			{10058400, 2, false},
+			{10058400, 4, false},
+			{10058400, 2, false},
+			{10058400, 4, false},
+			{10058400, 3, true},
+			{10058400, 1, false},
+			{10058400, 3, false},
+			{10058400, 4, true},
+		},
 	}
 
-	for _, v := range sequence {
-		if allowed := antipassback.Allow(v.card, v.door); allowed != v.expected {
-			t.Fatalf("incorrect 'deny' - expected:%v, got:%v", v.expected, allowed)
-		} else if allowed {
-			antipassback.Allowed(v.card, v.door)
+	for _, sequence := range sequences {
+		antipassback := AntiPassback{
+			antipassback: types.Readers13_24,
+		}
+
+		for _, v := range sequence {
+			if allowed := antipassback.Allow(v.card, v.door); allowed != v.expected {
+				t.Fatalf("incorrect 'deny' - expected:%v, got:%v", v.expected, allowed)
+			} else if allowed {
+				antipassback.Allowed(v.card, v.door)
+			}
 		}
 	}
 }

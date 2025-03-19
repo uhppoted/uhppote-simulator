@@ -27,10 +27,10 @@ var rules = map[types.AntiPassback]map[uint8]struct {
 	},
 
 	types.Readers13_24: {
-		1: {[]uint8{1}, []uint8{3}},
-		2: {[]uint8{2}, []uint8{4}},
-		3: {[]uint8{3}, []uint8{1}},
-		4: {[]uint8{4}, []uint8{2}},
+		1: {[]uint8{1, 3}, []uint8{2, 4}},
+		2: {[]uint8{2, 4}, []uint8{1, 3}},
+		3: {[]uint8{1, 3}, []uint8{2, 4}},
+		4: {[]uint8{2, 4}, []uint8{1, 3}},
 	},
 
 	types.Readers1_23: {
