@@ -9,10 +9,11 @@
       - [x] README
       - [x] antipassback per-instance mutex
       - [x] validate against UHPPOTE controller
-      - [x] crash:
+      - [x] crash
+      - [x] rework (1,3):(2,4) behaviour
 
-      - (?) Replace global lock with external per controller lock
-            - maybe time to think about a proper DB ?
+- (?) Replace global/table locks with external per controller lock
+   - maybe time to think about a proper DB ?
 
 ## TODO
 
