@@ -167,7 +167,7 @@ func udpListenAndServe(ctx *simulator.Context, udp *net.UDPConn) error {
 			return err
 		} else {
 			if debug {
-				debugf("udp", "received %v bytes from %v\n%s", N, raddr, codec.Dump(request[0:N], " ...          "))
+				infof("udp", "received %v bytes from %v\n%s", N, raddr, codec.Dump(request[:N], " ...          "))
 			}
 
 			handle(raddr, request[:N])
