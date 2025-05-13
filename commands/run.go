@@ -187,7 +187,7 @@ func tcpListenAndServe(ctx *simulator.Context, c *net.TCPListener) error {
 			errorf("tcp", "%v", err)
 		} else {
 			if debug {
-				debugf("tcp", "received %v bytes from %v\n%s", N, addr, codec.Dump(packet[0:N], " ...          "))
+				infof("tcp", "received %v bytes from %v\n%s", N, addr, codec.Dump(packet[0:N], " ...          "))
 			}
 
 			if request, err := messages.UnmarshalRequest(packet[0:N]); err != nil {
