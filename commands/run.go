@@ -273,6 +273,7 @@ func sendto(bind *net.UDPAddr, dest *net.UDPAddr, message any) {
 	}
 }
 
+//lint:ignore U1000 utility function
 func debugf(tag any, format string, args ...any) {
 	f := fmt.Sprintf("%-10v  %v", tag, format)
 
