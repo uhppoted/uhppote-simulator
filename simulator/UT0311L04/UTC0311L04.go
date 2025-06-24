@@ -407,7 +407,7 @@ func unmarshal(bytes []byte, filepath string, compressed bool) (*UT0311L04, erro
 	var addrPort netip.AddrPort
 	var udpAddr net.UDPAddr
 
-	if err := json.Unmarshal(object.Listener, &addrPort); err == nil {
+	if err := json.Unmarshal(object.Listener, &addrPort); err == nil && addrPort.IsValid() {
 		listener = addrPort
 	} else if err := json.Unmarshal(object.Listener, &udpAddr); err == nil {
 		listener = udpAddr.AddrPort()

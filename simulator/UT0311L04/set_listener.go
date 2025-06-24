@@ -12,17 +12,27 @@ func (s *UT0311L04) setListener(request *messages.SetListenerRequest) (*messages
 		return nil, nil
 	}
 
-	s.Listener = request.AddrPort
-	s.AutoSend = request.Interval
-	s.autosent = time.Now()
+	if request.AddrPort.IsValid() {
+		s.Listener = request.AddrPort
+		s.AutoSend = request.Interval
+		s.autosent = time.Now()
 
-	response := messages.SetListenerResponse{
-		SerialNumber: s.SerialNumber,
-		Succeeded:    true,
+		if err := s.Save(); err != nil {
+			fmt.Printf("ERROR: %v\n", err)
+		}
+
+		response := messages.SetListenerResponse{
+			SerialNumber: s.SerialNumber,
+			Succeeded:    true,
+		}
+
+		return &response, nil
 	}
 
-	if err := s.Save(); err != nil {
-		fmt.Printf("ERROR: %v\n", err)
+	// default response
+	response := messages.SetListenerResponse{
+		SerialNumber: s.SerialNumber,
+		Succeeded:    false,
 	}
 
 	return &response, nil

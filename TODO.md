@@ -1,16 +1,7 @@
 # TODO
 
 - [x] anti-passback (cf. https://github.com/uhppoted/uhppoted/issues/60)
-      - [x] messages
-      - [x] save/restore
-      - [x] anti-passback
-      - [x] clean up 'find card' logic in swipe
-      - [x] CHANGELOG
-      - [x] README
-      - [x] antipassback per-instance mutex
-      - [x] validate against UHPPOTE controller
-      - [x] crash
-      - [x] rework (1,3):(2,4) behaviour
+- [x] `get-listener` fails horribly if the internal address is invalid cf. https://github.com/uhppoted/uhppote-simulator/issues/13
 
 - (?) Replace global/table locks with external per controller lock
    - maybe time to think about a proper DB ?
