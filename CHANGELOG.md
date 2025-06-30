@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## [0.8.11](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.11) - 2025-07-01
 
 ### Added
 1. `get/set-antipassback` command emulation.

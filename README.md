@@ -39,11 +39,11 @@ Supported operating systems:
 
 ### Current release
 
-**[v0.8.10](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.10) - 2025-01-30**
+**[v0.8.11](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.11) - 2025-07-01**
 
-1. Added support for event auto-send and updated _get-event-listener_ and _set-event-listener_
-   with the auto-send interval field.
-2. Added ARMv6 build target (RaspberryPi ZeroW).
+1. Added `get/set-antipassback` command emulation.
+2. Fixed incoming requests not printed to console (bug).
+3. Updated to Go 1.24.
 
 
 ## Installation
