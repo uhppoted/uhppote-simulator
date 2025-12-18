@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] Add support for *card-number*PIN* keypad entry (cf. https://github.com/uhppoted/uhppote-simulator/issues/14)
+- [x] Add support for *card-number*PIN* keypad entry (cf. https://github.com/uhppoted/uhppote-simulator/issues/14)
 
 
 - (?) Replace global/table locks with external per controller lock
