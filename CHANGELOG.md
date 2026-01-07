@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+1. Added _reset_ action to generate a _controller reset_ event.
+
 ### Updated
 1. Updated to Go 1.25.
 

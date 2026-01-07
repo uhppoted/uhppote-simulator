@@ -53,6 +53,7 @@ func Run(ctx *simulator.Context) {
 	d.Add("^/uhppote/simulator/[0-9]+/code$", code)
 	d.Add("^/uhppote/simulator/[0-9]+/door/[1-4]$", door)
 	d.Add("^/uhppote/simulator/[0-9]+/cards/[0-9]+$", cards)
+	d.Add("^/uhppote/simulator/[0-9]+/reset$", reset)
 
 	log.Fatal(http.ListenAndServe(ctx.RestAddress, &d))
 }
@@ -498,6 +499,68 @@ func button(ctx *simulator.Context, w http.ResponseWriter, deviceID uint32, door
 		Message string `json:"message"`
 	}{
 		Result:  unlocked,
+		Message: message,
+	}
+
+	b, err := json.Marshal(response)
+	if err != nil {
+		http.Error(w, "Error generating response", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(b)
+}
+
+func reset(ctx *simulator.Context, w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, fmt.Sprintf("Invalid method:%s - expected POST", r.Method), http.StatusMethodNotAllowed)
+		return
+	}
+
+	url := r.URL.Path
+	matches := regexp.MustCompile("^/uhppote/simulator/([0-9]+)/reset$").FindStringSubmatch(url)
+	controller, err := strconv.ParseUint(matches[1], 10, 32)
+	if err != nil {
+		http.Error(w, "Error reading request", http.StatusInternalServerError)
+		return
+	}
+
+	blob, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Error reading request", http.StatusInternalServerError)
+		return
+	}
+
+	request := struct {
+	}{}
+
+	err = json.Unmarshal(blob, &request)
+	if err != nil {
+		http.Error(w, "Invalid request format", http.StatusBadRequest)
+		return
+	}
+
+	s := ctx.DeviceList.Find(uint32(controller))
+	if s == nil {
+		http.Error(w, fmt.Sprintf("No controller with ID %d", controller), http.StatusNotFound)
+		return
+	}
+
+	ok, err := s.Reset()
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Failed to emulate 'controller reset' (%v)", err), http.StatusInternalServerError)
+		return
+	}
+
+	message := "controller reset"
+	if !ok {
+		message = "controller reset failed"
+	}
+
+	response := struct {
+		Message string `json:"message"`
+	}{
 		Message: message,
 	}
 

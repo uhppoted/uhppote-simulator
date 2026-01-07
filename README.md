@@ -166,6 +166,7 @@ The simulator provides a REST API to simulate user actions and manage controller
 - list controllers
 - create controller
 - delete controller
+- reset controller
 
 The actions may be invoked:
 - from the command line using _curl_ 
@@ -324,6 +325,23 @@ controller   controller serial number e.g. 405419896
 ```
 curl -X DELETE "http://127.0.0.1:8000/uhppote/simulator/405419896" -H "accept: */*"
 ```
+
+### `reset-controller`
+Simulates a controller reset to generate a reset event.
+```
+URL: `http://localhost:8000/uhppote/simulator/{controller}/reset`
+Method: POST
+Request:
+{
+}
+
+controller   controller serial number e.g. 405419896
+```
+reset:
+```
+curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/reset" -H "accept: application/json" -H "Content-Type: application/json" -d '{}'
+```
+
 
 ### `put-card`
 Adds or updates a card on a simulated controller. Unlike the controller `put-card` API, the REST API does not 

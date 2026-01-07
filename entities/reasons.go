@@ -12,4 +12,7 @@ const (
 	ReasonNoPass                uint8 = 0x12
 	ReasonSuperPasswordOpenDoor uint8 = 0x19
 	ReasonInterlock             uint8 = 0x21
+
+	ReasonControllerPowerOn uint8 = 0x1c
+	ReasonControllerReset   uint8 = 0x1d
 )

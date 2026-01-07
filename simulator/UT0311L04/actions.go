@@ -353,6 +353,27 @@ func (s *UT0311L04) StoreCard(card uint32, from types.Date, to types.Date, doors
 	}
 }
 
+// Implements the REST 'reset' API.
+//
+// Generates a 'controller reset' event.
+func (s *UT0311L04) Reset() (bool, error) {
+	datetime := types.DateTime(time.Now().UTC().Add(time.Duration(s.TimeOffset)))
+
+	event := entities.Event{
+		Type:      0x03,
+		Granted:   false,
+		Door:      0,
+		Direction: 0,
+		Card:      0,
+		Timestamp: datetime,
+		Reason:    entities.ReasonControllerReset,
+	}
+
+	s.add(event)
+
+	return true, nil
+}
+
 // Builds list of linked time profiles and then checks each individual profile
 func (s *UT0311L04) checkTimeProfile(profileID uint8) bool {
 	profiles := map[uint8]bool{}

@@ -146,6 +146,9 @@ button:
 card:
 	curl -X PUT "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/cards/${CARD}" -H "accept: */*" -H "Content-Type: application/json" -d '{"start-date":"2024-01-01", "end-date":"2024-12-31", "doors": [1,2,3,4], "PIN": 7531}'
 
+reset:
+	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/$(SERIALNO)/reset" -H "accept: application/json" -H "Content-Type: application/json" -d '{}'
+
 # v06.62 events
 v6.62-swipe:
 	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/201020304/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"door\":$(DOOR),\"card-number\":$(CARD)}"

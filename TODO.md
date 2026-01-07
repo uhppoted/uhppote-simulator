@@ -1,7 +1,7 @@
 # TODO
 
 - [x] Add support for *card-number*PIN* keypad entry (cf. https://github.com/uhppoted/uhppote-simulator/issues/14)
-
+- [x] Add 'reset' REST API to generate _controller reset_ event  (cf. https://github.com/uhppoted/uhppoted-app-home-assistant/issues/14)
 
 - (?) Replace global/table locks with external per controller lock
    - maybe time to think about a proper DB ?
