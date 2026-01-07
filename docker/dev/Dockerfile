@@ -14,4 +14,4 @@ COPY 405419896.json /usr/local/etc/uhppoted/simulator
 WORKDIR /opt/uhppote
 COPY uhppote-simulator .
 
-ENTRYPOINT /opt/uhppote/uhppote-simulator --debug --devices /usr/local/etc/uhppoted/simulator
+ENTRYPOINT ["/opt/uhppote/uhppote-simulator", "--debug", "--devices", "/usr/local/etc/uhppoted/simulator"]
