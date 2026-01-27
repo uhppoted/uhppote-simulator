@@ -39,11 +39,9 @@ Supported operating systems:
 
 ### Current release
 
-**[v0.8.11](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.8.11) - 2025-07-01**
-
-1. Added `get/set-antipassback` command emulation.
-2. Fixed incoming requests not printed to console (bug).
-3. Updated to Go 1.24.
+**[v0.9.0](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.9.0) - 2026-01-27**
+1. Added _reset_ action to generate a _controller reset_ event.
+2. Updated to Go 1.25.
 
 
 ## Installation

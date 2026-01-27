@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## [0.9.0](https://github.com/uhppoted/uhppote-simulator/releases/tag/v0.9.0) - 2026-01-27
 
 ### Added
 1. Added _reset_ action to generate a _controller reset_ event.
