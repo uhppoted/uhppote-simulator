@@ -105,7 +105,7 @@ func TestCardListPutWithExistingCard(t *testing.T) {
 func TestCardListPutWithFullList(t *testing.T) {
 	cards := CardList{}
 
-	for i := 0; i < len(cards); i++ {
+	for i := range len(cards) {
 		cards[i] = &Card{
 			CardNumber: uint32(6000000 + i),
 			From:       date("2023-01-01"),
@@ -349,7 +349,7 @@ func TestCardListUnmarshalJSON(t *testing.T) {
 }
 
 func fill(l *CardList) uint32 {
-	for i := 0; i < 29; i++ {
+	for i := range 29 {
 		l[i] = &Card{
 			CardNumber: uint32(6000000 + i),
 			From:       date("2023-01-01"),

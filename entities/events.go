@@ -14,7 +14,7 @@ type Event struct {
 	Door      uint8          `json:"door"`
 	Direction uint8          `json:"direction"`
 	Card      uint32         `json:"card"`
-	Timestamp types.DateTime `json:"timestamp,omitempty"`
+	Timestamp types.DateTime `json:"timestamp"`
 	Reason    uint8          `json:"reason"`
 }
 

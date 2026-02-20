@@ -2,6 +2,7 @@ package entities
 
 import (
 	"encoding/json"
+	"slices"
 	"sync"
 	"time"
 )
@@ -167,25 +168,23 @@ func (d *Door) UnlockWithPasscode(passcode uint32, duration time.Duration) bool 
 		return false
 	}
 
-	for _, v := range d.Passcodes {
-		if v == passcode {
-			d.guard.Lock()
-			defer d.guard.Unlock()
+	if slices.Contains(d.Passcodes, passcode) {
+		d.guard.Lock()
+		defer d.guard.Unlock()
 
-			// if d.ControlState == NormallyClosed || d.overrideState == NormallyClosed {
-			// 	return false
-			// }
+		// if d.ControlState == NormallyClosed || d.overrideState == NormallyClosed {
+		// 	return false
+		// }
 
-			until := time.Now().UTC()
-			until = until.Add(duration)
-			until = until.Add(time.Duration(d.Delay))
+		until := time.Now().UTC()
+		until = until.Add(duration)
+		until = until.Add(time.Duration(d.Delay))
 
-			if d.unlockedUntil == nil || d.unlockedUntil.Before(until) {
-				d.unlockedUntil = &until
-			}
-
-			return true
+		if d.unlockedUntil == nil || d.unlockedUntil.Before(until) {
+			d.unlockedUntil = &until
 		}
+
+		return true
 	}
 
 	return false

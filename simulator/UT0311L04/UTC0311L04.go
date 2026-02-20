@@ -31,7 +31,7 @@ type UT0311L04 struct {
 	Gateway             net.IP                `json:"gateway"`
 	MacAddress          types.MacAddress      `json:"MAC"`
 	Version             types.Version         `json:"version"`
-	Released            types.Date            `json:"released,omitempty"`
+	Released            types.Date            `json:"released"`
 	TimeOffset          entities.Offset       `json:"offset"`
 	Doors               entities.Doors        `json:"doors"`
 	Keypads             entities.Keypads      `json:"keypads"`
@@ -45,7 +45,7 @@ type UT0311L04 struct {
 	SpecialInfo         uint8                 `json:"special-info"`
 	InputState          uint8                 `json:"input-state"`
 	TimeProfiles        entities.TimeProfiles `json:"time-profiles,omitempty"`
-	TaskList            entities.TaskList     `json:"tasklist,omitempty"`
+	TaskList            entities.TaskList     `json:"tasklist"`
 	Cards               entities.CardList     `json:"cards"`
 	Events              entities.EventList    `json:"events"`
 }
@@ -374,7 +374,7 @@ func unmarshal(bytes []byte, filepath string, compressed bool) (*UT0311L04, erro
 		Gateway             net.IP                `json:"gateway"`
 		MacAddress          types.MacAddress      `json:"MAC"`
 		Version             types.Version         `json:"version"`
-		Released            types.Date            `json:"released,omitempty"`
+		Released            types.Date            `json:"released"`
 		TimeOffset          entities.Offset       `json:"offset"`
 		Doors               entities.Doors        `json:"doors"`
 		Keypads             entities.Keypads      `json:"keypads"`

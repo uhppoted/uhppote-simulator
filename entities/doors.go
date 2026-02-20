@@ -40,7 +40,7 @@ func (dd *Doors) SetPasscodes(door uint8, passcodes ...uint32) {
 	if d, ok := dd.doors[door]; ok {
 		p := []uint32{0, 0, 0, 0}
 
-		for i := 0; i < 4; i++ {
+		for i := range 4 {
 			if i < len(passcodes) && passcodes[i] < 1000000 {
 				p[i] = passcodes[i]
 			}

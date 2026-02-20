@@ -304,7 +304,7 @@ func isNil(v any) bool {
 	}
 
 	switch reflect.TypeOf(v).Kind() {
-	case reflect.Ptr,
+	case reflect.Pointer,
 		reflect.Map,
 		reflect.Array,
 		reflect.Chan,
