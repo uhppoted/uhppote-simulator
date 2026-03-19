@@ -8,12 +8,12 @@ import (
 
 func TestHandleDeleteCardsRequest(t *testing.T) {
 	request := messages.DeleteCardsRequest{
-		SerialNumber: 12345,
+		SerialNumber: 405419896,
 		MagicWord:    0x55aaaa55,
 	}
 
 	response := messages.DeleteCardsResponse{
-		SerialNumber: 12345,
+		SerialNumber: 405419896,
 		Succeeded:    true,
 	}
 

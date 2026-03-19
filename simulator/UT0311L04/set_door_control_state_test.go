@@ -8,14 +8,14 @@ import (
 
 func TestHandleSetDoorControlState(t *testing.T) {
 	request := messages.SetDoorControlStateRequest{
-		SerialNumber: 12345,
+		SerialNumber: 405419896,
 		Door:         2,
 		ControlState: 3,
 		Delay:        7,
 	}
 
 	response := messages.SetDoorControlStateResponse{
-		SerialNumber: 12345,
+		SerialNumber: 405419896,
 		Door:         2,
 		ControlState: 3,
 		Delay:        7,

@@ -196,6 +196,9 @@ func (s *UT0311L04) Handle(rq messages.Request) (any, error) {
 	case *messages.SetEventIndexRequest:
 		return s.setEventIndex(v)
 
+	case *messages.SetFirstCardRequest:
+		return s.setFirstCard(v)
+
 	case *messages.SetInterlockRequest:
 		return s.setInterlock(v)
 

@@ -8,13 +8,13 @@ import (
 
 func TestHandleSetEventIndex(t *testing.T) {
 	request := messages.SetEventIndexRequest{
-		SerialNumber: 12345,
+		SerialNumber: 405419896,
 		Index:        7,
 		MagicWord:    0x55aaaa55,
 	}
 
 	response := messages.SetEventIndexResponse{
-		SerialNumber: 12345,
+		SerialNumber: 405419896,
 		Changed:      true,
 	}
 
@@ -23,11 +23,11 @@ func TestHandleSetEventIndex(t *testing.T) {
 
 func TestHandleGetEventIndex(t *testing.T) {
 	request := messages.GetEventIndexRequest{
-		SerialNumber: 12345,
+		SerialNumber: 405419896,
 	}
 
 	response := messages.GetEventIndexResponse{
-		SerialNumber: 12345,
+		SerialNumber: 405419896,
 		Index:        123,
 	}
 

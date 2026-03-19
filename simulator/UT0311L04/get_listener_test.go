@@ -9,11 +9,11 @@ import (
 
 func TestHandleGetListener(t *testing.T) {
 	request := messages.GetListenerRequest{
-		SerialNumber: 12345,
+		SerialNumber: 405419896,
 	}
 
 	response := messages.GetListenerResponse{
-		SerialNumber: 12345,
+		SerialNumber: 405419896,
 		AddrPort:     netip.MustParseAddrPort("10.0.0.10:43210"),
 	}
 

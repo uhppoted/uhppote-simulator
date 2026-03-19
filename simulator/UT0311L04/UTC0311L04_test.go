@@ -571,7 +571,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 		})
 
 	s := UT0311L04{
-		SerialNumber: 12345,
+		SerialNumber: 405419896,
 		IpAddress:    net.IPv4(10, 0, 0, 100),
 		SubnetMask:   net.IPv4(255, 255, 255, 0),
 		Gateway:      net.IPv4(10, 0, 0, 1),

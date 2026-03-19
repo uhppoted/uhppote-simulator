@@ -8,11 +8,11 @@ import (
 
 func TestHandleGetCardsRequest(t *testing.T) {
 	request := messages.GetCardsRequest{
-		SerialNumber: 12345,
+		SerialNumber: 405419896,
 	}
 
 	response := messages.GetCardsResponse{
-		SerialNumber: 12345,
+		SerialNumber: 405419896,
 		Records:      3,
 	}
 

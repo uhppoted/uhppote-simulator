@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
+	"github.com/uhppoted/uhppote-core/types"
 )
 
 type Doors struct {
@@ -48,6 +50,12 @@ func (dd *Doors) SetPasscodes(door uint8, passcodes ...uint32) {
 
 		d.Passcodes = p
 	}
+}
+
+func (dd *Doors) SetFirstCard(door uint8, start types.HHmm, end types.HHmm, active uint8, inactive uint8, weekdays map[time.Weekday]bool) bool {
+	// TODO
+
+	return true
 }
 
 func (dd *Doors) PressButton(door uint8, duration time.Duration) (pressed bool, reason uint8) {

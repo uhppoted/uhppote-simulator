@@ -8,12 +8,12 @@ import (
 
 func TestHandleSetAntiPassback(t *testing.T) {
 	request := messages.SetAntiPassbackRequest{
-		SerialNumber: 12345,
+		SerialNumber: 405419896,
 		AntiPassback: 0x04,
 	}
 
 	response := messages.SetAntiPassbackResponse{
-		SerialNumber: 12345,
+		SerialNumber: 405419896,
 		Ok:           true,
 	}
 

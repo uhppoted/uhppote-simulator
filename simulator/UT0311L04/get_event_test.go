@@ -13,12 +13,12 @@ func TestHandleGetEvent(t *testing.T) {
 	timestamp := types.DateTime(datetime)
 
 	request := messages.GetEventRequest{
-		SerialNumber: 12345,
+		SerialNumber: 405419896,
 		Index:        2,
 	}
 
 	response := messages.GetEventResponse{
-		SerialNumber: 12345,
+		SerialNumber: 405419896,
 		Index:        2,
 		Type:         0x06,
 		Granted:      true,

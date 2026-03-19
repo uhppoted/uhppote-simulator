@@ -12,7 +12,7 @@ import (
 
 func TestHandlePutCardRequest(t *testing.T) {
 	request := messages.PutCardRequest{
-		SerialNumber: 12345,
+		SerialNumber: 405419896,
 		CardNumber:   192837465,
 		From:         types.MustParseDate("2019-01-01"),
 		To:           types.MustParseDate("2019-12-31"),
@@ -23,7 +23,7 @@ func TestHandlePutCardRequest(t *testing.T) {
 	}
 
 	response := messages.PutCardResponse{
-		SerialNumber: 12345,
+		SerialNumber: 405419896,
 		Succeeded:    true,
 	}
 

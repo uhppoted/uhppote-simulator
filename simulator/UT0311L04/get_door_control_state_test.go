@@ -8,12 +8,12 @@ import (
 
 func TestHandleGetDoorControlState(t *testing.T) {
 	request := messages.GetDoorControlStateRequest{
-		SerialNumber: 12345,
+		SerialNumber: 405419896,
 		Door:         2,
 	}
 
 	response := messages.GetDoorControlStateResponse{
-		SerialNumber: 12345,
+		SerialNumber: 405419896,
 		Door:         2,
 		ControlState: 2,
 		Delay:        22,
