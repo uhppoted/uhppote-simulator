@@ -4,7 +4,7 @@
    - [x] API
    - [x] add to UHPPOTE/door
    - [x] serialize/deserialize
-   - [ ] set from API
+   - [x] set from API
    - [ ] Include in get door state
    - [ ] Add to swipe
    - [ ] SwipeNOPass Denied Access: First Card Open

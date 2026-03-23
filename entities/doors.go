@@ -38,7 +38,7 @@ func (dd *Doors) SetDelay(door uint8, delay Delay) {
 	}
 }
 
-func (dd *Doors) SetPasscodes(door uint8, passcodes ...uint32) {
+func (dd *Doors) SetPasscodes(door uint8, passcodes ...uint32) bool {
 	if d, ok := dd.doors[door]; ok {
 		p := []uint32{0, 0, 0, 0}
 
@@ -49,13 +49,35 @@ func (dd *Doors) SetPasscodes(door uint8, passcodes ...uint32) {
 		}
 
 		d.Passcodes = p
+
+		return true
 	}
+
+	return false
 }
 
 func (dd *Doors) SetFirstCard(door uint8, start types.HHmm, end types.HHmm, active uint8, inactive uint8, weekdays map[time.Weekday]bool) bool {
-	// TODO
+	if d, ok := dd.doors[door]; ok {
+		d.FirstCard = &types.FirstCard{
+			From:     start,
+			To:       end,
+			Active:   types.ControlState(active),
+			Inactive: types.ControlState(inactive),
+			Weekdays: types.Weekdays{
+				time.Monday:    weekdays[time.Monday],
+				time.Tuesday:   weekdays[time.Tuesday],
+				time.Wednesday: weekdays[time.Wednesday],
+				time.Thursday:  weekdays[time.Thursday],
+				time.Friday:    weekdays[time.Friday],
+				time.Saturday:  weekdays[time.Saturday],
+				time.Sunday:    weekdays[time.Sunday],
+			},
+		}
 
-	return true
+		return true
+	}
+
+	return false
 }
 
 func (dd *Doors) PressButton(door uint8, duration time.Duration) (pressed bool, reason uint8) {

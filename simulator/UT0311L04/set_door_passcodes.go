@@ -11,16 +11,11 @@ func (s *UT0311L04) setDoorPasscodes(request *messages.SetDoorPasscodesRequest) 
 		return nil, nil
 	}
 
+	ok := s.Doors.SetPasscodes(request.Door, request.Passcode1, request.Passcode2, request.Passcode3, request.Passcode4)
+
 	response := messages.SetDoorPasscodesResponse{
 		SerialNumber: s.SerialNumber,
-		Succeeded:    false,
-	}
-
-	door := request.Door
-
-	if !(door < 1 || door > 4) {
-		s.Doors.SetPasscodes(door, request.Passcode1, request.Passcode2, request.Passcode3, request.Passcode4)
-		response.Succeeded = true
+		Succeeded:    ok,
 	}
 
 	if err := s.Save(); err != nil {
