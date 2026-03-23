@@ -5,15 +5,18 @@ import (
 	"slices"
 	"sync"
 	"time"
+
+	"github.com/uhppoted/uhppote-core/types"
 )
 
 type Delay time.Duration
 type Direction uint8
 
 type Door struct {
-	ControlState    uint8    `json:"control"`
-	Delay           Delay    `json:"delay"`
-	Passcodes       []uint32 `json:"passcodes,omitempty"`
+	ControlState    uint8            `json:"control"`
+	Delay           Delay            `json:"delay"`
+	Passcodes       []uint32         `json:"passcodes,omitempty"`
+	FirstCard       *types.FirstCard `json:"firstcard,omitempty"`
 	overrideState   uint8
 	profileDisabled bool
 	buttonDisabled  bool
