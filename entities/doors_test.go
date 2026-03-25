@@ -269,11 +269,11 @@ func TestDoorsMarshalJSON(t *testing.T) {
 				Delay:        Delay(5 * time.Second),
 				Passcodes:    []uint32{12345, 0, 999999, 654321},
 				FirstCard: &types.FirstCard{
-					From:     types.MustParseHHmm("08:30"),
-					To:       types.MustParseHHmm("16:45"),
-					Active:   types.NormallyOpen,
-					Inactive: types.NormallyClosed,
-					Weekdays: types.Weekdays{time.Monday: true, time.Tuesday: true, time.Friday: true},
+					StartTime: types.MustParseHHmm("08:30"),
+					EndTime:   types.MustParseHHmm("16:45"),
+					Active:    types.NormallyOpen,
+					Inactive:  types.NormallyClosed,
+					Weekdays:  types.Weekdays{time.Monday: true, time.Tuesday: true, time.Friday: true},
 				},
 			},
 			2: &Door{
@@ -380,10 +380,10 @@ func TestDoorsUnmarshalJSON(t *testing.T) {
 				Delay:        Delay(5 * time.Second),
 				Passcodes:    []uint32{12345, 0, 999999, 654321},
 				FirstCard: &types.FirstCard{
-					From:     types.MustParseHHmm("08:30"),
-					To:       types.MustParseHHmm("16:45"),
-					Active:   types.NormallyOpen,
-					Inactive: types.NormallyClosed,
+					StartTime: types.MustParseHHmm("08:30"),
+					EndTime:   types.MustParseHHmm("16:45"),
+					Active:    types.NormallyOpen,
+					Inactive:  types.NormallyClosed,
 					Weekdays: types.Weekdays{
 						time.Monday:    true,
 						time.Tuesday:   true,
