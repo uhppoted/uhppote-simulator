@@ -333,6 +333,18 @@ func (d *Door) IsButtonPressed() bool {
 	return d.pressed()
 }
 
+// FIXME match against door control state and weekday/time
+func (d *Door) RequiresFirstCard() bool {
+	if d == nil {
+		return false
+	}
+
+	d.guard.RLock()
+	defer d.guard.RUnlock()
+
+	return d.FirstCard != nil
+}
+
 func (d *Door) unlocked() bool {
 	switch d.overrideState {
 	case NormallyOpen:

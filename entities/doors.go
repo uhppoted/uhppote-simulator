@@ -258,6 +258,14 @@ func (dd *Doors) IsInterlocked(door uint8) bool {
 	return false
 }
 
+func (dd *Doors) RequiresFirstCard(door uint8) bool {
+	if d, ok := dd.doors[door]; ok {
+		return d.RequiresFirstCard()
+	}
+
+	return false
+}
+
 func (d Doors) String() string {
 	var b strings.Builder
 

@@ -215,7 +215,8 @@ func TestCardListMarshalJSON(t *testing.T) {
       "2": 0,
       "3": 0,
       "4": 29
-    }
+    },
+    "firstcard": false
   },
   null,
   {
@@ -227,7 +228,8 @@ func TestCardListMarshalJSON(t *testing.T) {
       "2": 0,
       "3": 0,
       "4": 30
-    }
+    },
+    "firstcard": false
   },
   null,
   {
@@ -239,7 +241,8 @@ func TestCardListMarshalJSON(t *testing.T) {
       "2": 0,
       "3": 0,
       "4": 31
-    }
+    },
+    "firstcard": false
   },
   {
     "card": 8165538,
@@ -251,7 +254,8 @@ func TestCardListMarshalJSON(t *testing.T) {
       "3": 0,
       "4": 31
     },
-    "PIN": 7531
+    "PIN": 7531,
+    "firstcard": false
   }
 ]`
 

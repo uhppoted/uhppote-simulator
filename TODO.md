@@ -5,9 +5,10 @@
    - [x] add to UHPPOTE/door
    - [x] serialize/deserialize
    - [x] set from API
+   - [x] SwipeNOPass Denied Access: First Card Open
+   - [ ] activate/update after refresh tasklist
    - [ ] Include in get door state
-   - [ ] Add to swipe
-   - [ ] SwipeNOPass Denied Access: First Card Open
+   - [ ] FirstCard privilege
 
 - [ ] Fix docker swagger
 
