@@ -94,7 +94,7 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, direction entities.Dire
 		}
 
 		// first card ?
-		if s.Doors.RequiresFirstCard(door) && !card.FirstCard {
+		if s.Doors.RequiresFirstCard(door) && !card.FirstCard.Has(door) {
 			swiped(0x01, false, entities.ReasonFirstCard)
 			return false, nil
 		}

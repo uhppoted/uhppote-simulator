@@ -33,6 +33,11 @@ func (s *UT0311L04) putCard(request *messages.PutCardRequest) (*messages.PutCard
 			card.PIN = uint32(request.PIN)
 		}
 
+		card.FirstCard.Door1 = request.FirstCard&0x01 == 0x01
+		card.FirstCard.Door2 = request.FirstCard&0x02 == 0x02
+		card.FirstCard.Door3 = request.FirstCard&0x04 == 0x04
+		card.FirstCard.Door4 = request.FirstCard&0x08 == 0x08
+
 		if err := s.Cards.Put(&card); err != nil {
 			fmt.Printf("WARN:  %v\n", err)
 			response.Succeeded = false

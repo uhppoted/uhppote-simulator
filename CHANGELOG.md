@@ -4,6 +4,7 @@
 
 ### Added
 1. `set-first-card` command emulation.
+2. Added _First Card_ privileges to cards.
 
 ### Updated
 1. Updated to Go version 1.26.

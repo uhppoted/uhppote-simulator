@@ -29,6 +29,8 @@ func (s *UT0311L04) getCardByID(request *messages.GetCardByIDRequest) (*messages
 				response.PIN = types.PIN(card.PIN)
 			}
 
+			response.FirstCard = card.FirstCard.ToUint8()
+
 			break
 		}
 	}
@@ -61,6 +63,8 @@ func (s *UT0311L04) getCardByIndex(request *messages.GetCardByIndexRequest) (*me
 			if card.PIN < 1000000 {
 				response.PIN = types.PIN(card.PIN)
 			}
+
+			response.FirstCard = card.FirstCard.ToUint8()
 		}
 
 		return &response, nil

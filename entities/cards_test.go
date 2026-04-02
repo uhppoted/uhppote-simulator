@@ -216,7 +216,12 @@ func TestCardListMarshalJSON(t *testing.T) {
       "3": 0,
       "4": 29
     },
-    "firstcard": false
+    "firstcard": {
+      "1": false,
+      "2": false,
+      "3": false,
+      "4": false
+    }
   },
   null,
   {
@@ -229,7 +234,12 @@ func TestCardListMarshalJSON(t *testing.T) {
       "3": 0,
       "4": 30
     },
-    "firstcard": false
+    "firstcard": {
+      "1": false,
+      "2": false,
+      "3": false,
+      "4": false
+    }
   },
   null,
   {
@@ -242,7 +252,12 @@ func TestCardListMarshalJSON(t *testing.T) {
       "3": 0,
       "4": 31
     },
-    "firstcard": false
+    "firstcard": {
+      "1": false,
+      "2": false,
+      "3": false,
+      "4": false
+    }
   },
   {
     "card": 8165538,
@@ -255,7 +270,12 @@ func TestCardListMarshalJSON(t *testing.T) {
       "4": 31
     },
     "PIN": 7531,
-    "firstcard": false
+    "firstcard": {
+      "1": false,
+      "2": false,
+      "3": false,
+      "4": false
+    }
   }
 ]`
 
@@ -280,7 +300,14 @@ func TestCardListUnmarshalJSON(t *testing.T) {
 	expected[0] = &Card{CardNumber: 6000001, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 29}}
 	expected[2] = &Card{CardNumber: 0, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 30}}
 	expected[4] = &Card{CardNumber: 0xffffffff, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 31}}
-	expected[5] = &Card{CardNumber: 8165538, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 31}, PIN: 7531}
+	expected[5] = &Card{
+		CardNumber: 8165538,
+		From:       date("2023-01-01"),
+		To:         date("2023-12-31"),
+		Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 31},
+		PIN:        7531,
+		FirstCard:  FirstCardPrivileges{true, false, true, true},
+	}
 
 	blob := `[
   {
@@ -328,7 +355,13 @@ func TestCardListUnmarshalJSON(t *testing.T) {
       "3": 0,
       "4": 31
     },
-    "PIN": 7531
+    "PIN": 7531,
+    "firstcard": {
+      "1": true,
+      "2": false,
+      "3": true,
+      "4": true
+    }
   }
 ]`
 
