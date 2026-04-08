@@ -25,6 +25,7 @@ type Door struct {
 	openTimer       *time.Timer
 	unlockedUntil   *time.Time
 	pressedUntil    *time.Time
+	pending         *types.FirstCard
 	guard           sync.RWMutex
 }
 

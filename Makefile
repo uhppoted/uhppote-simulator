@@ -105,8 +105,7 @@ debug:
 	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d '{"door":1, "card-number":10058400,"direction":1}'
 
 delve: build
-#	dlv test github.com/uhppoted/uhppote-simulator/simulator/UT0311L04 -- run TestCheckTimeProfileInTimeSegmentWithOffset
-	dlv debug github.com/uhppoted/uhppote-simulator/cmd/uhppote-simulator -- --bind 0.0.0.0:60000 --rest 0.0.0.0:8000 --devices "../runtime/simulation/devices"
+	dlv debug github.com/uhppoted/uhppote-simulator/cmd/uhppote-simulator -- --bind 0.0.0.0:60000 --rest 0.0.0.0:8000 --devices "./workdir/debug/controllers"
 
 godoc:
 	godoc -http=:80	-index_interval=60s
@@ -115,7 +114,7 @@ version: build
 	./bin/uhppote-simulator version
 
 run: build
-	./bin/uhppote-simulator --debug --bind 0.0.0.0:60000 --rest 0.0.0.0:8000 --devices "../runtime/simulation/devices"
+	./bin/uhppote-simulator --debug --bind 0.0.0.0:60000 --rest 0.0.0.0:8000 --devices "./workdir/debug/controllers"
 
 list-devices:
 	curl -X GET "http://127.0.0.1:8000/uhppote/simulator" -H "accept: application/json"

@@ -14,7 +14,11 @@ func (s *UT0311L04) refreshTaskList(request *messages.RefreshTaskListRequest) (*
 	refreshed := false
 
 	if request.MagicWord == 0x55aaaa55 {
-		refreshed = s.TaskList.Refresh()
+		if s.TaskList.Refresh() {
+			if s.Doors.Refresh() {
+				refreshed = true
+			}
+		}
 	}
 
 	response := messages.RefreshTaskListResponse{
