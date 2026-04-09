@@ -343,7 +343,29 @@ func (d *Door) RequiresFirstCard() bool {
 	d.guard.RLock()
 	defer d.guard.RUnlock()
 
-	return d.FirstCard != nil
+	if d.FirstCard != nil {
+		now := time.Now()
+		hhmm := types.HHmmFromTime(now)
+		weekday := now.Weekday()
+
+		if !d.FirstCard.StartTime.Before(hhmm) {
+			return false // FIXME check door mode
+		}
+
+		if !d.FirstCard.EndTime.After(hhmm) {
+			return false // FIXME check door mode
+		}
+
+		if !d.FirstCard.Weekdays[weekday] {
+			return false // FIXME check door mode
+		}
+
+		// TODO set door mode
+
+		return true
+	}
+
+	return false
 }
 
 func (d *Door) unlocked() bool {

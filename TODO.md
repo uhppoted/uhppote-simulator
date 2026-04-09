@@ -6,12 +6,13 @@
    - [x] serialize/deserialize
    - [x] set from API
    - [x] SwipeNOPass Denied Access: First Card Open
-   - [ ] Activate/update after refresh tasklist
-   - [ ] Include in get door state
-   - [ ] Check start/end dates
+   - [x] Activate/update after refresh tasklist
+   - [ ] Check start/end times
    - [ ] Check weekdays
-   - [ ] Check times
+   - [ ] Trigger once per day
+   - [ ] Set door state
    - [ ] FirstCard privilege
+   - [ ] Include in get door state
 
 - [ ] Fix docker swagger
 
@@ -50,3 +51,4 @@
 
 1.  Integration tests
 
+\

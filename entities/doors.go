@@ -56,13 +56,13 @@ func (dd *Doors) SetPasscodes(door uint8, passcodes ...uint32) bool {
 	return false
 }
 
-func (dd *Doors) SetFirstCard(door uint8, start types.HHmm, end types.HHmm, active uint8, inactive uint8, weekdays map[time.Weekday]bool) bool {
+func (dd *Doors) SetFirstCard(door uint8, start types.HHmm, end types.HHmm, active types.ControlState, inactive types.ControlState, weekdays map[time.Weekday]bool) bool {
 	if d, ok := dd.doors[door]; ok {
 		d.pending = &types.FirstCard{
 			StartTime: start,
 			EndTime:   end,
-			Active:    types.ControlState(active),
-			Inactive:  types.ControlState(inactive),
+			Active:    active,
+			Inactive:  inactive,
 			Weekdays: types.Weekdays{
 				time.Monday:    weekdays[time.Monday],
 				time.Tuesday:   weekdays[time.Tuesday],
