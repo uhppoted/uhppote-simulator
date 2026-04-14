@@ -23,10 +23,10 @@ func TestRestoreDefaultParameters(t *testing.T) {
 		Doors: entities.MakeDoors(),
 	}
 
-	s.Doors.SetControlState(1, entities.NormallyOpen)
-	s.Doors.SetControlState(2, entities.NormallyClosed)
-	s.Doors.SetControlState(3, entities.NormallyOpen)
-	s.Doors.SetControlState(4, entities.NormallyClosed)
+	s.Doors.SetControlState(1, types.ModeNormallyOpen)
+	s.Doors.SetControlState(2, types.ModeNormallyClosed)
+	s.Doors.SetControlState(3, types.ModeNormallyOpen)
+	s.Doors.SetControlState(4, types.ModeNormallyClosed)
 
 	s.Doors.SetDelay(1, entities.DelayFromSeconds(15))
 	s.Doors.SetDelay(2, entities.DelayFromSeconds(15))
@@ -123,8 +123,8 @@ func TestRestoreDefaultParameters(t *testing.T) {
 		}
 
 		for _, door := range []uint8{1, 2, 3, 4} {
-			if s.Doors.ControlState(door) != entities.Controlled {
-				t.Errorf("'restore-default-parameters' failed to reset door %v mode\n   expected: %+v\n   got:      %+v\n", door, entities.Controlled, s.Doors.ControlState(door))
+			if s.Doors.ControlState(door) != types.ModeControlled {
+				t.Errorf("'restore-default-parameters' failed to reset door %v mode\n   expected: %+v\n   got:      %+v\n", door, types.ModeControlled, s.Doors.ControlState(door))
 			}
 
 			if s.Doors.Delay(door) != entities.DelayFromSeconds(5) {

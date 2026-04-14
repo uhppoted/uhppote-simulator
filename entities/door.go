@@ -13,27 +13,26 @@ type Delay time.Duration
 type Direction uint8
 
 type Door struct {
-	ControlState    uint8            `json:"control"`
-	Delay           Delay            `json:"delay"`
-	Passcodes       []uint32         `json:"passcodes,omitempty"`
-	FirstCard       *types.FirstCard `json:"firstcard,omitempty"`
-	overrideState   uint8
+	ControlState types.ControlState `json:"control"`
+	Delay        Delay              `json:"delay"`
+	Passcodes    []uint32           `json:"passcodes,omitempty"`
+	FirstCard    *types.FirstCard   `json:"firstcard,omitempty"`
+
+	overrideState   types.ControlState
 	profileDisabled bool
 	buttonDisabled  bool
 	open            bool
 	button          bool
-	openTimer       *time.Timer
-	unlockedUntil   *time.Time
-	pressedUntil    *time.Time
-	pending         *types.FirstCard
-	guard           sync.RWMutex
+	firstcardSwiped bool
+
+	openTimer     *time.Timer
+	unlockedUntil *time.Time
+	pressedUntil  *time.Time
+	pending       *types.FirstCard
+	guard         sync.RWMutex
 }
 
 const (
-	NormallyOpen   = uint8(1)
-	NormallyClosed = uint8(2)
-	Controlled     = uint8(3)
-
 	DirectionIn  Direction = 1
 	DirectionOut Direction = 2
 )
@@ -144,7 +143,7 @@ func (d *Door) Close(closed func()) bool {
 	return !d.open
 }
 
-func (d *Door) Unlock(duration time.Duration) bool {
+func (d *Door) Unlock(duration time.Duration, firstcard bool) bool {
 	if d == nil {
 		return false
 	}
@@ -152,7 +151,14 @@ func (d *Door) Unlock(duration time.Duration) bool {
 	d.guard.Lock()
 	defer d.guard.Unlock()
 
-	if d.ControlState == NormallyClosed || d.overrideState == NormallyClosed {
+	if d.FirstCard != nil && firstcard {
+		if !d.firstcardSwiped {
+			d.firstcardSwiped = true
+			d.ControlState = d.FirstCard.Active
+		}
+	}
+
+	if d.ControlState == types.ModeNormallyClosed || d.overrideState == types.ModeNormallyClosed {
 		return false
 	}
 
@@ -176,6 +182,7 @@ func (d *Door) UnlockWithPasscode(passcode uint32, duration time.Duration) bool 
 		d.guard.Lock()
 		defer d.guard.Unlock()
 
+		// NTS: apparently not!
 		// if d.ControlState == NormallyClosed || d.overrideState == NormallyClosed {
 		// 	return false
 		// }
@@ -222,7 +229,7 @@ func (d *Door) PressButton(duration time.Duration) (pressed bool, reason uint8) 
 		return
 	}
 
-	if d.ControlState == NormallyClosed || d.overrideState == NormallyClosed {
+	if d.ControlState == types.ModeNormallyClosed || d.overrideState == types.ModeNormallyClosed {
 		reason = 0x14
 		return
 	}
@@ -240,7 +247,7 @@ func (d *Door) PressButton(duration time.Duration) (pressed bool, reason uint8) 
 	return
 }
 
-func (d *Door) OverrideState(state uint8) bool {
+func (d *Door) OverrideState(state types.ControlState) bool {
 	if d == nil {
 		return false
 	}
@@ -287,7 +294,7 @@ func (d *Door) IsNormallyClosed() bool {
 	d.guard.RLock()
 	defer d.guard.RUnlock()
 
-	return d.ControlState == NormallyClosed || d.overrideState == NormallyClosed
+	return d.ControlState == types.ModeNormallyClosed || d.overrideState == types.ModeNormallyClosed
 }
 
 func (d *Door) IsProfileDisabled() bool {
@@ -334,7 +341,15 @@ func (d *Door) IsButtonPressed() bool {
 	return d.pressed()
 }
 
-// FIXME match against door control state and weekday/time
+// Requires a card with first card privileges iff:
+// 1. The door has an active first card configuration
+// 2. The door has not been unlocked by a card with first card privileges
+// 3. The first card configuration INACTIVE state is ModeFirstCardOnly
+//
+// i.e. don't require a card with first card privileges if any of the following are true:
+// - the door does not have an active first card configuration
+// - the doors first card configuration INACTIVE state is not ModeFirstCardOnly
+// - the door has been unlocked by a card with first card privileges
 func (d *Door) RequiresFirstCard() bool {
 	if d == nil {
 		return false
@@ -343,25 +358,27 @@ func (d *Door) RequiresFirstCard() bool {
 	d.guard.RLock()
 	defer d.guard.RUnlock()
 
-	if d.FirstCard != nil {
-		now := time.Now()
-		hhmm := types.HHmmFromTime(now)
-		weekday := now.Weekday()
+	if d.FirstCard == nil {
+		return false
+	}
 
-		if !d.FirstCard.StartTime.Before(hhmm) {
-			return false // FIXME check door mode
+	if d.FirstCard.Inactive != types.ModeFirstCardOnly {
+		return false
+	}
+
+	if d.firstcardSwiped {
+		return false
+	}
+
+	now := time.Now()
+	hhmm := types.HHmmFromTime(now)
+	weekday := now.Weekday()
+
+	if d.FirstCard.Weekdays[weekday] {
+		if hhmm.Before(d.FirstCard.StartTime) || hhmm.After(d.FirstCard.EndTime) {
+			return true
 		}
-
-		if !d.FirstCard.EndTime.After(hhmm) {
-			return false // FIXME check door mode
-		}
-
-		if !d.FirstCard.Weekdays[weekday] {
-			return false // FIXME check door mode
-		}
-
-		// TODO set door mode
-
+	} else {
 		return true
 	}
 
@@ -370,24 +387,24 @@ func (d *Door) RequiresFirstCard() bool {
 
 func (d *Door) unlocked() bool {
 	switch d.overrideState {
-	case NormallyOpen:
+	case types.ModeNormallyOpen:
 		return true
 
-	case NormallyClosed:
+	case types.ModeNormallyClosed:
 		return false
 
-	case Controlled:
+	case types.ModeControlled:
 		return d.unlockedUntil != nil && d.unlockedUntil.After(time.Now())
 
 	default:
 		switch d.ControlState {
-		case NormallyOpen:
+		case types.ModeNormallyOpen:
 			return true
 
-		case NormallyClosed:
+		case types.ModeNormallyClosed:
 			return false
 
-		case Controlled:
+		case types.ModeControlled:
 			return d.unlockedUntil != nil && d.unlockedUntil.After(time.Now())
 		}
 	}
@@ -397,4 +414,58 @@ func (d *Door) unlocked() bool {
 
 func (d *Door) pressed() bool {
 	return d.pressedUntil != nil && d.pressedUntil.After(time.Now())
+}
+
+func (d *Door) MarshalJSON() ([]byte, error) {
+	mode := uint8(0)
+	switch d.ControlState {
+	case types.ModeNormallyOpen:
+		mode = 1
+	case types.ModeNormallyClosed:
+		mode = 2
+	case types.ModeControlled:
+		mode = 3
+	}
+
+	serializable := struct {
+		Mode      uint8            `json:"control"`
+		Delay     Delay            `json:"delay"`
+		Passcodes []uint32         `json:"passcodes,omitempty"`
+		FirstCard *types.FirstCard `json:"firstcard,omitempty"`
+	}{
+		Mode:      mode,
+		Delay:     d.Delay,
+		Passcodes: d.Passcodes,
+		FirstCard: d.FirstCard,
+	}
+
+	return json.Marshal(serializable)
+}
+
+func (d *Door) UnmarshalJSON(bytes []byte) error {
+	serializable := struct {
+		Mode      uint8            `json:"control"`
+		Delay     Delay            `json:"delay"`
+		Passcodes []uint32         `json:"passcodes,omitempty"`
+		FirstCard *types.FirstCard `json:"firstcard,omitempty"`
+	}{}
+
+	if err := json.Unmarshal(bytes, &serializable); err != nil {
+		return err
+	}
+
+	switch serializable.Mode {
+	case 1:
+		d.ControlState = types.ModeNormallyOpen
+	case 2:
+		d.ControlState = types.ModeNormallyClosed
+	case 3:
+		d.ControlState = types.ModeControlled
+	}
+
+	d.Delay = serializable.Delay
+	d.Passcodes = serializable.Passcodes
+	d.FirstCard = serializable.FirstCard
+
+	return nil
 }

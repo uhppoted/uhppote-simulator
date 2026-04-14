@@ -283,15 +283,15 @@ func (s *UT0311L04) RunTasks() {
 		switch task {
 		case types.DoorControlled:
 			log.Infof("%-10v  task:set door %v to controlled", s.SerialNumber, door)
-			s.Doors.OverrideState(door, entities.Controlled)
+			s.Doors.OverrideState(door, types.ModeControlled)
 
 		case types.DoorNormallyOpen:
 			log.Infof("%-10v  task:set door %v to normally open", s.SerialNumber, door)
-			s.Doors.OverrideState(door, entities.NormallyOpen)
+			s.Doors.OverrideState(door, types.ModeNormallyOpen)
 
 		case types.DoorNormallyClosed:
 			log.Infof("%-10v  task:set door %v to normally closed", s.SerialNumber, door)
-			s.Doors.OverrideState(door, entities.NormallyClosed)
+			s.Doors.OverrideState(door, types.ModeNormallyClosed)
 
 		case types.DisableTimeProfile:
 			log.Infof("%-10v  task:disabled time profile for door %v", s.SerialNumber, door)
@@ -318,7 +318,7 @@ func (s *UT0311L04) RunTasks() {
 
 		case types.TriggerOnce:
 			log.Infof("%-10v  task:trigger once for door %v", s.SerialNumber, door)
-			s.Doors.Unlock(door, 0*time.Second)
+			s.Doors.Unlock(door, 0*time.Second, false)
 
 		case types.DisablePushButton:
 			log.Infof("%-10v  task:disabled push button for door %v", s.SerialNumber, door)

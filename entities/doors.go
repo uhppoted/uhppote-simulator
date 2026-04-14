@@ -26,9 +26,9 @@ func MakeDoors() Doors {
 	}
 }
 
-func (dd *Doors) SetControlState(door uint8, state uint8) {
+func (dd *Doors) SetControlState(door uint8, mode types.ControlState) {
 	if d, ok := dd.doors[door]; ok {
-		d.ControlState = state
+		d.ControlState = mode
 	}
 }
 
@@ -101,7 +101,7 @@ func (dd *Doors) PressButton(door uint8, duration time.Duration) (pressed bool, 
 	return false, 0
 }
 
-func (dd *Doors) OverrideState(door uint8, state uint8) bool {
+func (dd *Doors) OverrideState(door uint8, state types.ControlState) bool {
 	if d, ok := dd.doors[door]; ok {
 		return d.OverrideState(state)
 	}
@@ -117,9 +117,9 @@ func (dd *Doors) EnableProfile(door uint8, enabled bool) bool {
 	return false
 }
 
-func (dd *Doors) Unlock(door uint8, duration time.Duration) bool {
+func (dd *Doors) Unlock(door uint8, duration time.Duration, firstcard bool) bool {
 	if d, ok := dd.doors[door]; ok {
-		return d.Unlock(duration)
+		return d.Unlock(duration, firstcard)
 	}
 
 	return false
@@ -149,12 +149,12 @@ func (dd *Doors) Close(door uint8, closed func()) bool {
 	return false
 }
 
-func (dd *Doors) ControlState(door uint8) uint8 {
+func (dd *Doors) ControlState(door uint8) types.ControlState {
 	if d, ok := dd.doors[door]; ok {
 		return d.ControlState
 	}
 
-	return 0
+	return types.ModeUnknown
 }
 
 func (dd *Doors) Delay(door uint8) Delay {
@@ -231,8 +231,6 @@ func (dd *Doors) IsInterlocked(door uint8) bool {
 	case 1:
 		if door == 1 && dd.IsOpen(2) || door == 2 && dd.IsOpen(1) {
 			return true
-			// } else if door == 3 && dd.IsOpen(4) || door == 4 && dd.IsOpen(3) {
-			// 	return true
 		}
 
 	case 2:

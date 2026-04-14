@@ -118,7 +118,9 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, direction entities.Dire
 		}
 
 		// unlock door!
-		if s.Doors.Unlock(door, 0*time.Second) {
+		firstcard := card.FirstCard.Has(door)
+
+		if s.Doors.Unlock(door, 0*time.Second, firstcard) {
 			swiped(0x02, true, entities.ReasonSwipePass)
 			return true, nil
 		}

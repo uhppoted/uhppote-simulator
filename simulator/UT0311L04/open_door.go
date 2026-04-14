@@ -20,7 +20,7 @@ func (s *UT0311L04) unlockDoor(request *messages.OpenDoorRequest) (*messages.Ope
 	door := request.Door
 	granted := true
 
-	s.Doors.Unlock(door, 0*time.Second)
+	s.Doors.Unlock(door, 0*time.Second, false)
 
 	datetime := types.DateTime(time.Now().UTC().Add(time.Duration(s.TimeOffset)))
 	event := entities.Event{

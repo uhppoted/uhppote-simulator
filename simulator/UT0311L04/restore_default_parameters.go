@@ -6,6 +6,8 @@ import (
 	"net/netip"
 
 	"github.com/uhppoted/uhppote-core/messages"
+	"github.com/uhppoted/uhppote-core/types"
+
 	"github.com/uhppoted/uhppote-simulator/entities"
 )
 
@@ -25,7 +27,7 @@ func (s *UT0311L04) restoreDefaultParameters(request *messages.RestoreDefaultPar
 		s.AntiPassback = entities.AntiPassback{}
 
 		for _, door := range []uint8{1, 2, 3, 4} {
-			s.Doors.SetControlState(door, entities.Controlled)
+			s.Doors.SetControlState(door, types.ModeControlled)
 			s.Doors.SetDelay(door, entities.DelayFromSeconds(5))
 			s.Doors.SetPasscodes(door)
 		}

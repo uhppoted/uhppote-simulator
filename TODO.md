@@ -7,11 +7,12 @@
    - [x] set from API
    - [x] SwipeNOPass Denied Access: First Card Open
    - [x] Activate/update after refresh tasklist
-   - [ ] Check start/end times
-   - [ ] Check weekdays
-   - [ ] Trigger once per day
-   - [ ] Set door state
-   - [ ] FirstCard privilege
+   - [x] Check start/end times
+   - [x] Check weekdays
+   - [x] FirstCard privilege
+   - [x] Set door mode on swipe
+   - [ ] Reset firstcardSwiped
+   - [ ] Set door mode on startup
    - [ ] Include in get door state
 
 - [ ] Fix docker swagger
