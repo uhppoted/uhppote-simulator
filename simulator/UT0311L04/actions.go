@@ -94,6 +94,7 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, direction entities.Dire
 		}
 
 		// TODO wrap these all into a s.DoorsCanUnlock
+		//      -- OR -- maybe UnlockWithFirstCard
 
 		// first card ?
 		if s.Doors.RequiresFirstCard(door) && !card.FirstCard.Has(door) {
@@ -282,7 +283,7 @@ func (s *UT0311L04) ButtonPressed(door uint8, duration time.Duration) (bool, err
 				Direction: 1,
 				Card:      1,
 				Timestamp: datetime,
-				Reason:    0x14,
+				Reason:    uint8(entities.ReasonPushbuttonOk),
 			}
 
 			s.add(event)
@@ -313,7 +314,7 @@ func (s *UT0311L04) ButtonPressed(door uint8, duration time.Duration) (bool, err
 
 	pressed, reason := s.Doors.PressButton(door, duration)
 	if pressed {
-		if reason == 0x00 {
+		if reason == entities.ReasonPushbuttonOk {
 			onUnlocked()
 		} else {
 			onNotUnlocked(reason)

@@ -18,8 +18,8 @@ func TestDoorPressButton(t *testing.T) {
 		t.Errorf("Unexpected 'button press' fail -  expected:%v, got:%v", true, ok)
 	}
 
-	if reason != 0 {
-		t.Errorf("Incorrect reason returned from button press - expected:%v, got:%v", 0, reason)
+	if reason != ReasonPushbuttonOk {
+		t.Errorf("Incorrect reason returned from button press - expected:%v, got:%v", ReasonPushbuttonOk, reason)
 	}
 }
 
