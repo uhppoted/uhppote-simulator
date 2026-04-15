@@ -1,19 +1,23 @@
 package entities
 
-const (
-	ReasonOk                    uint8 = 0
-	ReasonSwipePass             uint8 = 0x01
-	ReasonPCControl             uint8 = 0x05
-	ReasonNoPrivilege           uint8 = 0x06
-	ReasonInvalidPIN            uint8 = 0x07
-	ReasonAntiPassback          uint8 = 0x08
-	ReasonFirstCard             uint8 = 0x0a
-	ReasonNormallyClosed        uint8 = 0x0b
-	ReasonInvalidTimezone       uint8 = 0x0f
-	ReasonNoPass                uint8 = 0x12
-	ReasonSuperPasswordOpenDoor uint8 = 0x19
-	ReasonInterlock             uint8 = 0x21
+type Reason uint8
 
-	ReasonControllerPowerOn uint8 = 0x1c
-	ReasonControllerReset   uint8 = 0x1d
+const (
+	ReasonUnknown               Reason = 0x00
+	ReasonSwipePass             Reason = 0x01
+	ReasonPCControl             Reason = 0x05
+	ReasonNoPrivilege           Reason = 0x06
+	ReasonInvalidPIN            Reason = 0x07
+	ReasonAntiPassback          Reason = 0x08
+	ReasonFirstCard             Reason = 0x0a
+	ReasonNormallyClosed        Reason = 0x0b
+	ReasonInvalidTimezone       Reason = 0x0f
+	ReasonNoPass                Reason = 0x12
+	ReasonPushbuttonOk          Reason = 0x14
+	ReasonPushbuttonDisabled    Reason = 0x1e
+	ReasonSuperPasswordOpenDoor Reason = 0x19
+	ReasonInterlock             Reason = 0x21
+
+	ReasonControllerPowerOn Reason = 0x1c
+	ReasonControllerReset   Reason = 0x1d
 )

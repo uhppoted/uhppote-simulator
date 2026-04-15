@@ -93,12 +93,12 @@ func (dd *Doors) Refresh() bool {
 	return true
 }
 
-func (dd *Doors) PressButton(door uint8, duration time.Duration) (pressed bool, reason uint8) {
+func (dd *Doors) PressButton(door uint8, duration time.Duration) (pressed bool, reason Reason) {
 	if d, ok := dd.doors[door]; ok {
 		return d.PressButton(duration)
 	}
 
-	return false, 0
+	return false, ReasonUnknown
 }
 
 func (dd *Doors) OverrideState(door uint8, state types.ControlState) bool {

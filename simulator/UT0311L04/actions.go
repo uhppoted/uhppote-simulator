@@ -23,7 +23,7 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, direction entities.Dire
 		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID(), door)
 	}
 
-	swiped := func(eventType uint8, granted bool, reason uint8) {
+	swiped := func(eventType uint8, granted bool, reason entities.Reason) {
 		datetime := types.DateTime(time.Now().UTC().Add(time.Duration(s.TimeOffset)))
 		event := entities.Event{
 			Type:      eventType,
@@ -32,7 +32,7 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, direction entities.Dire
 			Direction: 1,
 			Card:      cardNumber,
 			Timestamp: datetime,
-			Reason:    reason,
+			Reason:    uint8(reason),
 		}
 
 		s.add(event)
@@ -93,6 +93,8 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, direction entities.Dire
 			}
 		}
 
+		// TODO wrap these all into a s.DoorsCanUnlock
+
 		// first card ?
 		if s.Doors.RequiresFirstCard(door) && !card.FirstCard.Has(door) {
 			swiped(0x01, false, entities.ReasonFirstCard)
@@ -146,7 +148,7 @@ func (s *UT0311L04) Passcode(door uint8, passcode uint32) (bool, error) {
 		return false, fmt.Errorf("%v: invalid door %d", s.DeviceID(), door)
 	}
 
-	unlocked := func(eventType uint8, granted bool, reason uint8) {
+	unlocked := func(eventType uint8, granted bool, reason entities.Reason) {
 		datetime := types.DateTime(time.Now().UTC().Add(time.Duration(s.TimeOffset)))
 		event := entities.Event{
 			Type:      eventType,
@@ -155,7 +157,7 @@ func (s *UT0311L04) Passcode(door uint8, passcode uint32) (bool, error) {
 			Direction: 1,
 			Timestamp: datetime,
 			Card:      SupervisorAccessCode,
-			Reason:    reason,
+			Reason:    uint8(reason),
 		}
 
 		s.add(event)
@@ -287,7 +289,7 @@ func (s *UT0311L04) ButtonPressed(door uint8, duration time.Duration) (bool, err
 		}
 	}
 
-	onNotUnlocked := func(reason uint8) {
+	onNotUnlocked := func(reason entities.Reason) {
 		if s.RecordSpecialEvents {
 			datetime := types.DateTime(time.Now().UTC().Add(time.Duration(s.TimeOffset)))
 			event := entities.Event{
@@ -297,7 +299,7 @@ func (s *UT0311L04) ButtonPressed(door uint8, duration time.Duration) (bool, err
 				Direction: 1,
 				Card:      6,
 				Timestamp: datetime,
-				Reason:    reason,
+				Reason:    uint8(reason),
 			}
 
 			s.add(event)
@@ -374,7 +376,7 @@ func (s *UT0311L04) Reset() (bool, error) {
 		Direction: 0,
 		Card:      0,
 		Timestamp: datetime,
-		Reason:    entities.ReasonControllerReset,
+		Reason:    uint8(entities.ReasonControllerReset),
 	}
 
 	s.add(event)

@@ -201,9 +201,9 @@ func (d *Door) UnlockWithPasscode(passcode uint32, duration time.Duration) bool 
 	return false
 }
 
-func (d *Door) PressButton(duration time.Duration) (pressed bool, reason uint8) {
+func (d *Door) PressButton(duration time.Duration) (pressed bool, reason Reason) {
 	pressed = false
-	reason = 0x14
+	reason = ReasonPushbuttonOk
 
 	if d == nil {
 		return
@@ -225,12 +225,12 @@ func (d *Door) PressButton(duration time.Duration) (pressed bool, reason uint8) 
 	}
 
 	if d.buttonDisabled {
-		reason = 0x1e
+		reason = ReasonPushbuttonDisabled
 		return
 	}
 
 	if d.ControlState == types.ModeNormallyClosed || d.overrideState == types.ModeNormallyClosed {
-		reason = 0x14
+		reason = ReasonPushbuttonOk
 		return
 	}
 
@@ -242,7 +242,7 @@ func (d *Door) PressButton(duration time.Duration) (pressed bool, reason uint8) 
 		d.unlockedUntil = &unlockUntil
 	}
 
-	reason = ReasonOk
+	reason = ReasonPushbuttonOk
 
 	return
 }
@@ -375,11 +375,9 @@ func (d *Door) RequiresFirstCard() bool {
 	weekday := now.Weekday()
 
 	if d.FirstCard.Weekdays[weekday] {
-		if hhmm.Before(d.FirstCard.StartTime) || hhmm.After(d.FirstCard.EndTime) {
+		if d.FirstCard.StartTime.Before(hhmm) && d.FirstCard.EndTime.After(hhmm) {
 			return true
 		}
-	} else {
-		return true
 	}
 
 	return false
