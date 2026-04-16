@@ -93,40 +93,47 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, direction entities.Dire
 			}
 		}
 
-		// TODO wrap these all into a s.DoorsCanUnlock
-		//      -- OR -- maybe UnlockWithFirstCard
-
-		// first card ?
-		if s.Doors.RequiresFirstCard(door) && !card.FirstCard.Has(door) {
-			swiped(0x01, false, entities.ReasonFirstCard)
-			return false, nil
-		}
-
-		// normally closed?
-		if s.Doors.IsNormallyClosed(door) {
-			swiped(0x01, false, entities.ReasonNormallyClosed)
-			return false, nil
-		}
-
-		// interlocked?
-		if s.Doors.IsInterlocked(door) {
-			swiped(0x01, false, entities.ReasonInterlock)
-			return false, nil
-		}
-
 		// anti-passback?
 		if !s.AntiPassback.Allow(cardNumber, door) {
 			swiped(0x01, false, entities.ReasonAntiPassback)
 			return false, nil
 		}
 
-		// unlock door!
-		firstcard := card.FirstCard.Has(door)
+		// // first card ?
+		// if s.Doors.RequiresFirstCard(door) && !card.FirstCard.Has(door) {
+		// 	swiped(0x01, false, entities.ReasonFirstCard)
+		// 	return false, nil
+		// }
+		//
+		// // normally closed?
+		// if s.Doors.IsNormallyClosed(door) {
+		// 	swiped(0x01, false, entities.ReasonNormallyClosed)
+		// 	return false, nil
+		// }
+		//
+		// // interlocked?
+		// if s.Doors.IsInterlocked(door) {
+		// 	swiped(0x01, false, entities.ReasonInterlock)
+		// 	return false, nil
+		// }
+		//
+		// // unlock door!
+		// firstcard := card.FirstCard.Has(door)
+		//
+		// if s.Doors.Unlock(door, 0*time.Second, firstcard) {
+		// 	swiped(0x02, true, entities.ReasonSwipePass)
+		// 	return true, nil
+		// }
 
-		if s.Doors.Unlock(door, 0*time.Second, firstcard) {
-			swiped(0x02, true, entities.ReasonSwipePass)
-			return true, nil
+		ok, reason := s.Doors.Swiped(door, 0*time.Second, card.FirstCard.Has(door))
+
+		if ok {
+			swiped(0x02, true, reason)
+		} else {
+			swiped(0x01, false, reason)
 		}
+
+		return ok, nil
 	}
 
 	// Denied!

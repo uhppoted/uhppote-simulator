@@ -119,10 +119,26 @@ func (dd *Doors) EnableProfile(door uint8, enabled bool) bool {
 
 func (dd *Doors) Unlock(door uint8, duration time.Duration, firstcard bool) bool {
 	if d, ok := dd.doors[door]; ok {
-		return d.Unlock(duration, firstcard)
+		if dd.IsInterlocked(door) {
+			return false
+		}
+
+		return d.Unlock(duration)
 	}
 
 	return false
+}
+
+func (dd *Doors) Swiped(door uint8, duration time.Duration, firstcard bool) (bool, Reason) {
+	if d, ok := dd.doors[door]; ok {
+		if dd.IsInterlocked(door) {
+			return false, ReasonInterlock
+		}
+
+		return d.Swiped(duration, firstcard)
+	}
+
+	return false, ReasonUnknown
 }
 
 func (dd *Doors) UnlockWithPasscode(door uint8, passcode uint32, duration time.Duration) bool {
@@ -215,14 +231,6 @@ func (dd *Doors) IsProfileDisabled(door uint8) bool {
 	return false
 }
 
-func (dd *Doors) IsNormallyClosed(door uint8) bool {
-	if d, ok := dd.doors[door]; ok {
-		return d.IsNormallyClosed()
-	}
-
-	return false
-}
-
 func (dd *Doors) IsInterlocked(door uint8) bool {
 	switch dd.Interlock {
 	case 0:
@@ -264,14 +272,6 @@ func (dd *Doors) IsInterlocked(door uint8) bool {
 		} else if door == 4 && dd.IsOpen(1, 2, 3) {
 			return true
 		}
-	}
-
-	return false
-}
-
-func (dd *Doors) RequiresFirstCard(door uint8) bool {
-	if d, ok := dd.doors[door]; ok {
-		return d.RequiresFirstCard()
 	}
 
 	return false

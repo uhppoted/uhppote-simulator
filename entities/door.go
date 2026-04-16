@@ -143,20 +143,13 @@ func (d *Door) Close(closed func()) bool {
 	return !d.open
 }
 
-func (d *Door) Unlock(duration time.Duration, firstcard bool) bool {
+func (d *Door) Unlock(duration time.Duration) bool {
 	if d == nil {
 		return false
 	}
 
 	d.guard.Lock()
 	defer d.guard.Unlock()
-
-	if d.FirstCard != nil && firstcard {
-		if !d.firstcardSwiped {
-			d.firstcardSwiped = true
-			d.ControlState = d.FirstCard.Active
-		}
-	}
 
 	if d.ControlState == types.ModeNormallyClosed || d.overrideState == types.ModeNormallyClosed {
 		return false
@@ -171,6 +164,56 @@ func (d *Door) Unlock(duration time.Duration, firstcard bool) bool {
 	}
 
 	return true
+}
+
+func (d *Door) Swiped(duration time.Duration, firstcard bool) (bool, Reason) {
+	if d == nil {
+		return false, ReasonUnknown
+	}
+
+	d.guard.Lock()
+	defer d.guard.Unlock()
+
+	// first-card
+	//
+	// Requires a card with first card privileges iff:
+	// 1. The door has an active first card configuration
+	// 2. The door has not been unlocked by a card with first card privileges
+	// 3. The first card configuration INACTIVE state is ModeFirstCardOnly
+	if d.FirstCard != nil && d.FirstCard.Inactive == types.ModeFirstCardOnly && !d.firstcardSwiped {
+		now := time.Now()
+		hhmm := types.HHmmFromTime(now)
+		weekday := now.Weekday()
+
+		if d.FirstCard.Weekdays[weekday] {
+			if d.FirstCard.StartTime.Before(hhmm) && d.FirstCard.EndTime.After(hhmm) {
+				if !firstcard {
+					return false, ReasonFirstCard
+				}
+
+				if !d.firstcardSwiped {
+					d.firstcardSwiped = true
+					d.ControlState = d.FirstCard.Active
+				}
+			}
+		}
+	}
+
+	// normally closed?
+	if d.ControlState == types.ModeNormallyClosed || d.overrideState == types.ModeNormallyClosed {
+		return false, ReasonNormallyClosed
+	}
+
+	// unlock!
+	until := time.Now().UTC()
+	until = until.Add(duration)
+	until = until.Add(time.Duration(d.Delay))
+
+	if d.unlockedUntil == nil || d.unlockedUntil.Before(until) {
+		d.unlockedUntil = &until
+	}
+
+	return true, ReasonSwipePass
 }
 
 func (d *Door) UnlockWithPasscode(passcode uint32, duration time.Duration) bool {
@@ -286,17 +329,6 @@ func (d *Door) EnableButton(enabled bool) bool {
 	return true
 }
 
-func (d *Door) IsNormallyClosed() bool {
-	if d == nil {
-		return true
-	}
-
-	d.guard.RLock()
-	defer d.guard.RUnlock()
-
-	return d.ControlState == types.ModeNormallyClosed || d.overrideState == types.ModeNormallyClosed
-}
-
 func (d *Door) IsProfileDisabled() bool {
 	if d == nil {
 		return true
@@ -339,48 +371,6 @@ func (d *Door) IsButtonPressed() bool {
 	defer d.guard.RUnlock()
 
 	return d.pressed()
-}
-
-// Requires a card with first card privileges iff:
-// 1. The door has an active first card configuration
-// 2. The door has not been unlocked by a card with first card privileges
-// 3. The first card configuration INACTIVE state is ModeFirstCardOnly
-//
-// i.e. don't require a card with first card privileges if any of the following are true:
-// - the door does not have an active first card configuration
-// - the doors first card configuration INACTIVE state is not ModeFirstCardOnly
-// - the door has been unlocked by a card with first card privileges
-func (d *Door) RequiresFirstCard() bool {
-	if d == nil {
-		return false
-	}
-
-	d.guard.RLock()
-	defer d.guard.RUnlock()
-
-	if d.FirstCard == nil {
-		return false
-	}
-
-	if d.FirstCard.Inactive != types.ModeFirstCardOnly {
-		return false
-	}
-
-	if d.firstcardSwiped {
-		return false
-	}
-
-	now := time.Now()
-	hhmm := types.HHmmFromTime(now)
-	weekday := now.Weekday()
-
-	if d.FirstCard.Weekdays[weekday] {
-		if d.FirstCard.StartTime.Before(hhmm) && d.FirstCard.EndTime.After(hhmm) {
-			return true
-		}
-	}
-
-	return false
 }
 
 func (d *Door) unlocked() bool {
