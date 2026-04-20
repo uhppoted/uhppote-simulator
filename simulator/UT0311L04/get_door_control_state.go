@@ -15,7 +15,7 @@ func (s *UT0311L04) getDoorControlState(request *messages.GetDoorControlStateReq
 	}
 
 	mode := uint8(0)
-	switch s.Doors.ControlState(request.Door) {
+	switch s.Doors.Mode(request.Door) {
 	case types.ModeNormallyOpen:
 		mode = 1
 	case types.ModeNormallyClosed:

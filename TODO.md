@@ -13,7 +13,7 @@
    - [x] Set door mode on swipe
    - [x] Reset firstcardSwiped
    - [x] ~~Set door mode on startup~~
-   - [ ] Include in get door state
+   - [x] Include in get door state
    - [ ] Validate against actual controller
 
 - [ ] Fix docker swagger

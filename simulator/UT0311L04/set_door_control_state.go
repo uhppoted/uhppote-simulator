@@ -23,19 +23,19 @@ func (s *UT0311L04) setDoorControlState(request *messages.SetDoorControlStateReq
 
 	switch request.ControlState {
 	case 1:
-		s.Doors.SetControlState(door, types.ModeNormallyOpen)
+		s.Doors.SetMode(door, types.ModeNormallyOpen)
 
 	case 2:
-		s.Doors.SetControlState(door, types.ModeNormallyClosed)
+		s.Doors.SetMode(door, types.ModeNormallyClosed)
 
 	case 3:
-		s.Doors.SetControlState(door, types.ModeControlled)
+		s.Doors.SetMode(door, types.ModeControlled)
 	}
 
 	s.Doors.SetDelay(door, entities.Delay(uint64(request.Delay)*1000000000))
 
 	mode := uint8(0)
-	switch s.Doors.ControlState(request.Door) {
+	switch s.Doors.Mode(request.Door) {
 	case types.ModeNormallyOpen:
 		mode = 1
 	case types.ModeNormallyClosed:

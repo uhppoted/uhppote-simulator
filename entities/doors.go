@@ -26,7 +26,7 @@ func MakeDoors() Doors {
 	}
 }
 
-func (dd *Doors) SetControlState(door uint8, mode types.ControlState) {
+func (dd *Doors) SetMode(door uint8, mode types.ControlState) {
 	if d, ok := dd.doors[door]; ok {
 		d.ControlState = mode
 	}
@@ -165,9 +165,9 @@ func (dd *Doors) Close(door uint8, closed func()) bool {
 	return false
 }
 
-func (dd *Doors) ControlState(door uint8) types.ControlState {
+func (dd *Doors) Mode(door uint8) types.ControlState {
 	if d, ok := dd.doors[door]; ok {
-		return d.ControlState
+		return d.Mode()
 	}
 
 	return types.ModeUnknown

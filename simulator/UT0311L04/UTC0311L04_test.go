@@ -454,10 +454,10 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 	listener := netip.MustParseAddrPort("10.0.0.10:43210")
 	doors := entities.MakeDoors()
 
-	doors.SetControlState(1, 3)
-	doors.SetControlState(2, 2)
-	doors.SetControlState(3, 3)
-	doors.SetControlState(4, 3)
+	doors.SetMode(1, 3)
+	doors.SetMode(2, 2)
+	doors.SetMode(3, 3)
+	doors.SetMode(4, 3)
 
 	doors.SetDelay(1, entities.DelayFromSeconds(11))
 	doors.SetDelay(2, entities.DelayFromSeconds(22))

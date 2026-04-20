@@ -91,6 +91,17 @@ func NewDoor(id uint8) *Door {
 	return door
 }
 
+func (d *Door) Mode() types.ControlState {
+	if d == nil {
+		return types.ModeUnknown
+	}
+
+	d.guard.RLock()
+	defer d.guard.RUnlock()
+
+	return d.mode()
+}
+
 func (d *Door) Open(duration *time.Duration, opened func(uint8), closed func()) bool {
 	if d == nil {
 		return false
@@ -182,18 +193,7 @@ func (d *Door) Swiped(duration time.Duration, firstcard bool) (bool, Reason) {
 	// 1. The door has an active first card configuration
 	// 2. The door has not been unlocked 'today' by a card with first card privileges
 	// 3. The first card configuration INACTIVE state is ModeFirstCardOnly
-	firstCardSwiped := func() bool {
-		if !d.firstcardSwiped.IsZero() {
-			year, month, day := d.firstcardSwiped.Date()
-			if year == now.Year() && month == now.Month() && day == now.Day() {
-				return true
-			}
-		}
-
-		return false
-	}
-
-	if d.FirstCard != nil && d.FirstCard.Inactive == types.ModeFirstCardOnly && !firstCardSwiped() {
+	if d.FirstCard != nil && d.FirstCard.Inactive == types.ModeFirstCardOnly && !d.firstCardSwiped() {
 		hhmm := types.HHmmFromTime(now)
 		weekday := now.Weekday()
 
@@ -280,8 +280,8 @@ func (d *Door) PressButton(duration time.Duration) (pressed bool, reason Reason)
 		return
 	}
 
-	if d.ControlState == types.ModeNormallyClosed || d.overrideState == types.ModeNormallyClosed {
-		reason = ReasonPushbuttonOk
+	if d.mode() == types.ModeNormallyClosed || d.overrideState == types.ModeNormallyClosed {
+		reason = ReasonPushbuttonOk // NTS doesn't seem to be a 'pushbutton invalid' event reason (possibly because button is to exit?)
 		return
 	}
 
@@ -381,6 +381,20 @@ func (d *Door) IsButtonPressed() bool {
 	return d.pressed()
 }
 
+func (d *Door) mode() types.ControlState {
+	if d.FirstCard != nil {
+		if d.firstCardSwiped() {
+			return d.FirstCard.Active
+		} else if d.FirstCard.Inactive == types.ModeFirstCardOnly {
+			return types.ModeNormallyClosed
+		} else {
+			return d.FirstCard.Inactive
+		}
+	}
+
+	return d.ControlState
+}
+
 func (d *Door) unlocked() bool {
 	switch d.overrideState {
 	case types.ModeNormallyOpen:
@@ -393,7 +407,7 @@ func (d *Door) unlocked() bool {
 		return d.unlockedUntil != nil && d.unlockedUntil.After(time.Now())
 
 	default:
-		switch d.ControlState {
+		switch d.mode() {
 		case types.ModeNormallyOpen:
 			return true
 
@@ -410,6 +424,19 @@ func (d *Door) unlocked() bool {
 
 func (d *Door) pressed() bool {
 	return d.pressedUntil != nil && d.pressedUntil.After(time.Now())
+}
+
+func (d *Door) firstCardSwiped() bool {
+	now := time.Now()
+
+	if !d.firstcardSwiped.IsZero() {
+		year, month, day := d.firstcardSwiped.Date()
+		if year == now.Year() && month == now.Month() && day == now.Day() {
+			return true
+		}
+	}
+
+	return false
 }
 
 func (d *Door) MarshalJSON() ([]byte, error) {
