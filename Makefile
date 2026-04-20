@@ -7,6 +7,7 @@ PASSCODE  ?= 654321
 DOOR      ?= 3
 DEBUG     ?= --debug
 DOCKER    ?= ghcr.io/uhppoted/simulator:latest
+DEBUG     ?= --debug
 
 WORKDIR=/Users/tonyseebregts/Development/uhppote/uhppoted/uhppote-simulator/workdir
 
@@ -114,7 +115,7 @@ version: build
 	./bin/uhppote-simulator version
 
 run: build
-	./bin/uhppote-simulator --debug --bind 0.0.0.0:60000 --rest 0.0.0.0:8000 --devices "./workdir/debug/controllers"
+	./bin/uhppote-simulator $(DEBUG) --bind 0.0.0.0:60000 --rest 0.0.0.0:8000 --devices "./workdir/debug/controllers"
 
 list-devices:
 	curl -X GET "http://127.0.0.1:8000/uhppote/simulator" -H "accept: application/json"

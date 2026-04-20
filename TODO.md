@@ -11,9 +11,10 @@
    - [x] Check weekdays
    - [x] FirstCard privilege
    - [x] Set door mode on swipe
-   - [ ] Reset firstcardSwiped
-   - [ ] Set door mode on startup
+   - [x] Reset firstcardSwiped
+   - [x] ~~Set door mode on startup~~
    - [ ] Include in get door state
+   - [ ] Validate against actual controller
 
 - [ ] Fix docker swagger
 
@@ -51,5 +52,3 @@
 ### Other
 
 1.  Integration tests
-
-\

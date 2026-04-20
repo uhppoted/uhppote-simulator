@@ -23,7 +23,7 @@ type Door struct {
 	buttonDisabled  bool
 	open            bool
 	button          bool
-	firstcardSwiped bool
+	firstcardSwiped time.Time
 
 	openTimer     *time.Timer
 	unlockedUntil *time.Time
@@ -167,6 +167,8 @@ func (d *Door) Unlock(duration time.Duration) bool {
 }
 
 func (d *Door) Swiped(duration time.Duration, firstcard bool) (bool, Reason) {
+	now := time.Now()
+
 	if d == nil {
 		return false, ReasonUnknown
 	}
@@ -178,23 +180,31 @@ func (d *Door) Swiped(duration time.Duration, firstcard bool) (bool, Reason) {
 	//
 	// Requires a card with first card privileges iff:
 	// 1. The door has an active first card configuration
-	// 2. The door has not been unlocked by a card with first card privileges
+	// 2. The door has not been unlocked 'today' by a card with first card privileges
 	// 3. The first card configuration INACTIVE state is ModeFirstCardOnly
-	if d.FirstCard != nil && d.FirstCard.Inactive == types.ModeFirstCardOnly && !d.firstcardSwiped {
-		now := time.Now()
+	firstCardSwiped := func() bool {
+		if !d.firstcardSwiped.IsZero() {
+			year, month, day := d.firstcardSwiped.Date()
+			if year == now.Year() && month == now.Month() && day == now.Day() {
+				return true
+			}
+		}
+
+		return false
+	}
+
+	if d.FirstCard != nil && d.FirstCard.Inactive == types.ModeFirstCardOnly && !firstCardSwiped() {
 		hhmm := types.HHmmFromTime(now)
 		weekday := now.Weekday()
 
 		if d.FirstCard.Weekdays[weekday] {
-			if d.FirstCard.StartTime.Before(hhmm) && d.FirstCard.EndTime.After(hhmm) {
+			if !hhmm.Before(d.FirstCard.StartTime) && !hhmm.After(d.FirstCard.EndTime) {
 				if !firstcard {
 					return false, ReasonFirstCard
 				}
 
-				if !d.firstcardSwiped {
-					d.firstcardSwiped = true
-					d.ControlState = d.FirstCard.Active
-				}
+				d.firstcardSwiped = now
+				d.ControlState = d.FirstCard.Active
 			}
 		}
 	}
@@ -205,9 +215,7 @@ func (d *Door) Swiped(duration time.Duration, firstcard bool) (bool, Reason) {
 	}
 
 	// unlock!
-	until := time.Now().UTC()
-	until = until.Add(duration)
-	until = until.Add(time.Duration(d.Delay))
+	until := now.UTC().Add(duration).Add(time.Duration(d.Delay))
 
 	if d.unlockedUntil == nil || d.unlockedUntil.Before(until) {
 		d.unlockedUntil = &until
