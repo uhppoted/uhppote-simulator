@@ -9,7 +9,7 @@ DEBUG     ?= --debug
 DOCKER    ?= ghcr.io/uhppoted/simulator:latest
 DEBUG     ?= --debug
 
-WORKDIR=/Users/tonyseebregts/Development/uhppote/uhppoted/uhppote-simulator/workdir
+CLI = ../uhppote-cli/bin/uhppote-cli
 
 .DEFAULT_GOAL := test
 .PHONY: clean
@@ -241,3 +241,67 @@ docker-compose:
 docker-clean:
 	docker image     prune -f
 	docker container prune -f
+
+matrix-controlled:
+	$(CLI) get-time         423187757 3
+	$(CLI) set-listener     423187757 192.168.1.125:60001
+	$(CLI) set-antipassback 423187757 disabled
+	$(CLI) set-door-control 423187757 3 "controlled"
+	$(CLI) get-door-control 423187757 3
+	$(CLI) put-card         423187757 10058397 2026-01-01 2026-12-31   --first-card 3
+	$(CLI) put-card         423187757 10058398 2026-01-01 2026-12-31
+	$(CLI) put-card         423187757 10058399 2026-01-01 2026-12-31 3
+	$(CLI) put-card         423187757 10058400 2026-01-01 2026-12-31 3 --first-card 3
+	$(CLI) get-card         423187757 10058397
+	$(CLI) get-card         423187757 10058398
+	$(CLI) get-card         423187757 10058399
+	$(CLI) get-card         423187757 10058400
+
+matrix-normally-open:
+	$(CLI) get-time         423187757 3
+	$(CLI) set-listener     423187757 192.168.1.125:60001
+	$(CLI) set-antipassback 423187757 disabled
+	$(CLI) set-door-control 423187757 3 "normally open"
+	$(CLI) get-door-control 423187757 3
+	$(CLI) put-card         423187757 10058397 2026-01-01 2026-12-31   --first-card 3
+	$(CLI) put-card         423187757 10058398 2026-01-01 2026-12-31
+	$(CLI) put-card         423187757 10058399 2026-01-01 2026-12-31 3
+	$(CLI) put-card         423187757 10058400 2026-01-01 2026-12-31 3 --first-card 3
+	$(CLI) get-card         423187757 10058397
+	$(CLI) get-card         423187757 10058398
+	$(CLI) get-card         423187757 10058399
+	$(CLI) get-card         423187757 10058400
+
+matrix-normally-closed:
+	$(CLI) get-time         423187757 3
+	$(CLI) set-listener     423187757 192.168.1.125:60001
+	$(CLI) set-antipassback 423187757 disabled
+	$(CLI) set-door-control 423187757 3 "normally closed"
+	$(CLI) get-door-control 423187757 3
+	$(CLI) put-card         423187757 10058397 2026-01-01 2026-12-31   --first-card 3
+	$(CLI) put-card         423187757 10058398 2026-01-01 2026-12-31
+	$(CLI) put-card         423187757 10058399 2026-01-01 2026-12-31 3
+	$(CLI) put-card         423187757 10058400 2026-01-01 2026-12-31 3 --first-card 3
+	$(CLI) get-card         423187757 10058397
+	$(CLI) get-card         423187757 10058398
+	$(CLI) get-card         423187757 10058399
+	$(CLI) get-card         423187757 10058400
+
+matrix-firstcard-only:
+	$(CLI) get-time         423187757 3
+	$(CLI) set-listener     423187757 192.168.1.125:60001
+	$(CLI) set-antipassback 423187757 disabled
+	$(CLI) set-door-control 423187757 3 "controlled"
+	$(CLI) set-firstcard    423187757 3 00:30 01:30 normally-open firstcard Mon,Tue,Wed,Thurs,Fri
+	$(CLI) get-door-control 423187757 3
+	$(CLI) put-card         423187757 10058397 2026-01-01 2026-12-31   --first-card 3
+	$(CLI) put-card         423187757 10058398 2026-01-01 2026-12-31
+	$(CLI) put-card         423187757 10058399 2026-01-01 2026-12-31 3
+	$(CLI) put-card         423187757 10058400 2026-01-01 2026-12-31 3 --first-card 3
+	$(CLI) get-card         423187757 10058397
+	$(CLI) get-card         423187757 10058398
+	$(CLI) get-card         423187757 10058399
+	$(CLI) get-card         423187757 10058400
+
+matrix-listen:
+	$(CLI) listen
