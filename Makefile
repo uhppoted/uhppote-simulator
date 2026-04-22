@@ -243,26 +243,26 @@ docker-clean:
 	docker container prune -f
 
 matrix-controlled:
-	$(CLI) get-time         423187757 3
-	$(CLI) set-listener     423187757 192.168.1.125:60001
-	$(CLI) set-antipassback 423187757 disabled
-	$(CLI) set-door-control 423187757 3 "controlled"
-	$(CLI) get-door-control 423187757 3
-	$(CLI) put-card         423187757 10058397 2026-01-01 2026-12-31   --first-card 3
-	$(CLI) put-card         423187757 10058398 2026-01-01 2026-12-31
-	$(CLI) put-card         423187757 10058399 2026-01-01 2026-12-31 3
-	$(CLI) put-card         423187757 10058400 2026-01-01 2026-12-31 3 --first-card 3
-	$(CLI) get-card         423187757 10058397
-	$(CLI) get-card         423187757 10058398
-	$(CLI) get-card         423187757 10058399
-	$(CLI) get-card         423187757 10058400
+	$(CLI) get-time          423187757 3
+	$(CLI) set-listener      423187757 192.168.1.125:60001
+	$(CLI) put-card          423187757 10058397 2026-01-01 2026-12-31   --first-card 3
+	$(CLI) put-card          423187757 10058398 2026-01-01 2026-12-31
+	$(CLI) put-card          423187757 10058399 2026-01-01 2026-12-31 3
+	$(CLI) put-card          423187757 10058400 2026-01-01 2026-12-31 3 --first-card 3
+	$(CLI) get-card          423187757 10058397
+	$(CLI) get-card          423187757 10058398
+	$(CLI) get-card          423187757 10058399
+	$(CLI) get-card          423187757 10058400
+	$(CLI) clear-task-list   423187757
+	$(CLI) set-door-control  423187757 3 "controlled"
+	$(CLI) set-antipassback  423187757 disabled
+	$(CLI) set-firstcard     423187757 3
+	$(CLI) refresh-task-list 423187757	
+	$(CLI) get-door-control  423187757 3
 
 matrix-normally-open:
 	$(CLI) get-time         423187757 3
 	$(CLI) set-listener     423187757 192.168.1.125:60001
-	$(CLI) set-antipassback 423187757 disabled
-	$(CLI) set-door-control 423187757 3 "normally open"
-	$(CLI) get-door-control 423187757 3
 	$(CLI) put-card         423187757 10058397 2026-01-01 2026-12-31   --first-card 3
 	$(CLI) put-card         423187757 10058398 2026-01-01 2026-12-31
 	$(CLI) put-card         423187757 10058399 2026-01-01 2026-12-31 3
@@ -271,13 +271,16 @@ matrix-normally-open:
 	$(CLI) get-card         423187757 10058398
 	$(CLI) get-card         423187757 10058399
 	$(CLI) get-card         423187757 10058400
+	$(CLI) clear-task-list   423187757
+	$(CLI) set-door-control 423187757 3 "normally open"
+	$(CLI) set-antipassback  423187757 disabled
+	$(CLI) set-firstcard     423187757 3
+	$(CLI) refresh-task-list 423187757	
+	$(CLI) get-door-control 423187757 3
 
 matrix-normally-closed:
 	$(CLI) get-time         423187757 3
 	$(CLI) set-listener     423187757 192.168.1.125:60001
-	$(CLI) set-antipassback 423187757 disabled
-	$(CLI) set-door-control 423187757 3 "normally closed"
-	$(CLI) get-door-control 423187757 3
 	$(CLI) put-card         423187757 10058397 2026-01-01 2026-12-31   --first-card 3
 	$(CLI) put-card         423187757 10058398 2026-01-01 2026-12-31
 	$(CLI) put-card         423187757 10058399 2026-01-01 2026-12-31 3
@@ -286,22 +289,30 @@ matrix-normally-closed:
 	$(CLI) get-card         423187757 10058398
 	$(CLI) get-card         423187757 10058399
 	$(CLI) get-card         423187757 10058400
+	$(CLI) clear-task-list   423187757
+	$(CLI) set-door-control 423187757 3 "normally closed"
+	$(CLI) set-antipassback  423187757 disabled
+	$(CLI) set-firstcard     423187757 3
+	$(CLI) refresh-task-list 423187757	
+	$(CLI) get-door-control 423187757 3
 
 matrix-firstcard-only:
-	$(CLI) get-time         423187757 3
-	$(CLI) set-listener     423187757 192.168.1.125:60001
-	$(CLI) set-antipassback 423187757 disabled
-	$(CLI) set-door-control 423187757 3 "controlled"
-	$(CLI) set-firstcard    423187757 3 00:30 01:30 normally-open firstcard Mon,Tue,Wed,Thurs,Fri
-	$(CLI) get-door-control 423187757 3
-	$(CLI) put-card         423187757 10058397 2026-01-01 2026-12-31   --first-card 3
-	$(CLI) put-card         423187757 10058398 2026-01-01 2026-12-31
-	$(CLI) put-card         423187757 10058399 2026-01-01 2026-12-31 3
-	$(CLI) put-card         423187757 10058400 2026-01-01 2026-12-31 3 --first-card 3
-	$(CLI) get-card         423187757 10058397
-	$(CLI) get-card         423187757 10058398
-	$(CLI) get-card         423187757 10058399
-	$(CLI) get-card         423187757 10058400
+	$(CLI) get-time          423187757 3
+	$(CLI) set-listener      423187757 192.168.1.125:60001
+	$(CLI) put-card          423187757 10058397 2026-01-01 2026-12-31   --first-card 3
+	$(CLI) put-card          423187757 10058398 2026-01-01 2026-12-31
+	$(CLI) put-card          423187757 10058399 2026-01-01 2026-12-31 3
+	$(CLI) put-card          423187757 10058400 2026-01-01 2026-12-31 3 --first-card 3
+	$(CLI) get-card          423187757 10058397
+	$(CLI) get-card          423187757 10058398
+	$(CLI) get-card          423187757 10058399
+	$(CLI) get-card          423187757 10058400
+	$(CLI) clear-task-list   423187757
+	$(CLI) set-door-control  423187757 3 "controlled"
+	$(CLI) set-antipassback  423187757 disabled
+	$(CLI) set-firstcard     423187757 3 00:30 23:30 normally-open firstcard Mon,Tue,Wed,Thurs,Fri
+	$(CLI) refresh-task-list 423187757	
+	$(CLI) get-door-control  423187757 3
 
 matrix-listen:
 	$(CLI) listen
