@@ -277,6 +277,12 @@ func (dd *Doors) IsInterlocked(door uint8) bool {
 	return false
 }
 
+func (dd *Doors) Tick() {
+	for _, d := range []uint8{1, 2, 3, 4} {
+		dd.doors[d].tick()
+	}
+}
+
 func (d Doors) String() string {
 	var b strings.Builder
 

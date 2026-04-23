@@ -276,6 +276,8 @@ func (s *UT0311L04) Tick() {
 
 		s.autosent = time.Now()
 	}
+
+	s.Doors.Tick()
 }
 
 func (s *UT0311L04) RunTasks() {

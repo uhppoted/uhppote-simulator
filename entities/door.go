@@ -24,6 +24,7 @@ type Door struct {
 	open            bool
 	button          bool
 	firstcardSwiped time.Time
+	firstcardActive bool
 
 	openTimer     *time.Timer
 	unlockedUntil *time.Time
@@ -381,16 +382,34 @@ func (d *Door) IsButtonPressed() bool {
 	return d.pressed()
 }
 
-func (d *Door) mode() types.ControlState {
+// NTS: presumably a controller wakes up with its stored door control mode
+func (d *Door) tick() {
 	if d.FirstCard != nil {
-		if d.firstCardSwiped() {
-			return d.FirstCard.Active
-		} else if d.FirstCard.Inactive == types.ModeFirstCardOnly {
-			return types.ModeNormallyClosed
+		now := types.HHmmFromTime(time.Now())
+
+		if !d.firstcardActive {
+			if !d.FirstCard.StartTime.After(now) && !now.After(d.FirstCard.EndTime) {
+				d.firstcardActive = true
+			}
 		} else {
-			return d.FirstCard.Inactive
+			if now.After(d.FirstCard.EndTime) {
+				d.firstcardActive = false
+				d.ControlState = d.FirstCard.Inactive
+			}
 		}
 	}
+}
+
+func (d *Door) mode() types.ControlState {
+	// if d.FirstCard != nil {
+	// 	if d.firstCardSwiped() {
+	// 		return d.FirstCard.Active
+	// 	} else if d.FirstCard.Inactive == types.ModeFirstCardOnly {
+	// 		return types.ModeNormallyClosed
+	// 	} else {
+	// 		return d.FirstCard.Inactive
+	// 	}
+	// }
 
 	return d.ControlState
 }

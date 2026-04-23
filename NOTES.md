@@ -42,20 +42,20 @@
 | Normally Closed | N            | none             | 10058400 | Y       | Y         | N       | 11 normally closed | Locked   |
 | Normally Closed | N            | none             | 10058397 | N       | Y         | N       | 6  no privilege    | Locked   |
 |                 |              |                  |          |         |           |         |                    |          |
-| Controlled      | N            | firstcard only   | 10058398 | N       | N         | N       | 6  no privilege    | Locked   |
-| Controlled      | N            | firstcard only   | 10058399 | Y       | N         | N       | 10 first card      | Locked   |
-| Controlled      | N            | firstcard only   | 10058400 | Y       | Y         | Y       | 1  swipe ok        | Unlocked |
-| Controlled      | N            | firstcard only   | 10058397 | N       | Y         | N       | 6  no privilege    | Locked   |
+| Controlled      | N            | firstcard        | 10058398 | N       | N         | N       | 6  no privilege    | Locked   |
+| Controlled      | N            | firstcard        | 10058399 | Y       | N         | N       | 10 first card      | Locked   |
+| Controlled      | N            | firstcard        | 10058400 | Y       | Y         | Y       | 1  swipe ok        | Unlocked |
+| Controlled      | N            | firstcard        | 10058397 | N       | Y         | N       | 6  no privilege    | Locked   |
 |                 |              |                  |          |         |           |         |                    |          |
-| Normally Open   | N            | firstcard only   | 10058398 | N       | N         |         |                    |          |
-| Normally Open   | N            | firstcard only   | 10058399 | Y       | N         |         |                    |          |
-| Normally Open   | N            | firstcard only   | 10058400 | Y       | Y         |         |                    |          |
-| Normally Open   | N            | firstcard only   | 10058397 | N       | Y         |         |                    |          |
+| Normally Open   | N            | firstcard        | 10058398 | N       | N         |         |                    |          |
+| Normally Open   | N            | firstcard        | 10058399 | Y       | N         |         |                    |          |
+| Normally Open   | N            | firstcard        | 10058400 | Y       | Y         |         |                    |          |
+| Normally Open   | N            | firstcard        | 10058397 | N       | Y         |         |                    |          |
 |                 |              |                  |          |         |           |         |                    |          |
-| Normally Closed | N            | firstcard only   | 10058398 | N       | N         |         |                    |          |
-| Normally Closed | N            | firstcard only   | 10058399 | Y       | N         |         |                    |          |
-| Normally Closed | N            | firstcard only   | 10058400 | Y       | Y         |         |                    |          |
-| Normally Closed | N            | firstcard only   | 10058397 | N       | Y         |         |                    |          |
+| Normally Closed | N            | firstcard        | 10058398 | N       | N         |         |                    |          |
+| Normally Closed | N            | firstcard        | 10058399 | Y       | N         |         |                    |          |
+| Normally Closed | N            | firstcard        | 10058400 | Y       | Y         |         |                    |          |
+| Normally Closed | N            | firstcard        | 10058397 | N       | Y         |         |                    |          |
 |                 |              |                  |          |         |           |         |                    |          |
 | Controlled      | N            | firstcard swiped | 10058398 | N       | N         | N       | 6  no privilege    | Unlocked |
 | Controlled      | N            | firstcard swiped | 10058399 | Y       | N         | Y       | 1  swipe ok        | Unlocked |
@@ -78,4 +78,5 @@ Notes:
 1. Door mode _firstcard-only_ is reported as _controlled_.
 2. Door mode is set by the most recent _set-firstcard_ or _set-door_ command.
 3. Firstcard swipe requires firstcard-only mode.
+4. Access/anti-passback/interlocks take precedence over first card.
 
