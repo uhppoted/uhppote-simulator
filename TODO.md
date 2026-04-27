@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] 'first card' API (cf. https://github.com/uhppoted/uhppoted/issues/82)
+- [x] 'first card' API (cf. https://github.com/uhppoted/uhppoted/issues/82)
    - [x] API
    - [x] add to UHPPOTE/door
    - [x] serialize/deserialize
@@ -14,7 +14,7 @@
    - [x] Reset firstcardSwiped
    - [x] ~~Set door mode on startup~~
    - [x] Include in get door state
-   - [ ] Validate against actual controller
+   - [x] Validate against actual controller
 
 - [ ] Fix docker swagger
 
