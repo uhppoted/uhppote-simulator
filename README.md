@@ -1,5 +1,5 @@
-![build](https://img.shields.io/badge/dynamic/json?url=https://gist.github.com/twystd/2609d9356470acaf904386ce4a74f54e/raw/uhppoted-simulator.json&query=$.message&label=build&color=brightgreen)
-![docker](https://img.shields.io/badge/dynamic/json?url=https://gist.github.com/twystd/776a0d0a0d7ff1ca9a16749477381351/raw/uhppoted-simulator.json&query=$.message&label=docker&color=brightgreen)
+![build](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/twystd/2609d9356470acaf904386ce4a74f54e/raw/uhppoted-simulator.json)
+![docker](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/twystd/776a0d0a0d7ff1ca9a16749477381351/raw/uhppoted-simulator.json)
 
 
 https://gist.github.com/twystd/22f43415e5b5c7b8b58cb1b29a980b9f
