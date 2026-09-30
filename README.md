@@ -2,8 +2,6 @@
 ![docker](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/twystd/2609d9356470acaf904386ce4a74f54e/raw/uhppoted-simulator-docker.json)
 
 
-https://gist.github.com/twystd/22f43415e5b5c7b8b58cb1b29a980b9f
-
 # uhppote-simulator
 
 Software simulator for access control systems based on the *UHPPOTE UT0311-L0x* TCP/IP Wiegand access control boards. 
