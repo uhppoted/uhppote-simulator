@@ -7,7 +7,7 @@
 2. Added _First Card_ privileges to cards.
 
 ### Updated
-1. Updated to Go version 1.26.
+1. Updated to Go version 1.27.
 2. Updated _modern Go_ with `go fix`.
 3. Reworked access logic for _first card_.
 4. Migrated from _github.com/uhppoted/uhppote-simulator_ to _codeberg.org/uhppoted/uhppoted-simulator_.
