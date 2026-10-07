@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## [0.9.1](https://codeberg.org/uhppoted/uhppoted-simulator/releases/tag/v0.9.1) - 2026-10-07
 
 ### Added
 1. `set-first-card` command emulation.
@@ -13,7 +13,7 @@
 4. Migrated from _github.com/uhppoted/uhppote-simulator_ to _codeberg.org/uhppoted/uhppoted-simulator_.
 
 
-## [0.9.0](https://codeberg.org/uhppoted/uhppote-simulator/releases/tag/v0.9.0) - 2026-01-27
+## [0.9.0](https://codeberg.org/uhppoted/uhppoted-simulator/releases/tag/v0.9.0) - 2026-01-27
 
 ### Added
 1. Added _reset_ action to generate a _controller reset_ event.

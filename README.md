@@ -40,9 +40,12 @@ Supported operating systems:
 
 ### Current release
 
-**[v0.9.0](https://codeberg.org/uhppoted/uhppote-simulator/releases/tag/v0.9.0) - 2026-01-27**
-1. Added _reset_ action to generate a _controller reset_ event.
-2. Updated to Go 1.25.
+## [0.9.1](https://codeberg.org/uhppoted/uhppoted-simulator/releases/tag/v0.9.1) - 2026-10-07
+
+1. Migrated from _github_ to _codeberg_.
+2. Updated to Go version 1.27.
+3. `set-first-card` command emulation.
+4. Added _first card_ privileges to card access emulation.
 
 
 ## Installation
