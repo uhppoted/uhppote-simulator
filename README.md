@@ -1,4 +1,4 @@
-![build](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/twystd/2609d9356470acaf904386ce4a74f54e/raw/uhppoted-simulator.json)
+![build](https://github.com/uhppoted/uhppote-simulator/workflows/build/badge.svg)
 ![docker](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/twystd/2609d9356470acaf904386ce4a74f54e/raw/uhppoted-simulator-docker.json)
 
 
