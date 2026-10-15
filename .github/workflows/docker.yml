@@ -8,7 +8,7 @@ on:
 jobs:
 
   build:
-    name: Push uhppoted-simulator container to dockerhub
+    name: Push uhppoted-simulator container to docker.io
     runs-on: ubuntu-latest
     steps:
 
@@ -32,7 +32,7 @@ jobs:
         make docker-dockerhub
         docker images
 
-    - name: Docker login to dockerhub
+    - name: Docker login to docker.io
       run: |
         echo "${{ secrets.DOCKERHUB }}" | docker login -u uhppoted --password-stdin
 
@@ -40,7 +40,7 @@ jobs:
       run: |
         docker push uhppoted/simulator:latest
 
-    - name: Push versioned Docker image to dockerhub
+    - name: Push versioned Docker image to docker.io
       if: github.event_name == 'release' && github.event.action == 'published'
       run: |
         TAG="${{ github.event.release.tag_name }}"

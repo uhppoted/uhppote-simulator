@@ -53,7 +53,7 @@ Supported operating systems:
 
 ### Docker
 
-Public _Docker_ image are published to:
+Public _Docker_ images are published to:
 - [docker.io](https://hub.docker.com/repository/docker/uhppoted/simulator/general)
 - [ghcr.io](https://github.com/uhppoted/uhppote-simulator/pkgs/container/simulator)
 
