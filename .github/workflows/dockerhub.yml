@@ -8,7 +8,7 @@ on:
 jobs:
 
   build:
-    name: Push uhppoted-simulator container to ghcr.io
+    name: Push uhppoted-simulator container to dockerhub
     runs-on: ubuntu-latest
     steps:
 
@@ -29,10 +29,10 @@ jobs:
 
     - name: Build Docker image
       run: |
-        make docker-ghcr
+        make docker-dockerhub
         docker images
 
-    - name: Docker login to ghcr.io
+    - name: Docker login to dockerhub
       run: |
         echo "${{ secrets.DOCKERHUB }}" | docker login -u uhppoted --password-stdin
 
