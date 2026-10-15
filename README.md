@@ -53,9 +53,12 @@ Supported operating systems:
 
 ### Docker
 
-A public _Docker_ image is published to [docker.io](https://hub.docker.com/repository/docker/uhppoted/simulator/general). The image:
-- includes a _getting started_ sample controller
-- is configured to store emulated controllers in _/usr/local/etc/uhppoted/simulator_
+Public _Docker_ image are published to:
+- [docker.io](https://hub.docker.com/repository/docker/uhppoted/simulator/general)
+- [ghcr.io](https://github.com/uhppoted/uhppote-simulator/pkgs/container/simulator)
+
+The images include a _getting started_ sample controller and are configured to store emulated controllers in _/usr/local/etc/uhppoted/simulator_
+
 
 #### `docker compose`
 
