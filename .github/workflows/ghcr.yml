@@ -27,29 +27,18 @@ jobs:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v7
 
-    - name: Build Docker images
+    - name: Build Docker image
       run: |
-        make docker-dockerhub
         make docker-ghcr
         docker images
 
-    - name: Push Docker 'latest' image to dockerhub
+    - name: Docker login to ghcr.io
       run: |
-        echo "${{ secrets.DOCKERHUB }}" | docker login -u uhppoted --password-stdin && docker push uhppoted/simulator:latest
+        echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
 
     - name: Push Docker 'latest' image to ghcr.io
       run: |
-        echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin && docker push ghcr.io/uhppoted/simulator:latest
-
-    - name: Push versioned Docker image to dockerhub
-      if: github.event_name == 'release' && github.event.action == 'published'
-      run: |
-        TAG="${{ github.event.release.tag_name }}"
-        VERSION=${TAG#v}
-        echo ">>>>>> build Docker image version ${VERSION}"
-        make docker-ghcr DOCKER=ghcr.io/uhppoted/simulator:${VERSION}
-        docker images
-        echo "${{ secrets.GITHUB_TOKEN }}" | docker login -u uhppoted --password-stdin && docker push uhppoted/simulator:${VERSION}
+        docker push ghcr.io/uhppoted/simulator:latest
 
     - name: Push versioned Docker image to ghcr.io
       if: github.event_name == 'release' && github.event.action == 'published'
@@ -59,5 +48,4 @@ jobs:
         echo ">>>>>> build Docker image version ${VERSION}"
         make docker-ghcr DOCKER=ghcr.io/uhppoted/simulator:${VERSION}
         docker images
-        echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin && docker push ghcr.io/uhppoted/simulator:${VERSION}
-
+        docker push ghcr.io/uhppoted/simulator:${VERSION}
