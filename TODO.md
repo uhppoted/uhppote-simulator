@@ -1,7 +1,6 @@
 # TODO
 
 ## In Progress
-- [x] 'first card' API (cf. https://github.com/uhppoted/uhppoted/issues/82)
 
 
 ## To Be Done
