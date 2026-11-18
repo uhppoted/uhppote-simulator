@@ -2,6 +2,10 @@
 
 ## In Progress
 
+- [Configurable card capacity for simulated controllers](https://codeberg.org/uhppoted/uhppoted-simulator/issues/1)
+    - [ ] rework CardsList as struct
+    - [ ] --cards command line arg
+
 
 ## To Be Done
 - [ ] Fix docker swagger
@@ -25,6 +29,7 @@
 - [ ] Swagger UI
 - [ ] Autodetect gzipped files 
       - https://stackoverflow.com/questions/28309988/how-to-read-from-either-gzip-or-plain-text-reader-in-golang
+
 
 ### Documentation
 

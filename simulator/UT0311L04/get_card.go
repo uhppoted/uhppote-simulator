@@ -3,6 +3,8 @@ package UT0311L04
 import (
 	"codeberg.org/uhppoted/uhppoted-core/messages"
 	"codeberg.org/uhppoted/uhppoted-core/types"
+
+	"codeberg.org/uhppoted/uhppoted-simulator/entities"
 )
 
 func (s *UT0311L04) getCardByID(request *messages.GetCardByIDRequest) (*messages.GetCardByIDResponse, error) {
@@ -10,32 +12,29 @@ func (s *UT0311L04) getCardByID(request *messages.GetCardByIDRequest) (*messages
 		return nil, nil
 	}
 
-	response := messages.GetCardByIDResponse{
+	f := func(card *entities.Card) bool {
+		return card != nil && request.CardNumber == card.CardNumber
+	}
+
+	if _, card := s.Cards.Find(f); card != nil {
+		return &messages.GetCardByIDResponse{
+			SerialNumber: s.SerialNumber,
+			CardNumber:   card.CardNumber,
+			From:         card.From,
+			To:           card.To,
+			Door1:        card.Doors[1],
+			Door2:        card.Doors[2],
+			Door3:        card.Doors[3],
+			Door4:        card.Doors[4],
+			PIN:          pin(*card),
+			FirstCard:    card.FirstCard.ToUint8(),
+		}, nil
+	}
+
+	return &messages.GetCardByIDResponse{
 		SerialNumber: s.SerialNumber,
 		CardNumber:   0,
-	}
-
-	for _, card := range s.Cards {
-		if card != nil && request.CardNumber == card.CardNumber {
-			response.CardNumber = card.CardNumber
-			response.From = card.From
-			response.To = card.To
-			response.Door1 = card.Doors[1]
-			response.Door2 = card.Doors[2]
-			response.Door3 = card.Doors[3]
-			response.Door4 = card.Doors[4]
-
-			if card.PIN < 1000000 {
-				response.PIN = types.PIN(card.PIN)
-			}
-
-			response.FirstCard = card.FirstCard.ToUint8()
-
-			break
-		}
-	}
-
-	return &response, nil
+	}, nil
 }
 
 func (s *UT0311L04) getCardByIndex(request *messages.GetCardByIndexRequest) (*messages.GetCardByIndexResponse, error) {
@@ -43,32 +42,36 @@ func (s *UT0311L04) getCardByIndex(request *messages.GetCardByIndexRequest) (*me
 		return nil, nil
 	}
 
-	response := messages.GetCardByIndexResponse{
-		SerialNumber: s.SerialNumber,
-		CardNumber:   0,
+	ix, card := s.Cards.Get(request.Index)
+	if ix != -1 && card != nil {
+		return &messages.GetCardByIndexResponse{
+			SerialNumber: s.SerialNumber,
+			CardNumber:   card.CardNumber,
+			From:         card.From,
+			To:           card.To,
+			Door1:        card.Doors[1],
+			Door2:        card.Doors[2],
+			Door3:        card.Doors[3],
+			Door4:        card.Doors[4],
+			PIN:          pin(*card),
+			FirstCard:    card.FirstCard.ToUint8(),
+		}, nil
 	}
 
-	if request.Index > 0 && request.Index <= uint32(len(s.Cards)) {
-		card := s.Cards[request.Index-1]
-
-		if card != nil {
-			response.CardNumber = card.CardNumber
-			response.From = card.From
-			response.To = card.To
-			response.Door1 = card.Doors[1]
-			response.Door2 = card.Doors[2]
-			response.Door3 = card.Doors[3]
-			response.Door4 = card.Doors[4]
-
-			if card.PIN < 1000000 {
-				response.PIN = types.PIN(card.PIN)
-			}
-
-			response.FirstCard = card.FirstCard.ToUint8()
-		}
-
-		return &response, nil
+	if ix != -1 && card == nil {
+		return &messages.GetCardByIndexResponse{
+			SerialNumber: s.SerialNumber,
+			CardNumber:   0,
+		}, nil
 	}
 
 	return nil, nil
+}
+
+func pin(card entities.Card) types.PIN {
+	if card.PIN < 1000000 {
+		return types.PIN(card.PIN)
+	}
+
+	return types.PIN(0)
 }

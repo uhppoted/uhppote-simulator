@@ -2,7 +2,6 @@ package UT0311L04
 
 import (
 	"fmt"
-	"slices"
 	"time"
 
 	"codeberg.org/uhppoted/uhppoted-core/types"
@@ -42,9 +41,7 @@ func (s *UT0311L04) Swipe(cardNumber uint32, door uint8, direction entities.Dire
 		return card != nil && card.CardNumber == cardNumber
 	}
 
-	if ix := slices.IndexFunc(s.Cards[:], f); ix != -1 {
-		card := s.Cards[ix]
-
+	if _, card := s.Cards.Find(f); card != nil {
 		// PC control ?
 		lastTouched := time.Since(s.touched)
 		if s.PCControl && lastTouched < (30*time.Second) {

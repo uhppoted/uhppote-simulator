@@ -464,7 +464,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 	doors.SetDelay(3, entities.DelayFromSeconds(33))
 	doors.SetDelay(4, entities.DelayFromSeconds(44))
 
-	cards := entities.CardList{
+	cards := entities.NewCardList(
 		&entities.Card{
 			CardNumber: 100000001,
 			From:       from,
@@ -482,8 +482,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 			From:       from,
 			To:         to,
 			Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
-		},
-	}
+		})
 
 	events := entities.MakeEventList(
 		123,

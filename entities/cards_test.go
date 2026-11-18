@@ -46,7 +46,7 @@ func TestCardListPutWithNewCard(t *testing.T) {
 		PIN: 1234,
 	}
 
-	expected[3] = &card
+	expected.cards[3] = &card
 
 	err := cards.Put(&card)
 	if err != nil {
@@ -54,9 +54,9 @@ func TestCardListPutWithNewCard(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(cards, expected) {
-		for i, c := range cards {
-			if !reflect.DeepEqual(c, expected[i]) {
-				t.Errorf("Invalid CardList entry %v\n   expected: %v\n   got:      %v", i, *expected[i], *c)
+		for i, c := range cards.All() {
+			if !reflect.DeepEqual(c, expected.cards[i]) {
+				t.Errorf("Invalid CardList entry %v\n   expected: %v\n   got:      %v", i, *expected.cards[i], *c)
 			}
 		}
 	}
@@ -86,7 +86,7 @@ func TestCardListPutWithExistingCard(t *testing.T) {
 		PIN: 54321,
 	}
 
-	expected[5] = &card
+	expected.cards[5] = &card
 
 	err := cards.Put(&card)
 	if err != nil {
@@ -94,9 +94,9 @@ func TestCardListPutWithExistingCard(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(cards, expected) {
-		for i, c := range cards {
-			if !reflect.DeepEqual(c, expected[i]) {
-				t.Errorf("Invalid CardList entry %v\n   expected: %v\n   got:      %v", i, *expected[i], *c)
+		for i, c := range cards.All() {
+			if !reflect.DeepEqual(c, expected.cards[i]) {
+				t.Errorf("Invalid CardList entry %v\n   expected: %v\n   got:      %v", i, *expected.cards[i], *c)
 			}
 		}
 	}
@@ -105,8 +105,8 @@ func TestCardListPutWithExistingCard(t *testing.T) {
 func TestCardListPutWithFullList(t *testing.T) {
 	cards := CardList{}
 
-	for i := range len(cards) {
-		cards[i] = &Card{
+	for i := range len(cards.cards) {
+		cards.cards[i] = &Card{
 			CardNumber: uint32(6000000 + i),
 			From:       date("2023-01-01"),
 			To:         date("2023-12-31"),
@@ -146,7 +146,7 @@ func TestCardListDeleteActiveCard(t *testing.T) {
 	fill(&cards)
 	fill(&expected)
 
-	expected[5] = &Card{
+	expected.cards[5] = &Card{
 		CardNumber: 0xffffffff,
 	}
 
@@ -156,9 +156,9 @@ func TestCardListDeleteActiveCard(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(cards, expected) {
-		for i, c := range cards {
-			if !reflect.DeepEqual(c, expected[i]) {
-				t.Errorf("Invalid CardList entry %v\n   expected: %v\n   got:      %v", i, *expected[i], *c)
+		for i, c := range cards.All() {
+			if !reflect.DeepEqual(c, expected.cards[i]) {
+				t.Errorf("Invalid CardList entry %v\n   expected: %v\n   got:      %v", i, *expected.cards[i], *c)
 			}
 		}
 	}
@@ -177,9 +177,9 @@ func TestCardListDeleteCardNotInList(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(cards, expected) {
-		for i, c := range cards {
-			if !reflect.DeepEqual(c, expected[i]) {
-				t.Errorf("Invalid CardList entry %v\n   expected: %v\n   got:      %v", i, *expected[i], *c)
+		for i, c := range cards.All() {
+			if !reflect.DeepEqual(c, expected.cards[i]) {
+				t.Errorf("Invalid CardList entry %v\n   expected: %v\n   got:      %v", i, *expected.cards[i], *c)
 			}
 		}
 	}
@@ -197,7 +197,7 @@ func TestCardListDeleteAll(t *testing.T) {
 		t.Errorf("CardList.Size returned %v, expected: %v", N, 0)
 	}
 
-	for i, c := range cards {
+	for i, c := range cards.All() {
 		if c != nil {
 			t.Errorf("Invalid CardList entry %v\n   expected: %v\n   got:      %v", i, nil, *c)
 		}
@@ -280,10 +280,10 @@ func TestCardListMarshalJSON(t *testing.T) {
 ]`
 
 	cards := CardList{}
-	cards[0] = &Card{CardNumber: 6000001, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 29}}
-	cards[2] = &Card{CardNumber: 0, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 30}}
-	cards[4] = &Card{CardNumber: 0xffffffff, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 31}}
-	cards[5] = &Card{CardNumber: 8165538, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 31}, PIN: 7531}
+	cards.cards[0] = &Card{CardNumber: 6000001, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 29}}
+	cards.cards[2] = &Card{CardNumber: 0, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 30}}
+	cards.cards[4] = &Card{CardNumber: 0xffffffff, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 31}}
+	cards.cards[5] = &Card{CardNumber: 8165538, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 31}, PIN: 7531}
 
 	blob, err := json.MarshalIndent(cards, "", "  ")
 	if err != nil {
@@ -297,10 +297,10 @@ func TestCardListMarshalJSON(t *testing.T) {
 
 func TestCardListUnmarshalJSON(t *testing.T) {
 	expected := CardList{}
-	expected[0] = &Card{CardNumber: 6000001, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 29}}
-	expected[2] = &Card{CardNumber: 0, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 30}}
-	expected[4] = &Card{CardNumber: 0xffffffff, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 31}}
-	expected[5] = &Card{
+	expected.cards[0] = &Card{CardNumber: 6000001, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 29}}
+	expected.cards[2] = &Card{CardNumber: 0, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 30}}
+	expected.cards[4] = &Card{CardNumber: 0xffffffff, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 31}}
+	expected.cards[5] = &Card{
 		CardNumber: 8165538,
 		From:       date("2023-01-01"),
 		To:         date("2023-12-31"),
@@ -373,12 +373,12 @@ func TestCardListUnmarshalJSON(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(cards, expected) {
-		if len(cards) != len(expected) {
-			t.Errorf("Invalid card list after unmarshalling JSON\n   expected:%v\n   got:     %v", len(expected), len(cards))
+		if len(cards.cards) != len(expected.cards) {
+			t.Errorf("Invalid card list after unmarshalling JSON\n   expected:%v\n   got:     %v", len(expected.cards), len(cards.cards))
 		} else {
-			for i, card := range cards {
-				if !reflect.DeepEqual(card, expected[i]) {
-					t.Errorf("Invalid card %v in list after unmarshalling JSON\n   expected:%v\n   got:     %v", i+1, expected[i], card)
+			for i, card := range cards.All() {
+				if !reflect.DeepEqual(card, expected.cards[i]) {
+					t.Errorf("Invalid card %v in list after unmarshalling JSON\n   expected:%v\n   got:     %v", i+1, expected.cards[i], card)
 				}
 			}
 		}
@@ -387,7 +387,7 @@ func TestCardListUnmarshalJSON(t *testing.T) {
 
 func fill(l *CardList) uint32 {
 	for i := range 29 {
-		l[i] = &Card{
+		l.cards[i] = &Card{
 			CardNumber: uint32(6000000 + i),
 			From:       date("2023-01-01"),
 			To:         date("2023-12-31"),
@@ -400,14 +400,14 @@ func fill(l *CardList) uint32 {
 		}
 	}
 
-	l[11] = nil
-	l[17] = nil
+	l.cards[11] = nil
+	l.cards[17] = nil
 
-	l[19].CardNumber = 0
+	l.cards[19].CardNumber = 0
 
-	l[3].CardNumber = 0xffffffff
-	l[15].CardNumber = 0xffffffff
-	l[25].CardNumber = 0xffffffff
+	l.cards[3].CardNumber = 0xffffffff
+	l.cards[15].CardNumber = 0xffffffff
+	l.cards[25].CardNumber = 0xffffffff
 
 	return 23
 }

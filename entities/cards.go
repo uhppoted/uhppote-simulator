@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"iter"
+	"slices"
 	"strings"
 
 	"codeberg.org/uhppoted/uhppoted-core/types"
@@ -25,12 +26,36 @@ type FirstCardPrivileges struct {
 	Door4 bool
 }
 
-type CardList [64]*Card
+type CardList struct {
+	cards [64]*Card
+}
 
-func (l *CardList) Size() uint32 {
+func NewCardList(cards ...*Card) CardList {
+	list := CardList{}
+
+	for ix, card := range cards {
+		if ix < len(list.cards) {
+			list.cards[ix] = card
+		}
+	}
+
+	return list
+}
+
+func (l *CardList) All() iter.Seq2[int, *Card] {
+	return func(yield func(int, *Card) bool) {
+		for i, card := range l.cards {
+			if !yield(i, card) {
+				return
+			}
+		}
+	}
+}
+
+func (l CardList) Size() uint32 {
 	var count uint32 = 0
 
-	for _, card := range *l {
+	for _, card := range l.All() {
 		if card != nil && card.CardNumber != 0 && card.CardNumber != 0xffffffff {
 			count++
 		}
@@ -44,16 +69,16 @@ func (l *CardList) Put(card *Card) error {
 		return nil
 	}
 
-	for ix, c := range *l {
+	for ix, c := range l.All() {
 		if c != nil && c.CardNumber == card.CardNumber {
-			l[ix] = card
+			l.cards[ix] = card
 			return nil
 		}
 	}
 
-	for ix, c := range *l {
+	for ix, c := range l.All() {
 		if c == nil || c.CardNumber == 0 || c.CardNumber == 0xffffffff {
-			l[ix] = card
+			l.cards[ix] = card
 			return nil
 		}
 	}
@@ -63,9 +88,9 @@ func (l *CardList) Put(card *Card) error {
 
 func (l *CardList) Delete(cardNumber uint32) bool {
 	if cardNumber != 0 && cardNumber != 0xffffffff {
-		for ix, c := range *l {
+		for ix, c := range l.All() {
 			if c != nil && c.CardNumber == cardNumber {
-				(*l)[ix] = &Card{
+				l.cards[ix] = &Card{
 					CardNumber: 0xffffffff,
 				}
 
@@ -78,16 +103,32 @@ func (l *CardList) Delete(cardNumber uint32) bool {
 }
 
 func (l *CardList) DeleteAll() bool {
-	for ix := range *l {
-		(*l)[ix] = nil
+	for ix := range l.All() {
+		l.cards[ix] = nil
 	}
 
 	return true
 }
 
+func (l CardList) Find(f func(*Card) bool) (int, *Card) {
+	ix := slices.IndexFunc(l.cards[:], f)
+	if ix == -1 {
+		return -1, nil
+	}
+	return ix, l.cards[ix]
+}
+
+func (l CardList) Get(index uint32) (int, *Card) {
+	if index > 0 && index <= uint32(len(l.cards)) {
+		return int(index), l.cards[index-1]
+	}
+
+	return -1, nil
+}
+
 func (l CardList) MarshalJSON() ([]byte, error) {
 	N := 0
-	for i, c := range l {
+	for i, c := range l.All() {
 		if c != nil {
 			N = i + 1
 		}
@@ -95,9 +136,21 @@ func (l CardList) MarshalJSON() ([]byte, error) {
 
 	list := make([]*Card, N)
 
-	copy(list, l[0:N])
+	copy(list, l.cards[0:N])
 
 	return json.Marshal(list)
+}
+
+func (l *CardList) UnmarshalJSON(bytes []byte) error {
+	list := [64]*Card{}
+
+	if err := json.Unmarshal(bytes, &list); err != nil {
+		return err
+	}
+
+	l.cards = list
+
+	return nil
 }
 
 func (f FirstCardPrivileges) ToUint8() uint8 {
