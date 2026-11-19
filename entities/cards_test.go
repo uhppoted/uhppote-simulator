@@ -18,7 +18,7 @@ var date = func(s string) types.Date {
 }
 
 func TestCardListSize(t *testing.T) {
-	cards := CardList{}
+	cards := NewCardList()
 	expected := fill(&cards)
 
 	if N := cards.Size(); N != expected {
@@ -27,8 +27,8 @@ func TestCardListSize(t *testing.T) {
 }
 
 func TestCardListPutWithNewCard(t *testing.T) {
-	cards := CardList{}
-	expected := CardList{}
+	cards := NewCardList()
+	expected := NewCardList()
 
 	fill(&cards)
 	fill(&expected)
@@ -63,8 +63,8 @@ func TestCardListPutWithNewCard(t *testing.T) {
 }
 
 func TestCardListPutWithExistingCard(t *testing.T) {
-	cards := CardList{}
-	expected := CardList{}
+	cards := NewCardList()
+	expected := NewCardList()
 
 	fill(&cards)
 	fill(&expected)
@@ -103,7 +103,7 @@ func TestCardListPutWithExistingCard(t *testing.T) {
 }
 
 func TestCardListPutWithFullList(t *testing.T) {
-	cards := CardList{}
+	cards := NewCardList()
 
 	for i := range len(cards.cards) {
 		cards.cards[i] = &Card{
@@ -140,8 +140,8 @@ func TestCardListPutWithFullList(t *testing.T) {
 }
 
 func TestCardListDeleteActiveCard(t *testing.T) {
-	cards := CardList{}
-	expected := CardList{}
+	cards := NewCardList()
+	expected := NewCardList()
 
 	fill(&cards)
 	fill(&expected)
@@ -165,8 +165,8 @@ func TestCardListDeleteActiveCard(t *testing.T) {
 }
 
 func TestCardListDeleteCardNotInList(t *testing.T) {
-	cards := CardList{}
-	expected := CardList{}
+	cards := NewCardList()
+	expected := NewCardList()
 
 	fill(&cards)
 	fill(&expected)
@@ -186,7 +186,7 @@ func TestCardListDeleteCardNotInList(t *testing.T) {
 }
 
 func TestCardListDeleteAll(t *testing.T) {
-	cards := CardList{}
+	cards := NewCardList()
 
 	ok := cards.DeleteAll()
 	if ok != true {
@@ -279,7 +279,7 @@ func TestCardListMarshalJSON(t *testing.T) {
   }
 ]`
 
-	cards := CardList{}
+	cards := NewCardList()
 	cards.cards[0] = &Card{CardNumber: 6000001, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 29}}
 	cards.cards[2] = &Card{CardNumber: 0, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 30}}
 	cards.cards[4] = &Card{CardNumber: 0xffffffff, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 31}}
@@ -296,7 +296,7 @@ func TestCardListMarshalJSON(t *testing.T) {
 }
 
 func TestCardListUnmarshalJSON(t *testing.T) {
-	expected := CardList{}
+	expected := NewCardList()
 	expected.cards[0] = &Card{CardNumber: 6000001, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 29}}
 	expected.cards[2] = &Card{CardNumber: 0, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 30}}
 	expected.cards[4] = &Card{CardNumber: 0xffffffff, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 31}}
@@ -365,7 +365,7 @@ func TestCardListUnmarshalJSON(t *testing.T) {
   }
 ]`
 
-	cards := CardList{}
+	cards := NewCardList()
 
 	err := json.Unmarshal([]byte(blob), &cards)
 	if err != nil {
