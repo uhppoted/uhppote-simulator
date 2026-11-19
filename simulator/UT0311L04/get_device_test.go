@@ -44,7 +44,7 @@ func TestGetDeviceWithMatchingAddress(t *testing.T) {
 		Version:      9876,
 		Released:     types.MustParseDate("2020-12-05"),
 		Listener:     listener,
-		Cards:        entities.CardList{},
+		Cards:        entities.NewCardList(),
 		Events:       entities.EventList{},
 		Doors:        entities.MakeDoors(),
 	}
@@ -85,7 +85,7 @@ func TestGetDeviceWithAddress0(t *testing.T) {
 		Version:      9876,
 		Released:     types.MustParseDate("2020-12-05"),
 		Listener:     listener,
-		Cards:        entities.CardList{},
+		Cards:        entities.NewCardList(),
 		Events:       entities.EventList{},
 		Doors:        entities.MakeDoors(),
 	}
@@ -126,7 +126,7 @@ func TestGetDeviceWithDifferentAddress(t *testing.T) {
 		Version:      9876,
 		Released:     types.MustParseDate("2020-12-05"),
 		Listener:     listener,
-		Cards:        entities.CardList{},
+		Cards:        entities.NewCardList(),
 		Events:       entities.EventList{},
 		Doors:        entities.MakeDoors(),
 	}

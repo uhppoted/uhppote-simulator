@@ -61,7 +61,7 @@ func NewCardList(cards ...*Card) CardList {
 	return &list
 }
 
-func (l *cardList) All() iter.Seq2[int, *Card] {
+func (l cardList) All() iter.Seq2[int, *Card] {
 	return func(yield func(int, *Card) bool) {
 		for i, card := range l.cards {
 			if !yield(i, card) {
@@ -71,7 +71,7 @@ func (l *cardList) All() iter.Seq2[int, *Card] {
 	}
 }
 
-func (l *cardList) Size() uint32 {
+func (l cardList) Size() uint32 {
 	var count uint32 = 0
 
 	for _, card := range l.All() {
@@ -129,7 +129,7 @@ func (l *cardList) DeleteAll() bool {
 	return true
 }
 
-func (l *cardList) Find(f func(*Card) bool) (int, *Card) {
+func (l cardList) Find(f func(*Card) bool) (int, *Card) {
 	ix := slices.IndexFunc(l.cards[:], f)
 	if ix == -1 {
 		return -1, nil
@@ -145,7 +145,7 @@ func (l cardList) Get(index uint32) (int, *Card) {
 	return -1, nil
 }
 
-func (l *cardList) MarshalJSON() ([]byte, error) {
+func (l cardList) MarshalJSON() ([]byte, error) {
 	N := 0
 	for i, c := range l.All() {
 		if c != nil {

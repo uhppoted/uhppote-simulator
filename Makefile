@@ -106,7 +106,8 @@ publish: release
 debug:
 # 	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d '{"door":1, "card-number":10058400,"direction":1}'
 # 	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/405419896/swipe" -H "accept: application/json" -H "Content-Type: application/json" -d '{"door":1, "card-number":10058400,"direction":1}'
-	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/201020304/door/1" -H "accept: application/json" -H "Content-Type: application/json" -d '{"action":"button", "duration":10}'
+# 	curl -X POST "http://127.0.0.1:8000/uhppote/simulator/201020304/door/1" -H "accept: application/json" -H "Content-Type: application/json" -d '{"action":"button", "duration":10}'
+	go test -run TestCardListMarshalJSON ./... 
 
 delve: build
 	dlv debug codeberg.org/uhppoted/uhppoted-simulator/cmd/uhppote-simulator -- --bind 0.0.0.0:60000 --rest 0.0.0.0:8000 --devices "./workdir/debug/controllers"

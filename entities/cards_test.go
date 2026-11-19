@@ -18,7 +18,10 @@ var date = func(s string) types.Date {
 }
 
 func TestCardListSize(t *testing.T) {
-	cards := NewCardList()
+	cards := cardList{
+		cards: make([]*Card, 64),
+	}
+
 	expected := fill(&cards)
 
 	if N := cards.Size(); N != expected {
@@ -27,8 +30,13 @@ func TestCardListSize(t *testing.T) {
 }
 
 func TestCardListPutWithNewCard(t *testing.T) {
-	cards := NewCardList()
-	expected := NewCardList()
+	cards := cardList{
+		cards: make([]*Card, 64),
+	}
+
+	expected := cardList{
+		cards: make([]*Card, 64),
+	}
 
 	fill(&cards)
 	fill(&expected)
@@ -63,8 +71,13 @@ func TestCardListPutWithNewCard(t *testing.T) {
 }
 
 func TestCardListPutWithExistingCard(t *testing.T) {
-	cards := NewCardList()
-	expected := NewCardList()
+	cards := cardList{
+		cards: make([]*Card, 64),
+	}
+
+	expected := cardList{
+		cards: make([]*Card, 64),
+	}
 
 	fill(&cards)
 	fill(&expected)
@@ -103,7 +116,9 @@ func TestCardListPutWithExistingCard(t *testing.T) {
 }
 
 func TestCardListPutWithFullList(t *testing.T) {
-	cards := NewCardList()
+	cards := cardList{
+		cards: make([]*Card, 64),
+	}
 
 	for i := range len(cards.cards) {
 		cards.cards[i] = &Card{
@@ -140,8 +155,13 @@ func TestCardListPutWithFullList(t *testing.T) {
 }
 
 func TestCardListDeleteActiveCard(t *testing.T) {
-	cards := NewCardList()
-	expected := NewCardList()
+	cards := cardList{
+		cards: make([]*Card, 64),
+	}
+
+	expected := cardList{
+		cards: make([]*Card, 64),
+	}
 
 	fill(&cards)
 	fill(&expected)
@@ -165,8 +185,13 @@ func TestCardListDeleteActiveCard(t *testing.T) {
 }
 
 func TestCardListDeleteCardNotInList(t *testing.T) {
-	cards := NewCardList()
-	expected := NewCardList()
+	cards := cardList{
+		cards: make([]*Card, 64),
+	}
+
+	expected := cardList{
+		cards: make([]*Card, 64),
+	}
 
 	fill(&cards)
 	fill(&expected)
@@ -186,7 +211,9 @@ func TestCardListDeleteCardNotInList(t *testing.T) {
 }
 
 func TestCardListDeleteAll(t *testing.T) {
-	cards := NewCardList()
+	cards := cardList{
+		cards: make([]*Card, 64),
+	}
 
 	ok := cards.DeleteAll()
 	if ok != true {
@@ -279,13 +306,16 @@ func TestCardListMarshalJSON(t *testing.T) {
   }
 ]`
 
-	cards := NewCardList()
+	cards := cardList{
+		cards: make([]*Card, 64),
+	}
+
 	cards.cards[0] = &Card{CardNumber: 6000001, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 29}}
 	cards.cards[2] = &Card{CardNumber: 0, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 30}}
 	cards.cards[4] = &Card{CardNumber: 0xffffffff, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 31}}
 	cards.cards[5] = &Card{CardNumber: 8165538, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 31}, PIN: 7531}
 
-	blob, err := json.MarshalIndent(cards, "", "  ")
+	blob, err := json.MarshalIndent(&cards, "", "  ")
 	if err != nil {
 		t.Fatalf("Unexpected error marshalling card list (%v)", err)
 	}
@@ -296,7 +326,10 @@ func TestCardListMarshalJSON(t *testing.T) {
 }
 
 func TestCardListUnmarshalJSON(t *testing.T) {
-	expected := NewCardList()
+	expected := cardList{
+		cards: make([]*Card, 64),
+	}
+
 	expected.cards[0] = &Card{CardNumber: 6000001, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 29}}
 	expected.cards[2] = &Card{CardNumber: 0, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 30}}
 	expected.cards[4] = &Card{CardNumber: 0xffffffff, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 31}}
@@ -365,7 +398,9 @@ func TestCardListUnmarshalJSON(t *testing.T) {
   }
 ]`
 
-	cards := NewCardList()
+	cards := cardList{
+		cards: make([]*Card, 64),
+	}
 
 	err := json.Unmarshal([]byte(blob), &cards)
 	if err != nil {
@@ -385,7 +420,7 @@ func TestCardListUnmarshalJSON(t *testing.T) {
 	}
 }
 
-func fill(l *CardList) uint32 {
+func fill(l *cardList) uint32 {
 	for i := range 29 {
 		l.cards[i] = &Card{
 			CardNumber: uint32(6000000 + i),
