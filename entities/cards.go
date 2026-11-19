@@ -10,6 +10,15 @@ import (
 	"codeberg.org/uhppoted/uhppoted-core/types"
 )
 
+type CardList interface {
+	Size() uint32
+	Find(f func(*Card) bool) (int, *Card)
+	Get(index uint32) (int, *Card)
+	Put(card *Card) error
+	Delete(cardNumber uint32) bool
+	DeleteAll() bool
+}
+
 type Card struct {
 	CardNumber uint32              `json:"card"`
 	From       types.Date          `json:"from"`
@@ -26,7 +35,7 @@ type FirstCardPrivileges struct {
 	Door4 bool
 }
 
-type CardList struct {
+type cardList struct {
 	cards []*Card
 }
 
@@ -39,7 +48,7 @@ func SetCardsListSize(N uint) {
 }
 
 func NewCardList(cards ...*Card) CardList {
-	list := CardList{
+	list := cardList{
 		cards: make([]*Card, cardsListSize),
 	}
 
@@ -49,10 +58,10 @@ func NewCardList(cards ...*Card) CardList {
 		}
 	}
 
-	return list
+	return &list
 }
 
-func (l *CardList) All() iter.Seq2[int, *Card] {
+func (l *cardList) All() iter.Seq2[int, *Card] {
 	return func(yield func(int, *Card) bool) {
 		for i, card := range l.cards {
 			if !yield(i, card) {
@@ -62,7 +71,7 @@ func (l *CardList) All() iter.Seq2[int, *Card] {
 	}
 }
 
-func (l CardList) Size() uint32 {
+func (l *cardList) Size() uint32 {
 	var count uint32 = 0
 
 	for _, card := range l.All() {
@@ -74,7 +83,7 @@ func (l CardList) Size() uint32 {
 	return count
 }
 
-func (l *CardList) Put(card *Card) error {
+func (l *cardList) Put(card *Card) error {
 	if card == nil {
 		return nil
 	}
@@ -96,7 +105,7 @@ func (l *CardList) Put(card *Card) error {
 	return fmt.Errorf("insufficient space in card list")
 }
 
-func (l *CardList) Delete(cardNumber uint32) bool {
+func (l *cardList) Delete(cardNumber uint32) bool {
 	if cardNumber != 0 && cardNumber != 0xffffffff {
 		for ix, c := range l.All() {
 			if c != nil && c.CardNumber == cardNumber {
@@ -112,7 +121,7 @@ func (l *CardList) Delete(cardNumber uint32) bool {
 	return false
 }
 
-func (l *CardList) DeleteAll() bool {
+func (l *cardList) DeleteAll() bool {
 	for ix := range l.All() {
 		l.cards[ix] = nil
 	}
@@ -120,7 +129,7 @@ func (l *CardList) DeleteAll() bool {
 	return true
 }
 
-func (l CardList) Find(f func(*Card) bool) (int, *Card) {
+func (l *cardList) Find(f func(*Card) bool) (int, *Card) {
 	ix := slices.IndexFunc(l.cards[:], f)
 	if ix == -1 {
 		return -1, nil
@@ -128,7 +137,7 @@ func (l CardList) Find(f func(*Card) bool) (int, *Card) {
 	return ix, l.cards[ix]
 }
 
-func (l CardList) Get(index uint32) (int, *Card) {
+func (l cardList) Get(index uint32) (int, *Card) {
 	if index > 0 && index <= uint32(len(l.cards)) {
 		return int(index), l.cards[index-1]
 	}
@@ -136,7 +145,7 @@ func (l CardList) Get(index uint32) (int, *Card) {
 	return -1, nil
 }
 
-func (l CardList) MarshalJSON() ([]byte, error) {
+func (l *cardList) MarshalJSON() ([]byte, error) {
 	N := 0
 	for i, c := range l.All() {
 		if c != nil {
@@ -151,7 +160,7 @@ func (l CardList) MarshalJSON() ([]byte, error) {
 	return json.Marshal(list)
 }
 
-func (l *CardList) UnmarshalJSON(bytes []byte) error {
+func (l *cardList) UnmarshalJSON(bytes []byte) error {
 	var list []*Card
 	if err := json.Unmarshal(bytes, &list); err != nil {
 		return err

@@ -399,6 +399,7 @@ func unmarshal(bytes []byte, filepath string, compressed bool) (*UT0311L04, erro
 	}{
 		Released:     RELEASE_DATE,
 		Doors:        entities.MakeDoors(),
+		Cards:        entities.NewCardList(),
 		Keypads:      entities.MakeKeypads(),
 		TimeProfiles: entities.TimeProfiles{},
 	}
