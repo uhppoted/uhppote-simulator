@@ -8,6 +8,7 @@ DOOR      ?= 3
 DEBUG     ?= --debug
 DOCKER    ?= uhppoted/simulator:latest
 GHCR      ?= ghcr.io/uhppoted/simulator:latest
+CARDS     ?= 64
 DEBUG     ?= --debug
 
 CLI = ../uhppote-cli/bin/uhppote-cli
@@ -117,7 +118,7 @@ version: build
 	./bin/uhppote-simulator version
 
 run: build
-	./bin/uhppote-simulator $(DEBUG) --bind 0.0.0.0:60000 --rest 0.0.0.0:8000 --devices "./workdir/debug/controllers"
+	./bin/uhppote-simulator $(DEBUG) --bind 0.0.0.0:60000 --rest 0.0.0.0:8000 --devices "./workdir/debug/controllers" --cards $(CARDS)
 
 list-devices:
 	curl -X GET "http://127.0.0.1:8000/uhppote/simulator" -H "accept: application/json"

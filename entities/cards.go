@@ -27,11 +27,21 @@ type FirstCardPrivileges struct {
 }
 
 type CardList struct {
-	cards [64]*Card
+	cards []*Card
+}
+
+var cardsListSize uint = 64
+
+func SetCardsListSize(N uint) {
+	if N <= 20000 {
+		cardsListSize = N
+	}
 }
 
 func NewCardList(cards ...*Card) CardList {
-	list := CardList{}
+	list := CardList{
+		cards: make([]*Card, cardsListSize),
+	}
 
 	for ix, card := range cards {
 		if ix < len(list.cards) {
@@ -142,13 +152,14 @@ func (l CardList) MarshalJSON() ([]byte, error) {
 }
 
 func (l *CardList) UnmarshalJSON(bytes []byte) error {
-	list := [64]*Card{}
-
+	var list []*Card
 	if err := json.Unmarshal(bytes, &list); err != nil {
 		return err
 	}
 
-	l.cards = list
+	cards := make([]*Card, cardsListSize)
+	copy(cards, list)
+	l.cards = cards
 
 	return nil
 }

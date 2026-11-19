@@ -2,9 +2,9 @@
 
 ## In Progress
 
-- [Configurable card capacity for simulated controllers](https://codeberg.org/uhppoted/uhppoted-simulator/issues/1)
-    - [ ] rework CardsList as struct
-    - [ ] --cards command line arg
+- [ ] [Configurable card capacity for simulated controllers](https://codeberg.org/uhppoted/uhppoted-simulator/issues/1)
+    - [x] rework CardsList as struct
+    - [x] --cards command line arg
 
 
 ## To Be Done

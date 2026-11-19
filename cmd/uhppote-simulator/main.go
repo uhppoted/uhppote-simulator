@@ -7,6 +7,7 @@ import (
 
 	"codeberg.org/uhppoted/uhppoted-core/uhppote"
 	"codeberg.org/uhppoted/uhppoted-simulator/commands"
+	"codeberg.org/uhppoted/uhppoted-simulator/entities"
 	"codeberg.org/uhppoted/uhppoted-simulator/log"
 	"codeberg.org/uhppoted/uhppoted-simulator/simulator"
 	"codeberg.org/uhppoted/uhppoted-simulator/simulator/UT0311L04"
@@ -16,11 +17,13 @@ var options = struct {
 	dir   string
 	bind  string
 	rest  string
+	cards uint
 	debug bool
 }{
 	dir:   "./devices",
 	bind:  ":60000",
 	rest:  ":8000",
+	cards: 64,
 	debug: false,
 }
 
@@ -28,6 +31,7 @@ func main() {
 	flag.StringVar(&options.dir, "devices", "devices", "Specifies the simulation device directory")
 	flag.StringVar(&options.bind, "bind", ":60000", "Specifies the bind address for the simulator")
 	flag.StringVar(&options.rest, "rest", ":8000", "Specifies the bind address for the REST interface")
+	flag.UintVar(&options.cards, "cards", 64, "Size of controller cards lists (defaults to 64)")
 	flag.BoolVar(&options.debug, "debug", false, "Displays simulator activity")
 	flag.Parse()
 
@@ -40,6 +44,8 @@ func main() {
 		version()
 		return
 	}
+
+	entities.SetCardsListSize(options.cards)
 
 	ctx := simulator.Context{
 		Directory:   options.dir,
