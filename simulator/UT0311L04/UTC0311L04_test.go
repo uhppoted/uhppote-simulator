@@ -167,7 +167,7 @@ func TestUT0311L04Unmarshal(t *testing.T) {
 	}
 	`
 
-	if controller, err := unmarshal([]byte(JSON), "test.json", false); err != nil {
+	if controller, err := unmarshal([]byte(JSON), "test.json", false, 64); err != nil {
 		t.Fatalf("error unmarshalling UT0311L04 (%v)", err)
 	} else if controller == nil {
 		t.Fatalf("error unmarshalling UT0311L04, expected UT0311L04{}, got %v", controller)
@@ -216,7 +216,7 @@ func TestUT0311L04UnmarshalDefaultValues(t *testing.T) {
 	}
 	`
 
-	if controller, err := unmarshal([]byte(JSON), "test.json", false); err != nil {
+	if controller, err := unmarshal([]byte(JSON), "test.json", false, 64); err != nil {
 		t.Fatalf("error unmarshalling UT0311L04 (%v)", err)
 	} else if controller == nil {
 		t.Fatalf("error unmarshalling UT0311L04, expected UT0311L04{}, got %v", controller)
@@ -304,7 +304,7 @@ func TestUT0311L04UnmarshalWithMissingTaskList(t *testing.T) {
 	}
 	`
 
-	if controller, err := unmarshal([]byte(JSON), "test.json", false); err != nil {
+	if controller, err := unmarshal([]byte(JSON), "test.json", false, 64); err != nil {
 		t.Fatalf("error unmarshalling UT0311L04 (%v)", err)
 	} else if controller == nil {
 		t.Fatalf("error unmarshalling UT0311L04, expected UT0311L04{}, got %v", controller)
@@ -413,7 +413,7 @@ func TestUT0311L04UnmarshalWithInvalidTaskList(t *testing.T) {
 	}
 	`
 
-	if controller, err := unmarshal([]byte(JSON), "test.json", false); err != nil {
+	if controller, err := unmarshal([]byte(JSON), "test.json", false, 64); err != nil {
 		t.Fatalf("error unmarshalling UT0311L04 (%v)", err)
 	} else if controller == nil {
 		t.Fatalf("error unmarshalling UT0311L04, expected UT0311L04{}, got %v", controller)
@@ -465,6 +465,7 @@ func testHandle(request messages.Request, expected messages.Response, t *testing
 	doors.SetDelay(4, entities.DelayFromSeconds(44))
 
 	cards := entities.NewCardList(
+		64,
 		&entities.Card{
 			CardNumber: 100000001,
 			From:       from,

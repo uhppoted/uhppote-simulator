@@ -36,24 +36,22 @@ type FirstCardPrivileges struct {
 }
 
 type cardList struct {
+	size  int
 	cards []*Card
 }
 
-var cardsListSize uint = 64
+const maxCardsListSize = 20000
 
-func SetCardsListSize(N uint) {
-	if N <= 20000 {
-		cardsListSize = N
-	}
-}
+func NewCardList(size int, cards ...*Card) *cardList {
+	N := max(0, min(size, maxCardsListSize))
 
-func NewCardList(cards ...*Card) CardList {
 	list := cardList{
-		cards: make([]*Card, cardsListSize),
+		size:  N,
+		cards: make([]*Card, N),
 	}
 
 	for ix, card := range cards {
-		if ix < len(list.cards) {
+		if ix < N {
 			list.cards[ix] = card
 		}
 	}
@@ -166,7 +164,7 @@ func (l *cardList) UnmarshalJSON(bytes []byte) error {
 		return err
 	}
 
-	cards := make([]*Card, cardsListSize)
+	cards := make([]*Card, l.size)
 	copy(cards, list)
 	l.cards = cards
 

@@ -335,15 +335,15 @@ func (s *UT0311L04) RunTasks() {
 	s.TaskList.Run(handler)
 }
 
-func Load(filepath string, compressed bool) (*UT0311L04, error) {
+func Load(filepath string, compressed bool, cardsListSize int) (*UT0311L04, error) {
 	if compressed {
-		return loadGZ(filepath)
+		return loadGZ(filepath, cardsListSize)
 	}
 
-	return load(filepath)
+	return load(filepath, cardsListSize)
 }
 
-func loadGZ(filepath string) (*UT0311L04, error) {
+func loadGZ(filepath string, cardsListSize int) (*UT0311L04, error) {
 	b, err := os.ReadFile(filepath)
 	if err != nil {
 		return nil, err
@@ -359,19 +359,19 @@ func loadGZ(filepath string) (*UT0311L04, error) {
 		return nil, err
 	}
 
-	return unmarshal(bytes, filepath, true)
+	return unmarshal(bytes, filepath, true, cardsListSize)
 }
 
-func load(filepath string) (*UT0311L04, error) {
+func load(filepath string, cardsListSize int) (*UT0311L04, error) {
 	bytes, err := os.ReadFile(filepath)
 	if err != nil {
 		return nil, err
 	}
 
-	return unmarshal(bytes, filepath, false)
+	return unmarshal(bytes, filepath, false, cardsListSize)
 }
 
-func unmarshal(bytes []byte, filepath string, compressed bool) (*UT0311L04, error) {
+func unmarshal(bytes []byte, filepath string, compressed bool, cardsListSize int) (*UT0311L04, error) {
 	object := struct {
 		SerialNumber        types.SerialNumber    `json:"serial-number"`
 		IpAddress           net.IP                `json:"address"`
@@ -399,7 +399,7 @@ func unmarshal(bytes []byte, filepath string, compressed bool) (*UT0311L04, erro
 	}{
 		Released:     RELEASE_DATE,
 		Doors:        entities.MakeDoors(),
-		Cards:        entities.NewCardList(),
+		Cards:        entities.NewCardList(cardsListSize),
 		Keypads:      entities.MakeKeypads(),
 		TimeProfiles: entities.TimeProfiles{},
 	}

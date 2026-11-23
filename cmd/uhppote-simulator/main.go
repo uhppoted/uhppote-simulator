@@ -7,7 +7,6 @@ import (
 
 	"codeberg.org/uhppoted/uhppoted-core/uhppote"
 	"codeberg.org/uhppoted/uhppoted-simulator/commands"
-	"codeberg.org/uhppoted/uhppoted-simulator/entities"
 	"codeberg.org/uhppoted/uhppoted-simulator/log"
 	"codeberg.org/uhppoted/uhppoted-simulator/simulator"
 	"codeberg.org/uhppoted/uhppoted-simulator/simulator/UT0311L04"
@@ -45,19 +44,17 @@ func main() {
 		return
 	}
 
-	entities.SetCardsListSize(options.cards)
-
 	ctx := simulator.Context{
 		Directory:   options.dir,
 		BindAddress: options.bind,
 		RestAddress: options.rest,
-		DeviceList:  simulator.NewDeviceList(load(options.dir)),
+		DeviceList:  simulator.NewDeviceList(load(options.dir, int(options.cards))),
 	}
 
 	commands.Simulate(&ctx, options.debug)
 }
 
-func load(dir string) []simulator.Simulator {
+func load(dir string, cardsListSize int) []simulator.Simulator {
 	log.Infof("loading devices from '%s'", dir)
 
 	devices := map[uint32]simulator.Simulator{}
@@ -74,7 +71,7 @@ func load(dir string) []simulator.Simulator {
 		files, err := filepath.Glob(filepath.Join(dir, g.glob))
 		if err == nil {
 			for _, f := range files {
-				s, err := UT0311L04.Load(f, g.compressed)
+				s, err := UT0311L04.Load(f, g.compressed, cardsListSize)
 				if err != nil {
 					fmt.Printf("   ... error loading device from file '%s': %v\n", f, err)
 				} else {

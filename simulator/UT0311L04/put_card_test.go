@@ -49,7 +49,7 @@ func TestHandlePutCardRequestWithZeroFromDate(t *testing.T) {
 
 	ut0311L04 := UT0311L04{
 		SerialNumber: 405419896,
-		Cards:        entities.NewCardList(),
+		Cards:        entities.NewCardList(64),
 	}
 
 	if response, err := ut0311L04.putCard(&request); err != nil {
@@ -80,7 +80,7 @@ func TestHandlePutCardRequestWithZeroToDate(t *testing.T) {
 
 	ut0311L04 := UT0311L04{
 		SerialNumber: 405419896,
-		Cards:        entities.NewCardList(),
+		Cards:        entities.NewCardList(64),
 	}
 
 	if response, err := ut0311L04.putCard(&request); err != nil {

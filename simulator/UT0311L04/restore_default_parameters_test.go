@@ -21,7 +21,7 @@ func TestRestoreDefaultParameters(t *testing.T) {
 		AntiPassback: entities.MakeAntiPassback(types.Readers1_234),
 
 		Doors: entities.MakeDoors(),
-		Cards: entities.NewCardList(),
+		Cards: entities.NewCardList(64),
 	}
 
 	s.Doors.SetMode(1, types.ModeNormallyOpen)
