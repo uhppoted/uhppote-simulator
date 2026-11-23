@@ -27,10 +27,10 @@ var options = struct {
 }
 
 func main() {
-	flag.StringVar(&options.dir, "devices", "devices", "Specifies the simulation device directory")
-	flag.StringVar(&options.bind, "bind", ":60000", "Specifies the bind address for the simulator")
+	flag.StringVar(&options.dir, "devices", "devices", "Specifies the simulation controllers directory")
+	flag.StringVar(&options.bind, "bind", ":60000", "Specifies the bind address:port for the simulator")
 	flag.StringVar(&options.rest, "rest", ":8000", "Specifies the bind address for the REST interface")
-	flag.UintVar(&options.cards, "cards", 64, "Size of controller cards lists (defaults to 64)")
+	flag.UintVar(&options.cards, "cards", 64, "Size of controller cards lists (0 to 20000)")
 	flag.BoolVar(&options.debug, "debug", false, "Displays simulator activity")
 	flag.Parse()
 
@@ -102,19 +102,20 @@ func version() {
 
 func help() {
 	fmt.Println()
-	fmt.Println("  Usage: uhppote-simulator [options] <command>")
+	fmt.Println("  Usage: uhppoted-simulator [options] <command>")
 	fmt.Println()
 	fmt.Println("  By default, the application will run in 'simulation' mode if a command is not specified.")
 	fmt.Println()
 	fmt.Println("  Commands:")
 	fmt.Println()
-	fmt.Println("    version          Displays the simulator version")
-	fmt.Println("    help             Displays this message")
-	fmt.Println("                     For help on a specific command use 'uhppote-cli help <command>'")
+	fmt.Println("    version  Displays the simulator version")
+	fmt.Println("    help     Displays this message")
+	fmt.Println("             For help on a specific command use 'uhppoted-simulator help <command>'")
 	fmt.Println()
 	fmt.Println("  Options:")
 	fmt.Println()
-	fmt.Println("    --devices <directory>  Sets the directory to which to load and save simulator device files")
-	fmt.Println("    --debug                Displays internal information for diagnosing errors")
+	fmt.Println("    --devices <directory>  Sets the directory to which to load and save simulator controller files")
+	fmt.Println("    --cards   <N>          Sets the number of cards allowed in internal controller cards lists (0 to 20000, defaults to 64)")
+	fmt.Println("    --debug                Enables verbose logging of requests and responses")
 	fmt.Println()
 }

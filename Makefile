@@ -118,6 +118,12 @@ godoc:
 version: build
 	./bin/uhppote-simulator version
 
+help: build
+	./bin/uhppote-simulator help
+
+usage: build
+	./bin/uhppote-simulator --help
+
 run: build
 	./bin/uhppote-simulator $(DEBUG) --bind 0.0.0.0:60000 --rest 0.0.0.0:8000 --devices "./workdir/debug/controllers" --cards $(CARDS)
 

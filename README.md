@@ -163,10 +163,10 @@ Defaults to 'run' unless one of the commands below is specified:
 - version
 
 Supported options:
-- `--bind`: <IP address to bind to>
-- `--devices`: <directory path for device files>
-- `--cards`: number of cards allowed in internal controller cards lists. Valid sizes are from 0 to 20000.
-- `--debug`: enables verbose logging of requests and responses
+- `--bind` IP _address:port_ on which to listen for requests
+- `--devices` directory path for device files
+- `--cards` number of cards allowed in internal controller cards lists. Valid sizes are from 0 to 20000.
+- `--debug` enables verbose logging of requests and responses
 
 ## REST API
 
