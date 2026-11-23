@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+1. `--cards` command line to set size of internal cards lists.
+
 
 ## [0.9.1](https://codeberg.org/uhppoted/uhppoted-simulator/releases/tag/v0.9.1) - 2026-10-07
 

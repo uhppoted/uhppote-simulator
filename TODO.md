@@ -6,6 +6,8 @@
     - [x] rework CardsList as struct
     - [x] --cards command line arg
     - [x] unit tests
+    - [x] CHANGELOG
+    - [x] README
 
 ## To Be Done
 - [ ] Fix docker swagger

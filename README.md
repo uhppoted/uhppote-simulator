@@ -155,7 +155,7 @@ Supported `uhppote` functions:
 - RestoreDefaultParameters
 - Listen
 
-Usage: *uhppote-simulator \<command\> --devices=\<dir\>*
+Usage: *uhppote-simulator \<command\> --devices \<dir\> [--cards \<N\>]* 
 
 Defaults to 'run' unless one of the commands below is specified: 
 
@@ -163,9 +163,10 @@ Defaults to 'run' unless one of the commands below is specified:
 - version
 
 Supported options:
-- --bind <IP address to bind to>
-- --devices <directory path for device files>
-- --debug
+- `--bind`: <IP address to bind to>
+- `--devices`: <directory path for device files>
+- `--cards`: number of cards allowed in internal controller cards lists. Valid sizes are from 0 to 20000.
+- `--debug`: enables verbose logging of requests and responses
 
 ## REST API
 
